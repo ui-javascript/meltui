@@ -3,21 +3,54 @@ export function _warn(...message: any) {
 }
 
 export const safeEval = (code: string) => {
+  debugger
   return Function(`"use strict"; ${code}`)();
 }
 
-// 解析函数字符串值
-export const evaluateString = (string: string, formData: {}, rootValue: {}) =>
-  safeEval(`
-  const rootValue =${JSON.stringify(rootValue)};
-  const formData = ${JSON.stringify(formData)};
-  return (${string})
-  `);
+export const getEval = (string: string, record: {}, column: {}, rowIndex: number) => {
+  return safeEval(`
+    const rowIndex = ${rowIndex};
+    const column = ${JSON.stringify(column)};
+    const record = ${JSON.stringify(record)};
+    return (${string})
+  `);  
+}
 
-// 解析函数字符串值(用于validator，入参只有value)
-export const evaluateString2 = (string: string, value: {}, formData: {}) =>
+export const justEval = (string: string, record: {}, column: {}, rowIndex: number) => {
+  
   safeEval(`
-  const value =${JSON.stringify(value)};
-  const formData = ${JSON.stringify(formData)};
-  return (${string})
-  `);
+    const rowIndex = ${rowIndex};
+    const column = ${JSON.stringify(column)};
+    const record = ${JSON.stringify(record)};
+    return (${string})
+  `);  
+}
+ 
+
+// export const evaluateString5 = (string: string, record: {}) =>
+//   safeEval(`
+//   const record = ${JSON.stringify(record)};
+//   return (${string})
+//   `);
+
+// export const evaluateString2 = (string: string, tableData: [], record: {}) =>
+//   safeEval(`
+//   const tableData = ${JSON.stringify(tableData)};
+//   const record = ${JSON.stringify(record)};
+//   return (${string})
+// `);  
+
+// export const evaluateString3 = (string: string, record: {}) =>
+//   safeEval(`
+//   const record = ${JSON.stringify(record)};
+//   return (${string})
+// `);  
+
+
+// export const evaluateString4 = (string: string, record: {}, rowIndex: number) =>
+//   safeEval(`
+//   const rowIndex = ${rowIndex};
+//   const record = ${JSON.stringify(record)};
+//   return (${string})
+// `);  
+

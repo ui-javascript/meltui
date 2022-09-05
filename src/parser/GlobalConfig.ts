@@ -3,7 +3,7 @@ import { merge } from "lodash"
 export class GlobalConfig {
     
     json = {}
-    context = null
+    context = ''
     
     constructor(json?: {}) {
         if (json) {

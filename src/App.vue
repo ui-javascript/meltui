@@ -1,52 +1,91 @@
 <template>
-    <ArcoCrudTable 
-        :data="data" 
-        :options="options"
-    />
+    <ArcoCrudTable style="padding: 20px" :data="data" :options="options" :schema="schema" />
 </template>
 
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
+import { Ref } from 'vue';
+import { FormSchema } from './parser';
 
-// console.log("当前表达式")
-const options = new CrudOptions({ a: 1 }).parse({ b: 2 })
+const options = new CrudOptions()
+    .edit()
+    .hover() // .border(false).stripe(false)
+    .parse()
 
-const data = reactive([{
-    key: '1',
-    name: 'Jane Doe',
-    salary: 23000,
-    address: '32 Park Road, London',
-    province: 'Beijing',
-    city: 'Haidian',
-    email: 'jane.doe@example.com'
-}, {
-    key: '2',
-    name: 'Alisa Ross',
-    salary: 25000,
-    address: '35 Park Road, London',
-    email: 'alisa.ross@example.com'
-}, {
-    key: '3',
-    name: 'Kevin Sandra',
-    salary: 22000,
-    address: '31 Park Road, London',
-    province: 'Sichuan',
-    city: 'Mianyang',
-    email: 'kevin.sandra@example.com'
-}, {
-    key: '4',
-    name: 'Ed Hellen',
-    salary: 17000,
-    address: '42 Park Road, London',
-    email: 'ed.hellen@example.com'
-}, {
-    key: '5',
-    name: 'William Smith',
-    salary: 27000,
-    address: '62 Park Road, London',
-    email: 'william.smith@example.com'
-}]);
+const schema: Ref = ref({
+    name: new FormSchema().upperFirst().width(150).left()
+        .format("'自定义22223333333' + record.name + '(No.' + rowIndex  + ')'")
+        .parse(),
+    salary: new FormSchema().title("工资").width(100).center() // .left()
+        .readonly()
+        .parse(),
+    address: new FormSchema().title("地址").width(100).right().left()
+        .readonly()
+        .parse(),
+    province: new FormSchema().width(100).title("省份")
+        .select(['北京', '四川', '广东'])
+        .parse(),
+    city: new FormSchema().title("城市").width(100)
+        .select().keepWatch("province")
+        .parse(),
+})
+
+schema.value.name = new FormSchema(schema.value.name).title("姓名").parse()
+
+
+
+const data = reactive([
+    {
+        key: '1',
+        name: 'Jane Doe',
+        salary: 23000,
+        address: '32 Park Road, London',
+        province: '北京',
+        city: '海淀',
+        email: 'jane.doe@example.com'
+    },
+    {
+        key: '2',
+        name: 'Alisa Ross',
+        salary: 25000,
+        address: '35 Park Road, London',
+        email: 'alisa.ross@example.com'
+    },
+    {
+        key: '3',
+        name: 'Kevin Sandra',
+        salary: 22000,
+        address: '31 Park Road, London',
+        province: '四川',
+        city: '绵阳',
+        email: 'kevin.sandra@example.com'
+    },
+    {
+        key: '4',
+        name: 'Ed Hellen',
+        salary: 17000,
+        address: '42 Park Road, London',
+        email: 'ed.hellen@example.com'
+    },
+    {
+        key: '5',
+        name: 'William Smith',
+        salary: 27000,
+        address: '62 Park Road, London',
+        email: 'william.smith@example.com'
+    }
+]);
+
+for (let i = 10; i < 1000; i++) {
+    data.push({
+        key: i + "xx",
+        name: 'William Smith',
+        salary: 27000,
+        address: '62 Park Road, London',
+        email: 'william.smith@example.com'
+    })
+}
 
 </script>
     
