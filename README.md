@@ -1,5 +1,13 @@
 # meltui
 
+> 基于Arco和VXE的表单表格的常用增删改查封装，JSONSchema改ChainSchema
+
+- https://static-59728804-d890-4267-8e45-393e10b3c780.bspapp.com/#/pages/test/noteDetail?id=63093bda553eac0001a5472e
+
+---
+
+# 示例 @demo
+
 - 基础示例(带联动)
 
 ```vue
@@ -39,3 +47,7 @@ const schema: Ref = ref({
 ```
 
 ![image](https://user-images.githubusercontent.com/16240829/188521161-be5557dc-112f-49a9-a91e-930a086948f3.png)
+
+---
+
+# 参考 @ref
