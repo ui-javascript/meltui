@@ -4,6 +4,8 @@ export class CrudOptions {
     
     json = {}
 
+    context = null
+
     constructor(json?: {}) {
         if (json) {
             this.json = merge(this.json, json)

@@ -17,6 +17,8 @@
 
 <script setup name="ArcoCrudTable">
 
+import {set} from "lodash"
+
 // import  {  ArcoCrudTableProps }  from '@/types/ArcoCrudTableProps';
 
 // const props = withDefaults(defineProps<ArcoCrudTableProps>(), {
@@ -33,6 +35,12 @@ const props = defineProps({
     options: Object,
     loading: Boolean,
 })
+
+console.log("配置")
+set(props.options, "c.d", 2)
+
+console.log(props.options)
+
 
 const options = {
     Beijing: ['Haidian', 'Chaoyang', 'Changping'],
