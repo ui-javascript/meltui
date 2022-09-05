@@ -1,6 +1,6 @@
 {
   "name": "meltui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "dist/melt-crud.cjs",
   "module": "dist/melt-crud.js",

@@ -15,7 +15,7 @@ const options = new CrudOptions()
 
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(150).left()
-        .format("'自定义22223333333' + record.name + '(No.' + rowIndex  + ')'")
+        .format("'自定义' + record.name + '(No.' + rowIndex  + ')'")
         .parse(),
     salary: new FormSchema().title("工资").width(100).center() // .left()
         .readonly()
