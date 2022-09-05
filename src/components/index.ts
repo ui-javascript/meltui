@@ -1,0 +1,1 @@
+export { default as ArcoCrudTable } from "./ArcoCrudTable.vue";
