@@ -1,4 +1,4 @@
-export interface ArcoCrudTableProps {
+export default interface ArcoCrudTableProps {
   data: []
   schema: {}
   options: {}

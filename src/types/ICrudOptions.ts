@@ -1,7 +1,7 @@
 import { RuleItem } from 'async-validator';
 
 // @form https://github.com/alibaba/x-render/blob/master/packages/form-render/src/schema.d.ts
-export interface ICrudOptions {
+export default interface ICrudOptions {
   parse: (options: {}) => ICrudOptions
 
   rowKey: (rowKey: string) => ICrudOptions

@@ -19,9 +19,8 @@
 </template>
 
 <script setup name="ArcoCrudTable">
-
-import ArcoCrudTableProps from '@/types'
-
+    
+import ArcoCrudTableProps from '@/types/ArcoCrudTableProps';
 const props = defineProps<ArcoCrudTableProps>({})
 
 const options = {

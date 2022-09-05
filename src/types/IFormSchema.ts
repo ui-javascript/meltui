@@ -1,6 +1,6 @@
 import { CommonRequestProps } from "./ICrudOptions"
 
-export interface IFormSchema extends CommonWidgetProps<IFormSchema> {
+export default interface IFormSchema extends CommonWidgetProps<IFormSchema> {
   parse: (schema?: {}) => IFormSchema
 
   enabled: (enabled?: boolean) => IFormSchema
