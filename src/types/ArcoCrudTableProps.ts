@@ -1,7 +1,7 @@
-export default interface ArcoCrudTableProps {
-  data: []
-  schema: {}
-  options: {}
-  loading: boolean
-  // pagination:
+export interface ArcoCrudTableProps {
+  data?: []
+  schema?: {}
+  options?: {}
+  loading?: boolean
+  pagination: {}
 }

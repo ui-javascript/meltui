@@ -1,14 +1,13 @@
 <template>
     <ArcoCrudTable 
-        data="data" 
-        options="options"
+        :data="data" 
+        :options="options"
     />
 </template>
 
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
-import { reactive } from 'vue';
 
 // console.log("当前表达式")
 const options = new CrudOptions({ a: 1 }).parse({ b: 2 })
@@ -48,6 +47,7 @@ const data = reactive([{
     address: '62 Park Road, London',
     email: 'william.smith@example.com'
 }]);
+
 </script>
     
 

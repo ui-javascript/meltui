@@ -5,23 +5,34 @@
         </template>
         <template #province="{ rowIndex }">
             <Select v-model="props.data[rowIndex].province" @change="() => handleChange(rowIndex)">
-                <Option v-for="value of Object.keys(options)">{{ value }}</Option>
+                <Option :key="value" v-for="value of Object.keys(options)">{{ value }}</Option>
             </Select>
         </template>
         <template #city="{ rowIndex }">
-            <Select
-                :options="options[props.data[rowIndex].province] || []"
-                v-model="props.data[rowIndex].city"
-            />
+            <Select :options="options[props.data[rowIndex].province] || []" v-model="props.data[rowIndex].city" />
         </template>
     </Table>
-    
+
 </template>
 
 <script setup name="ArcoCrudTable">
-    
-import ArcoCrudTableProps from '@/types/ArcoCrudTableProps';
-const props = defineProps<ArcoCrudTableProps>({})
+
+// import  {  ArcoCrudTableProps }  from '@/types/ArcoCrudTableProps';
+
+// const props = withDefaults(defineProps<ArcoCrudTableProps>(), {
+//     data: [],
+//     schema: {},
+//     options: {},
+//     loading: false,
+// })
+
+
+const props = defineProps({
+    data: Array,
+    schema: Object,
+    options: Object,
+    loading: Boolean,
+})
 
 const options = {
     Beijing: ['Haidian', 'Chaoyang', 'Changping'],
@@ -55,10 +66,10 @@ const columns = [{
 
 
 const handleChange = (rowIndex) => {
-    data[rowIndex].city = ''
+    props.data[rowIndex].city = ''
 }
 
-const  dataSpanMethod= ({record, column}) => {
+const dataSpanMethod = ({ record, column }) => {
     if (record.key === '2' && column.dataIndex === 'name') {
         return {
             rowspan: 2,
