@@ -1,6 +1,6 @@
 # meltui
 
-- 基础示例
+- 基础示例(带联动)
 
 ```vue
 <template>
@@ -19,7 +19,8 @@ const options = new CrudOptions()
 
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(150).left()
-        .format("record.name + '(No.' + rowIndex  + ')'") // 自定义显示格式
+        .readonly()
+        .format("'(No.' + rowIndex  + ')' + record.name") // 自定义显示格式
         .parse(),
     salary: new FormSchema().title("工资").width(100).center()
         .readonly()
@@ -37,3 +38,4 @@ const schema: Ref = ref({
 </script>
 ```
 
+![image](https://user-images.githubusercontent.com/16240829/188521161-be5557dc-112f-49a9-a91e-930a086948f3.png)

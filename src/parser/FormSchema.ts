@@ -88,8 +88,8 @@ export class FormSchema {
         return this
     }
 
-    readonly(readonly = true) {
-        set(this.json, 'editable', !readonly)
+    readonly() {
+        set(this.json, 'editable', false)
         return this
     }
 

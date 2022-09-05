@@ -15,13 +15,12 @@ const options = new CrudOptions()
 
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(150).left()
-        .format("'自定义' + record.name + '(No.' + rowIndex  + ')'")
+        .readonly()
+        .format("'(No.' + rowIndex  + ')' + record.name")
         .parse(),
     salary: new FormSchema().title("工资").width(100).center() // .left()
-        .readonly()
         .parse(),
     address: new FormSchema().title("地址").width(100).right().left()
-        .readonly()
         .parse(),
     province: new FormSchema().width(100).title("省份")
         .select(['北京', '四川', '广东'])
@@ -32,8 +31,6 @@ const schema: Ref = ref({
 })
 
 schema.value.name = new FormSchema(schema.value.name).title("姓名").parse()
-
-
 
 const data = reactive([
     {
