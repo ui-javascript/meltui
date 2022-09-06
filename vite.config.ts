@@ -25,6 +25,7 @@ export default defineConfig({
       // 'pinia'
     ]
   }), setupExtend()],
+  base: './',
   css: {
     preprocessorOptions: {
       less: {
