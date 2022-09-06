@@ -9,7 +9,13 @@
             </template>
         </Switch>
 
-        <ArcoCrudTable :key="editable + ''" class="mt-2" :data="data" :options="options" :schema="schema" />
+        <ArcoCrudTable 
+            :key="editable + '_'" 
+            class="mt-2" 
+            :data="data" 
+            :pagination="pagination"
+            :options="options" 
+            :schema="schema" />
     </div>
 </template>
 
@@ -24,6 +30,10 @@ const editable = ref(false)
 const options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
     .hover().border().stripe()
+    // .row().selection().radioType()
+    .row().selection().checkboxType().checkAll().currentOnly(false)
+
+    .expand().width(100).title("展开行").render("{{ '我的名字是 is' + record.name }}")    
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -36,11 +46,11 @@ watch(() => editable.value, (current, prev) => {
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(100).left()
         // .readonly()
-        .input().placeholder("输入姓名")
+        .input().placeholder("输入姓名").clearable()
         .format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         .parse(),
     salary: new FormSchema().title("工资").width(100).right() 
-        .inputNumber().placeholder("输入工资").clearable()
+        .inputNumber().placeholder("输入工资").clearable(false)
         .parse(),
     address: new FormSchema().title("地址").width(200).center()
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
@@ -63,6 +73,7 @@ const data = reactive([
         address: '32 Park Road, London',
         province: '北京',
         city: '海淀',
+        // disabled: true,
         email: 'jane.doe@example.com'
     },
     {
@@ -106,6 +117,10 @@ for (let i = 10; i < 1000; i++) {
         email: 'william.smith@example.com'
     })
 }
+
+const pagination = ref({
+    pageSize: 5
+})
 
 </script>
     

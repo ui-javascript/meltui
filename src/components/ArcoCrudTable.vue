@@ -5,6 +5,9 @@
         :bordered="props.options?.row?.border"
         :stripe="props.options?.row?.stripe"
         :columns="columns" 
+        :expandable="expandable"
+        :pagination="props.pagination"
+        :row-selection="get(props.options, 'row.selection')"
         :data="props.data">
 
         <template #input="{ rowIndex, column, record }">
@@ -59,7 +62,7 @@
 <script setup name="ArcoCrudTable">
 
 import { getEval } from "@/utils";
-import { get, upperFirst } from "lodash"
+import { get, merge, upperFirst } from "lodash"
 
 const props = defineProps({
     data: {
@@ -78,6 +81,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    pagination: {
+        type: Object,
+        default: {}
+    },
 })
 
 
@@ -92,6 +99,23 @@ const selectOptions = ref({
 const keepWatchDeps = ref({
     'province': ['海淀', '朝阳', '昌平'],
 })
+
+
+let expandable = {}
+let expandRender = get(props.options, "row.expand")
+
+if (expandRender && expandRender.render) {
+    expandable = merge(expandRender, {
+      expandedRowRender: (record) => {
+        return getEval(expandRender.render, record, {}, null)
+      }
+    })
+
+    console.log("展开")
+    console.log(expandable)
+}
+
+
 
 const getWidgetType = (formSchema) => {
     const widget = get(formSchema, "widget.type")
@@ -127,7 +151,8 @@ onMounted(() => {
         }
 
         let format = get(formSchema, "widget.format")
-    
+
+
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
             dataIndex: key,

@@ -24,6 +24,64 @@ export class CrudOptions {
         return this
     }
 
+    selection() {
+        this.context = "row.selection"
+        return this
+    }
+
+    checkboxType() {
+        set(this.json, "row.selection.type", 'checkbox')
+        return this
+    }
+
+    radioType() {
+        set(this.json, "row.selection.type", 'radio')
+        return this
+    }
+
+    checkAll(checkAll = true) {
+        set(this.json, "row.selection.showCheckedAll", checkAll)
+        return this
+    }
+
+    currentOnly(currentOnly = true) {
+        set(this.json, "row.selection.currentOnly", currentOnly)
+        return this
+    }
+
+    expand(currentOnly = true) {
+        this.context = "row.expand"
+        return this
+    }
+
+    width(width: number) {
+        if (this.context) {
+            set(this.json, this.context + ".width", width)
+            return this
+        } 
+
+
+        return this
+    }
+
+    title(title: string) {
+        if (this.context) {
+            set(this.json, this.context + ".title", title)
+            return this
+        } 
+
+        return this
+    }
+
+    render(render: string) {
+        if (this.context) {
+            set(this.json, this.context + ".render", render)
+            return this
+        } 
+
+        return this
+    }
+
     hover(hoverable: boolean = true) {
         if (!this.context || this.context == "row") {
             set(this.json, "row.hover", hoverable)

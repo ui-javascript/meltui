@@ -2,7 +2,7 @@
 
 > 基于Arco和VXE的增删改查简单封装, 采用链式语法, 将JSONSchema改成ChainSchema
 
-# API文档
+# API草稿 @todo
 
 - https://static-59728804-d890-4267-8e45-393e10b3c780.bspapp.com/#/pages/test/noteDetail?id=63093bda553eac0001a5472e
 
@@ -50,6 +50,27 @@ const schema: Ref = ref({
 ```
 
 ![image](https://user-images.githubusercontent.com/16240829/188521161-be5557dc-112f-49a9-a91e-930a086948f3.png)
+
+- 行选择器
+
+```js 
+const options = ref(
+    new CrudOptions()
+        // .row().selection().radioType() // 单选
+        .row().selection().checkboxType().checkAll().currentOnly(false) // 复选
+    .parse()
+)
+```
+
+- 展开行
+
+```js
+const options = ref(
+    new CrudOptions()
+        .expand().width(100).title("展开行").render("{{ '我的名字是 is' + record.name }}") 
+    .parse()
+)
+```
 
 - 自定义操作列
 

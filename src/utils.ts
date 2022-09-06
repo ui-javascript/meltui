@@ -9,11 +9,11 @@ export const safeEval = (code: string) => {
 
 export const getEval = (string: string, record: {}, column: {}, rowIndex: number) => {
   
-    if (string) {
+  if (string) {
       if (string.includes("{{")) {
         string = string.replace(/\{\{/g, "").replace(/\}\}/g, "")
       } else {
-          string = "'" + string + "'"
+          return string
       }
   }
 
