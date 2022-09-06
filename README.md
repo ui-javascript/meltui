@@ -67,7 +67,7 @@ const options = ref(
 ```js
 const options = ref(
     new CrudOptions()
-        .expand().width(20).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
+        .row().expand().width(20).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
     .parse()
 )
 ```
@@ -80,6 +80,16 @@ const schema: Ref = ref({
         .cell().ellipsis().tooltip().width(50)
         .parse(),
 })
+```
+
+- 虚拟列表
+
+```js
+const options = ref(
+    new CrudOptions()
+        .body().virtualList().height(300)
+    .parse()
+)
 ```
 
 - 自定义操作列

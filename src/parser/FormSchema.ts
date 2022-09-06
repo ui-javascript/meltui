@@ -13,6 +13,17 @@ export class FormSchema {
         }
     }
 
+    column() {
+        this.context = "column"
+        return this
+    }
+
+    fixed() {
+        this.context = "column.fixed"
+        return this
+    }
+
+
     title(title: string) {
         // this.context = "title"
         set(this.json, 'title.name', title)
@@ -82,13 +93,21 @@ export class FormSchema {
     }
 
     left() {
-        // this.context = "title"
+        if (this.context === "column.fixed") {
+            set(this.json, 'column.fixed', 'left')
+            return this
+        }
+    
         set(this.json, 'title.align', 'left')
         return this
     }
 
     right() {
-        // this.context = "title"
+        if (this.context === "column.fixed") {
+            set(this.json, 'column.fixed', 'right')
+            return this
+        }
+
         set(this.json, 'title.align', 'right')
         return this
     }

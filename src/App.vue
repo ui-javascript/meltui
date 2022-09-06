@@ -22,7 +22,6 @@
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
-import { Row } from '@arco-design/web-vue';
 import { Ref } from 'vue';
 import { FormSchema } from './parser';
 
@@ -33,9 +32,11 @@ const options = ref(new CrudOptions()
     // .header().visible(false) // 不显示表头
     .row().hover().border().stripe()
     // .row().selection().radioType()
-    // .row().selection().checkboxType().checkAll().currentOnly(false)
-
-    .expand().width(20).title("展开行").render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    .row().selection().checkboxType().checkAll().currentOnly(false)
+    .row().expand().width(50).title("展开行").render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    // .body().virtualList().height(300)
+    .body().scroll().x(1500)
+    .column().resizable()
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -48,6 +49,7 @@ watch(() => editable.value, (current, prev) => {
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(100).left()
         // .readonly()
+        .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
         .format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         .parse(),
@@ -56,12 +58,14 @@ const schema: Ref = ref({
         .parse(),
     address: new FormSchema().title("地址").width(250).center()
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
-        .cell().ellipsis().tooltip().width(50) // width会覆盖前面的
+        .cell().ellipsis().tooltip().width(250) // width会覆盖前面的
         .parse(),
     province: new FormSchema().width(100).title("省份")
+        .column().fixed().right()
         .select(['北京', '四川', '广东']) // 下拉框选项
         .parse(),
     city: new FormSchema().title("城市").width(100)
+        .column().fixed().right()
         .select().keepWatch("province") // 联动
         .parse(),
 })

@@ -34,6 +34,59 @@ export class CrudOptions {
         return this
     }
 
+
+    body() {
+        this.context = "body"
+        return this
+    }
+
+    virtualList() {
+        this.context = "body.virtualList"
+        // set(this.json, "row.expand", {})
+        set(this.json, "pagination", false)
+        return this
+    }
+
+    height(height: number) {
+        if (this.context === "body.virtualList") {
+            set(this.json, "body.virtualList.height", height)
+        }
+        return this
+    }
+
+
+    column() {
+        this.context = "column"
+        return this
+    }
+
+    resizable(enable = true) {
+        set(this.json, "column.resizable", enable)
+        set(this.json, "row.border.cell", true)
+        return this
+    }
+
+    scroll() {
+        this.context = "body.scroll"
+        return this
+    }
+
+    x(num: number) {
+        if (this.context === "body.scroll") {
+            set(this.json, "body.scroll.x", num)
+        }
+        
+        return this
+    }
+
+    y(num: number) {
+        if (this.context === "body.scroll") {
+            set(this.json, "body.scroll.y", num)
+        }
+        
+        return this
+    }
+
     row() {
         this.context = "row"
         return this
@@ -107,7 +160,7 @@ export class CrudOptions {
 
     border(hasBorder: boolean = true) {
         if (!this.context || this.context == "row") {
-            set(this.json, "row.border", hasBorder)
+            set(this.json, "row.border.cell", hasBorder)
         }
 
         return this

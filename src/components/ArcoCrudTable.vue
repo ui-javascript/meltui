@@ -2,12 +2,15 @@
     <Table 
         @change="handleTableChange"
         :hoverable="props.options?.row?.hover"
-        :bordered="props.options?.row?.border"
+        :bordered="get(props.options, 'row.border')"
         :stripe="props.options?.row?.stripe"
         :columns="columns" 
         :expandable="expandable"
-        :pagination="props.pagination"
+        :column-resizable="get(props.options, 'column.resizable')"
+        :virtual-list-props="get(props.options, 'body.virtualList')" 
+        :pagination="get(props.options, 'pagination') !== false && props.pagination"
         :show-header="get(props.options, 'header.visible')"
+        :scroll="get(props.options, 'body.scroll')"
         :row-selection="get(props.options, 'row.selection')"
         :data="props.data">
 
@@ -102,6 +105,8 @@ const keepWatchDeps = ref({
 })
 
 
+debugger
+
 let expandable = {}
 let expandRender = get(props.options, "row.expand")
 
@@ -163,6 +168,7 @@ onMounted(() => {
             keepWatch,
             format,
             formSchema,
+            fixed: get(formSchema, "column.fixed"),
             ellipsis: get(formSchema, "cell.ellipsis"),
             tooltip: get(formSchema, "cell.tooltip"), 
             widget: get(formSchema, "widget") || {},
