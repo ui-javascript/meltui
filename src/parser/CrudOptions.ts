@@ -19,6 +19,21 @@ export class CrudOptions {
     }
 
 
+    header(visible = true) {
+        this.context = "header"
+        set(this.json, "header.visible", visible)
+        return this
+    }
+
+    visible(visible = true) {
+        if (this.context === 'header') {
+            set(this.json, this.context + ".visible", visible)
+            return this
+        } 
+       
+        return this
+    }
+
     row() {
         this.context = "row"
         return this

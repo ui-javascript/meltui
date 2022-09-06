@@ -7,6 +7,7 @@
         :columns="columns" 
         :expandable="expandable"
         :pagination="props.pagination"
+        :show-header="get(props.options, 'header.visible')"
         :row-selection="get(props.options, 'row.selection')"
         :data="props.data">
 
@@ -162,6 +163,8 @@ onMounted(() => {
             keepWatch,
             format,
             formSchema,
+            ellipsis: get(formSchema, "cell.ellipsis"),
+            tooltip: get(formSchema, "cell.tooltip"), 
             widget: get(formSchema, "widget") || {},
             slotName: (props.options.edit && get(formSchema, "editable") != false) 
                 ? getWidgetType(formSchema)

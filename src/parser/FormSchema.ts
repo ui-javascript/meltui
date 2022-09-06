@@ -1,4 +1,5 @@
 import { merge, set, upperFirst, get } from "lodash"
+import { toHandlers } from "vue"
 
 export class FormSchema {
     
@@ -116,6 +117,21 @@ export class FormSchema {
      */
     keepWatch(keepWatch: string) {
         set(this.json, 'widget.keepWatch', keepWatch)
+        return this
+    }
+
+    cell() {
+        this.context = "cell"
+        return this
+    }
+
+    ellipsis(enabled = true) {
+        set(this.json, 'cell.ellipsis', enabled)
+        return this
+    }
+
+    tooltip(enabled = true) {
+        set(this.json, 'cell.tooltip', enabled)
         return this
     }
 

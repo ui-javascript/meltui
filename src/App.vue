@@ -22,6 +22,7 @@
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
+import { Row } from '@arco-design/web-vue';
 import { Ref } from 'vue';
 import { FormSchema } from './parser';
 
@@ -29,11 +30,12 @@ const editable = ref(false)
 
 const options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
-    .hover().border().stripe()
+    // .header().visible(false) // 不显示表头
+    .row().hover().border().stripe()
     // .row().selection().radioType()
-    .row().selection().checkboxType().checkAll().currentOnly(false)
+    // .row().selection().checkboxType().checkAll().currentOnly(false)
 
-    .expand().width(100).title("展开行").render("{{ '我的名字是 is' + record.name }}")    
+    .expand().width(20).title("展开行").render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -52,8 +54,9 @@ const schema: Ref = ref({
     salary: new FormSchema().title("工资").width(100).right() 
         .inputNumber().placeholder("输入工资").clearable(false)
         .parse(),
-    address: new FormSchema().title("地址").width(200).center()
-        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
+    address: new FormSchema().title("地址").width(250).center()
+        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
+        .cell().ellipsis().tooltip().width(50) // width会覆盖前面的
         .parse(),
     province: new FormSchema().width(100).title("省份")
         .select(['北京', '四川', '广东']) // 下拉框选项

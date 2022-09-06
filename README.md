@@ -67,9 +67,19 @@ const options = ref(
 ```js
 const options = ref(
     new CrudOptions()
-        .expand().width(100).title("展开行").render("{{ '我的名字是 is' + record.name }}") 
+        .expand().width(20).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
     .parse()
 )
+```
+
+- 文本省略和提示
+
+```js
+const schema: Ref = ref({
+    address: new FormSchema()
+        .cell().ellipsis().tooltip().width(50)
+        .parse(),
+})
 ```
 
 - 自定义操作列
