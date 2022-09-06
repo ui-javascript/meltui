@@ -67,7 +67,7 @@ const options = ref(
 ```js
 const options = ref(
     new CrudOptions()
-        .row().expand().width(20).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
+        .row().expand().width(50).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
     .parse()
 )
 ```
