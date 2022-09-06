@@ -24,9 +24,11 @@ export class FormSchema {
     }
 
 
-    title(title: string) {
+    title(title?: string) {
         // this.context = "title"
-        set(this.json, 'title.name', title)
+        if (title) {
+            set(this.json, 'title.name', title)
+        }
         return this
     }
 

@@ -58,7 +58,7 @@ const options = ref(
     new CrudOptions()
         // .row().selection().radioType() // 单选
         .row().selection().checkboxType().checkAll().currentOnly(false) // 复选
-    .parse()
+        .parse()
 )
 ```
 
@@ -68,7 +68,7 @@ const options = ref(
 const options = ref(
     new CrudOptions()
         .row().expand().width(50).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
-    .parse()
+        .parse()
 )
 ```
 
@@ -82,13 +82,23 @@ const schema: Ref = ref({
 })
 ```
 
+- 调整列宽
+
+```js 
+const options = ref(
+    new CrudOptions()
+        .column().resizable()
+        .parse()
+)
+```
+
 - 虚拟列表
 
 ```js
 const options = ref(
     new CrudOptions()
         .body().virtualList().height(300)
-    .parse()
+        .parse()
 )
 ```
 

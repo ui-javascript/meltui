@@ -47,25 +47,30 @@ watch(() => editable.value, (current, prev) => {
 
 
 const schema: Ref = ref({
-    name: new FormSchema().upperFirst().width(100).left()
+    name: new FormSchema()
+        .title().upperFirst().width(100).left().format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         // .readonly()
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
-        .format("{{ '[No.' + rowIndex  + ']' + record.name }}")
+        .cell().ellipsis().tooltip().width(100) // width会覆盖前面的
         .parse(),
-    salary: new FormSchema().title("工资").width(100).right() 
+    salary: new FormSchema()
+        .title("工资").width(100).right() 
         .inputNumber().placeholder("输入工资").clearable(false)
         .parse(),
-    address: new FormSchema().title("地址").width(250).center()
+    address: new FormSchema()
+        .title("地址").width(250).center()
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
-        .cell().ellipsis().tooltip().width(250) // width会覆盖前面的
+        
         .parse(),
-    province: new FormSchema().width(100).title("省份")
-        .column().fixed().right()
+    province: new FormSchema()
+        .title("省份") // .width(100)
+        // .column().fixed().right()
         .select(['北京', '四川', '广东']) // 下拉框选项
         .parse(),
-    city: new FormSchema().title("城市").width(100)
-        .column().fixed().right()
+    city: new FormSchema()
+        .title("城市") // .width(100)
+        // .column().fixed().right()
         .select().keepWatch("province") // 联动
         .parse(),
 })
@@ -137,22 +142,6 @@ const pagination = ref({
     font-family: 微软雅黑, Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-.title {
-    margin: 0;
-    font-size: 32px;
-}
-
-.box {
-    // position: relative;
-    max-width: 80vw;
-    // max-height: 80vh;
-    // box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
-    margin: 0 auto 10vh;
-    // overflow-x: hidden;
-    padding: 10px 0;
-
 }
 
 ::-webkit-scrollbar-track {
