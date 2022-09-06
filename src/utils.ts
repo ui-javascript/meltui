@@ -3,11 +3,20 @@ export function _warn(...message: any) {
 }
 
 export const safeEval = (code: string) => {
-  debugger
+  
   return Function(`"use strict"; ${code}`)();
 }
 
 export const getEval = (string: string, record: {}, column: {}, rowIndex: number) => {
+  
+    if (string) {
+      if (string.includes("{{")) {
+        string = string.replace(/\{\{/g, "").replace(/\}\}/g, "")
+      } else {
+          string = "'" + string + "'"
+      }
+  }
+
   return safeEval(`
     const rowIndex = ${rowIndex};
     const column = ${JSON.stringify(column)};

@@ -1,6 +1,6 @@
 # meltui
 
-> 基于Arco和VXE的常规增删改查封装, 采用链式语法, 将JSONSchema改成ChainSchema
+> 基于Arco和VXE的增删改查简单封装, 采用链式语法, 将JSONSchema改成ChainSchema
 
 # API文档
 

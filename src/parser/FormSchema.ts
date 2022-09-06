@@ -3,6 +3,7 @@ import { merge, set, upperFirst, get } from "lodash"
 export class FormSchema {
     
     json = {}
+    
     context = ''
     
     constructor(json?: {}) {
@@ -10,7 +11,6 @@ export class FormSchema {
             this.json = merge(this.json, json)
         }
     }
-
 
     title(title: string) {
         // this.context = "title"
@@ -38,9 +38,15 @@ export class FormSchema {
         return this
     }
 
-    placeholder() {
+    placeholder(placeholder: string) {
         this.context = "widget"
-        set(this.json, 'widget.placeholder', 'input')
+        set(this.json, 'widget.placeholder', placeholder)
+        return this
+    }
+
+    clearable(clearable = true) {
+        this.context = "widget"
+        set(this.json, 'widget.clearable', clearable)
         return this
     }
 
@@ -51,6 +57,17 @@ export class FormSchema {
         return this
     }
 
+    inputNumber() {
+        this.context = "widget"
+        set(this.json, 'widget.type', 'inputNumber')
+        return this
+    }
+
+    textArea() {
+        this.context = "widget"
+        set(this.json, 'widget.type', 'textArea')
+        return this
+    }
 
     upperFirst() {
         set(this.json, 'title.upperFirst', true)
@@ -82,7 +99,6 @@ export class FormSchema {
     }
 
 
-
     editable(editable = true) {
         set(this.json, 'editable', editable)
         return this
@@ -93,6 +109,11 @@ export class FormSchema {
         return this
     }
 
+    /**
+     * 联动
+     * @param keepWatch 
+     * @returns 
+     */
     keepWatch(keepWatch: string) {
         set(this.json, 'widget.keepWatch', keepWatch)
         return this
