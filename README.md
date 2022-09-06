@@ -28,15 +28,16 @@ const options = new CrudOptions()
     .parse()
 
 const schema: Ref = ref({
-    name: new FormSchema().upperFirst().width(150).left()
-        .readonly()
-        .format("'(No.' + rowIndex  + ')' + record.name") // 自定义显示格式
+    name: new FormSchema().upperFirst().width(100).left()
+        // .readonly()
+        .input().placeholder("输入姓名")
+        .format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         .parse(),
-    salary: new FormSchema().title("工资").width(100).center()
-        .readonly()
+    salary: new FormSchema().title("工资").width(100).right() 
+        .inputNumber().placeholder("输入工资").clearable()
         .parse(),
-    address: new FormSchema().title("地址").width(100).right()
-        .readonly()
+    address: new FormSchema().title("地址").width(200).center()
+        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
         .parse(),
     province: new FormSchema().width(100).title("省份")
         .select(['北京', '四川', '广东']) // 下拉框选项

@@ -9,27 +9,27 @@ import { Ref } from 'vue';
 import { FormSchema } from './parser';
 
 const options = new CrudOptions()
-    .edit()
-    .hover() // .border(false).stripe(false)
+    .edit() // 编辑模式
+    .hover().border().stripe()
     .parse()
 
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(100).left()
         // .readonly()
-        .input().placeholder("请输入姓名")
-        .format("'[No.' + rowIndex  + ']' + record.name")
+        .input().placeholder("输入姓名")
+        .format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         .parse(),
     salary: new FormSchema().title("工资").width(100).right() 
-        .inputNumber()
+        .inputNumber().placeholder("输入工资").clearable()
         .parse(),
     address: new FormSchema().title("地址").width(200).center()
-        .textArea().clearable().placeholder(" {{ '请输入' + record.name + '的地址' }}")
+        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
         .parse(),
     province: new FormSchema().width(100).title("省份")
-        .select(['北京', '四川', '广东'])
+        .select(['北京', '四川', '广东']) // 下拉框选项
         .parse(),
     city: new FormSchema().title("城市").width(100)
-        .select().keepWatch("province")
+        .select().keepWatch("province") // 联动
         .parse(),
 })
 

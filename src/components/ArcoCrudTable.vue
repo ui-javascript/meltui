@@ -9,26 +9,27 @@
 
         <template #input="{ rowIndex, column, record }">
             <Input 
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex)"
+                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
                 :allow-clear="column.widget?.clearable"
-                v-model="props.data[rowIndex][column.dataIndex]" 
+                v-model="record[column.dataIndex]" 
             />
         </template>
 
         <template #inputNumber="{ rowIndex, column, record }">
             <InputNumber 
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex)"
+                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
                 :allow-clear="column.widget?.clearable"
-                v-model="props.data[rowIndex][column.dataIndex]" 
+                v-model="record[column.dataIndex]" 
             />
         </template>
 
         <template #textArea="{ rowIndex, column, record }">
             <!-- {{ column }} -->
             <Textarea 
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex)"
+                auto-size
+                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
                 :allow-clear="column.widget?.clearable"
-                v-model="props.data[rowIndex][column.dataIndex]"
+                v-model="record[column.dataIndex]"
             />
         </template>
 
