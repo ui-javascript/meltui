@@ -3,7 +3,7 @@ export function _warn(...message: any) {
 }
 
 export const safeEval = (code: string) => {
-  console.log("最后输出" + code)
+  // console.log("最后输出" + code)
   return Function(`"use strict"; ${code}`)();
 }
 

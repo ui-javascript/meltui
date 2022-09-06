@@ -1,5 +1,16 @@
 <template>
-    <ArcoCrudTable style="padding: 20px" :data="data" :options="options" :schema="schema" />
+    <div style="padding: 20px">
+        <Switch type="round" v-model="editable">
+            <template #checked>
+                编辑模式
+            </template>
+            <template #unchecked>
+                只读模式
+            </template>
+        </Switch>
+
+        <ArcoCrudTable :key="editable + ''" class="mt-2" :data="data" :options="options" :schema="schema" />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -8,10 +19,19 @@ import { CrudOptions } from '@/parser/CrudOptions';
 import { Ref } from 'vue';
 import { FormSchema } from './parser';
 
-const options = new CrudOptions()
-    .edit() // 编辑模式
+const editable = ref(false)
+
+const options = ref(new CrudOptions()
+    .edit(editable.value) // 编辑模式
     .hover().border().stripe()
-    .parse()
+    .parse())
+
+watch(() => editable.value, (current, prev) => {    
+    // console.log(current, prev)
+    // console.log(new CrudOptions(options.value).edit(current).parse())
+    options.value = new CrudOptions(options.value).edit(current).parse()
+})    
+
 
 const schema: Ref = ref({
     name: new FormSchema().upperFirst().width(100).left()
@@ -33,7 +53,7 @@ const schema: Ref = ref({
         .parse(),
 })
 
-schema.value.name = new FormSchema(schema.value.name).title("姓名").parse()
+// schema.value.name = new FormSchema(schema.value.name).title("姓名").parse()
 
 const data = reactive([
     {
