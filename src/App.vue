@@ -37,6 +37,7 @@ const options = ref(new CrudOptions()
     // .body().virtualList().height(300)
     .body().scroll().x(1500)
     .column().resizable()
+    .viewOperation()
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -52,7 +53,7 @@ const schema: Ref = ref({
         // .readonly()
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
-        .cell().ellipsis().tooltip().width(100) // width会覆盖前面的
+        .cell().ellipsis().tooltip().width(150) // width会覆盖前面的
         .parse(),
     salary: new FormSchema()
         .title("工资").width(150) // .left() 
@@ -62,7 +63,7 @@ const schema: Ref = ref({
         .parse(),
     address: new FormSchema()
         .title("地址").width(250).center()
-        // .filterable().eq("北京海淀知春路").render("{{ record.address === value`  }}") // @todo
+        // .filterable().eq("北京海淀知春路").render(`{{ record.address === value }}`) // @tofix
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
         .parse(),
     province: new FormSchema()

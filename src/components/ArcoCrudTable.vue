@@ -59,6 +59,15 @@
             {{ getEval(column.format, record, column, rowIndex) }}
         </template>
 
+        <template #operationList="{ record }">
+            
+    
+            <Component :is="item.type" 
+                v-for="item in props.options.operation.operationList" 
+                @click="$modal.info({ title:'Name', content: record.name })">{{item.title}}</Component>
+    
+        </template>
+
     </Table>
 
 </template>
@@ -190,6 +199,14 @@ onMounted(() => {
         })
 
     })
+
+    let operationList = get(props.options, "operation.operationList")
+    if (operationList && Object.keys(operationList).length > 0) {
+        columns.value.push({
+            title: '操作栏',
+            slotName: 'operationList'
+        })
+    }
 })
 
 

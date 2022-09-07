@@ -1,4 +1,4 @@
-import { merge, set } from "lodash"
+import { merge, set, get } from "lodash"
 
 export class CrudOptions {
 
@@ -42,7 +42,7 @@ export class CrudOptions {
 
     virtualList() {
         this.context = "body.virtualList"
-        // set(this.json, "row.expand", {})
+        set(this.json, "row.expand", false)
         set(this.json, "pagination", false)
         return this
     }
@@ -114,6 +114,26 @@ export class CrudOptions {
 
     currentOnly(currentOnly = true) {
         set(this.json, "row.selection.currentOnly", currentOnly)
+        return this
+    }
+
+    operation(currentOnly = true) {
+        this.context = "operation"
+        return this
+    }
+
+    viewOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "operation.view"
+        const op = get(this.json, "operation.operationList") || {}
+        op.view = {
+            type: 'Button',
+            title: "查看"
+        }
+        set(this.json, "operation.operationList", op)
+
         return this
     }
 
