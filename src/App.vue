@@ -47,14 +47,15 @@ let options = ref(new CrudOptions()
     // .header().visible(false) // 不显示表头
     // .row().hover().border().stripe()
     // .row().selection().radioType()
-    .layout().inline().cols(8)
+    .layout().inline().cols(12)
     .search(true)
     .row().selection().checkboxType().checkAll().currentOnly(false)
-    .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
     // .body().scroll().x(1500)
     .column().resizable()
     .viewOperation().clickEmit("showItem")
+    .deleteOperation()
     .parse())
 
 watch(() => editable.value, (current, prev) => {    

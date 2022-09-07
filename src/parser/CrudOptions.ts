@@ -162,6 +162,22 @@ export class CrudOptions {
         return this
     }
 
+    deleteOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "operation.delete"
+        const op = get(this.json, "operation.operationList") || {}
+        op.delete = {
+            type: 'Button',
+            title: "删除",
+            status: "danger"
+        }
+        set(this.json, "operation.operationList", op)
+
+        return this
+    }
+
     clickEmit(eventName: string) {
         if (this.context === "operation.view") {
             const op = get(this.json, "operation.operationList") || {}
