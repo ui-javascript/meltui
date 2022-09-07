@@ -92,15 +92,6 @@ const options = ref(
 )
 ```
 
-- 虚拟列表
-
-```js
-const options = ref(
-    new CrudOptions()
-        .body().virtualList().height(300)
-        .parse()
-)
-```
 
 - 排序筛选
 
@@ -113,7 +104,32 @@ const schema: Ref = ref({
 })
 ```
 
+- 单元格合并
+
+- 调整列宽
+
+```js
+const options = ref(
+    new CrudOptions()
+        .column().resizable()
+        .parse()
+)
+```
+
+- 分组表头
+
 - 自定义操作列
+
+
+- 虚拟列表
+
+```js
+const options = ref(
+    new CrudOptions()
+        .body().virtualList().height(300)
+        .parse()
+)
+```
 
 ---
 
