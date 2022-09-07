@@ -1,5 +1,6 @@
 <template>
     <Table 
+        :key="props.options.edit + '_'" 
         @change="handleTableChange"
         :hoverable="props.options?.row?.hover"
         :bordered="get(props.options, 'row.border')"

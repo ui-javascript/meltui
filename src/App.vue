@@ -10,7 +10,6 @@
         </Switch>
 
         <ArcoCrudTable 
-            :key="editable + '_'" 
             @showItem="showItem"
             class="mt-2" 
             :data="data" 
@@ -20,7 +19,6 @@
         />
 
         <ArcoCrudForm 
-            :key="editable + '_'" 
             :data="data[0]" 
             :options="options" 
             :schema="schema" 

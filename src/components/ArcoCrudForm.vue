@@ -1,5 +1,5 @@
 <template>
-    <Form>
+    <Form :key="props.options.edit + '_'" >
         <FormItem v-for="column in columns" :field="column.dataIndex" :label="column.title">
             <Component 
                 v-if="props.options.edit"
