@@ -66,12 +66,12 @@ onMounted(() => {
 
         let format = get(formSchema, "widget.format")
 
-        let filterRender = get(formSchema, "filterable.render")
-        if (filterRender) {
-            set(formSchema, "filterable.filter", (value, record) => {
-                return getEval2(filterRender, value, record)
-            })
-        }
+        // let filterRender = get(formSchema, "filterable.render")
+        // if (filterRender) {
+        //     set(formSchema, "filterable.filter", (value, record) => {
+        //         return getEval2(filterRender, value, record)
+        //     })
+        // }
 
         // const filter = get(formSchema, "filterable")
         // console.log("filter")
