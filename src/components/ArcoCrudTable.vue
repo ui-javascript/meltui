@@ -1,6 +1,5 @@
 <template>
     <Table 
-        :key="props.options.edit + '_'" 
         @change="handleTableChange"
         :hoverable="props.options?.row?.hover"
         :bordered="get(props.options, 'row.border')"
@@ -126,25 +125,34 @@ const props = defineProps({
 
 
 const columns = ref([]);
-
 const selectOptions = ref({})
-
 const keepWatchDeps = ref({})
 
 let expandable = false
 let expandRender = get(props.options, "row.expand")
 
-if (expandRender && expandRender.render) {
-    expandable = merge(expandRender, {
-      expandedRowRender: (record) => {
-        return getEval(expandRender.render, record, {}, null)
-      }
-    })
+const init = () => {
+    debugger
 
-    console.log("展开")
-    console.log(expandable)
+    columns.value = []
+    selectOptions.value = {}
+    keepWatchDeps.value = {}
+
+    expandable = false
+    expandRender = get(props.options, "row.expand")
+
+    if (expandRender && expandRender.render) {
+        expandable = merge(expandRender, {
+        expandedRowRender: 
+            (record) => {
+                return getEval(expandRender.render, record, {}, null)
+            }
+        })
+
+        console.log("展开")
+        console.log(expandable)
+    }
 }
-
 
 const getWidgetType = (formSchema) => {
     const widget = get(formSchema, "widget.type")
@@ -161,7 +169,11 @@ const getWidgetType = (formSchema) => {
     return 'Input' 
 }
 
+
+
 onMounted(() => {
+
+    init()    
 
     Object.keys(props.schema).forEach(key => {
         let formSchema = props.schema[key]

@@ -14,16 +14,16 @@
             class="mt-2" 
             :data="data" 
             :pagination="pagination"
-            :options="options" 
-            :schema="schema" 
+            v-model:options="options" 
+            v-model:schema="schema" 
         />
 
-        <ArcoCrudForm 
+        <!-- <ArcoCrudForm 
             :data="data[0]" 
             :options="options" 
             :schema="schema" 
             :style="{width: '600px'}"
-        />
+        /> -->
 
     </div>
 </template>
@@ -36,7 +36,7 @@ import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
 import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
-const editable = ref(true)
+const editable = ref(false)
 
 const options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
@@ -52,9 +52,16 @@ const options = ref(new CrudOptions()
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
+
     // console.log(current, prev)
     // console.log(new CrudOptions(options.value).edit(current).parse())
     options.value = new CrudOptions(options.value).edit(current).parse()
+
+    console.log("更新")
+    console.log(JSON.stringify(options.value))
+
+}, {
+    // deep: true
 })    
 
 

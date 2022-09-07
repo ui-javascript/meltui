@@ -1,5 +1,5 @@
 <template>
-    <Form :key="props.options.edit + '_'" >
+    <Form>
         <FormItem v-for="column in columns" :field="column.dataIndex" :label="column.title">
             <Component 
                 v-if="props.options.edit"
@@ -45,12 +45,16 @@ const props = defineProps({
 })
 
 const columns = ref([]);
+const selectOptions = ref({})
+
+const init = () => {
+    columns.value = []
+    selectOptions.value = []
+}
 
 onMounted(() => {
 
-    const selectOptions = ref({
-
-    })
+    init()
 
     Object.keys(props.schema).forEach(key => {
         let formSchema = props.schema[key]
