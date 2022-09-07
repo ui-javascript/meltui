@@ -35,7 +35,7 @@ const options = ref(new CrudOptions()
     .row().hover().border().stripe()
     // .row().selection().radioType()
     .row().selection().checkboxType().checkAll().currentOnly(false)
-    .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    // .row().expand().width(50).title('展开行').filter("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
     .body().scroll().x(1500)
     // .column().resizable()
@@ -52,7 +52,7 @@ watch(() => editable.value, (current, prev) => {
 const schema: Ref = ref({
     name: new FormSchema()
         .title().upperFirst().width(200).left().format("{{ '[No.' + rowIndex  + ']' + record.name }}")
-        // .readonly()
+        .readonly()
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
         .cell().ellipsis().tooltip().width(150) // width会覆盖前面的
@@ -61,11 +61,11 @@ const schema: Ref = ref({
         .title("工资").width(150) // .left() 
         .inputNumber().placeholder("输入工资").clearable(false)
         .sortable().asc().desc()
-        .filterable().gt(10000).gt(20000).gt(100000).render("{{ record.salary > value }}")
+        .filterable().gt(10000).gt(20000).gt(100000).filter("{{ record.salary > value }}")
         .parse(),
     address: new FormSchema()
         .title("地址").width(250).center()
-        // .filterable().eq("北京海淀知春路").render(`{{ record.address === value }}`) // @tofix
+        .filterable().eq("北京海淀知春路").eq("35 Park Road, London").filter(`{{ record.address === value[0] }}`) // @tofix
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
         .parse(),
     province: new FormSchema()

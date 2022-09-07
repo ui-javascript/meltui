@@ -177,7 +177,7 @@ export class FormSchema {
         return this
     }
 
-    render(render: string) {
+    filter(render: string) {
         if (this.context === "filterable") {
             set(this.json, "filterable.render", render)
         }

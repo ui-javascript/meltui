@@ -25,10 +25,8 @@ export const getEval = (string: string, record: {}, column: {}, rowIndex: number
   `);  
 }
 
-export const getEval2 = (string: string, value: number, record: {}) => {
-  
-  debugger
-  
+export const getEval2 = (string: string, value: string, record: {}) => {
+    
   if (string) {
       if (string.includes("{{")) {
         string = string.replace(/\{\{/g, "").replace(/\}\}/g, "")
@@ -39,7 +37,7 @@ export const getEval2 = (string: string, value: number, record: {}) => {
 
   debugger
   return safeEval(`
-    const value = ${value};
+    const value = ${JSON.stringify(value)};
     const record = ${JSON.stringify(record)};
     return (${string})
   `);  

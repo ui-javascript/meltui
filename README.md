@@ -99,7 +99,7 @@ const options = ref(
 const schema: Ref = ref({
     salary: new FormSchema()
         .sortable().asc().desc() // 排序
-        .filterable().gt(10000).gt(20000).gt(100000).render("{{ record.salary > value }}") // 筛选
+        .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}") // 筛选
         .parse(),
 })
 ```
