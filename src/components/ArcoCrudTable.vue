@@ -128,8 +128,8 @@ const columns = ref([]);
 const selectOptions = ref({})
 const keepWatchDeps = ref({})
 
-let expandable = false
-let expandRender = get(props.options, "row.expand")
+let expandable = ref({})
+let expandRender = ref()
 
 const init = () => {
     debugger
@@ -138,26 +138,26 @@ const init = () => {
     selectOptions.value = {}
     keepWatchDeps.value = {}
 
-    expandable = false
-    expandRender = get(props.options, "row.expand")
+    expandable.value = {}
+    expandRender.value = get(props.options, "row.expand")
 
-    if (expandRender && expandRender.render) {
-        expandable = merge(expandRender, {
-        expandedRowRender: 
-            (record) => {
-                return getEval(expandRender.render, record, {}, null)
-            }
-        })
+    if (expandRender.value && expandRender.value.render) {
+        expandable.value = merge(expandRender.value, {
+            expandedRowRender: 
+                (record) => {
+                    return getEval(expandRender.value.render, record, {}, null)
+                }
+            })
 
         console.log("展开")
-        console.log(expandable)
+        console.log(expandable.value)
     }
 }
 
 const getWidgetType = (formSchema) => {
     const widget = get(formSchema, "widget.type")
     const keepWatch = get(formSchema, "widget.keepWatch")
-    
+
     if (widget) {
         if (keepWatch) {
             return widget + 'Cascader'
@@ -168,8 +168,6 @@ const getWidgetType = (formSchema) => {
 
     return 'Input' 
 }
-
-
 
 onMounted(() => {
 

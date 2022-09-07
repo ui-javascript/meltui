@@ -10,20 +10,22 @@
         </Switch>
 
         <ArcoCrudTable 
+            :key="editable + '_'"
             @showItem="showItem"
             class="mt-2" 
             :data="data" 
             :pagination="pagination"
-            v-model:options="options" 
-            v-model:schema="schema" 
+            :options="options" 
+            :schema="schema" 
         />
 
-        <!-- <ArcoCrudForm 
+        <ArcoCrudForm 
+            class="mt-2" 
+            :style="{width: '600px'}"
             :data="data[0]" 
             :options="options" 
             :schema="schema" 
-            :style="{width: '600px'}"
-        /> -->
+        />
 
     </div>
 </template>
@@ -32,36 +34,35 @@
 
 import { CrudOptions } from '@/parser/CrudOptions';
 import { Ref } from 'vue';
+import { get } from 'lodash';
 import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
 import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
-const editable = ref(false)
+const editable = ref(true)
 
-const options = ref(new CrudOptions()
+let options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
     // .header().visible(false) // 不显示表头
-    .row().hover().border().stripe()
+    // .row().hover().border().stripe()
     // .row().selection().radioType()
     .row().selection().checkboxType().checkAll().currentOnly(false)
-    .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
-    .body().scroll().x(1500)
+    // .body().scroll().x(1500)
     .column().resizable()
     .viewOperation().clickEmit("showItem")
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
-
     // console.log(current, prev)
     // console.log(new CrudOptions(options.value).edit(current).parse())
     options.value = new CrudOptions(options.value).edit(current).parse()
 
-    console.log("更新")
-    console.log(JSON.stringify(options.value))
-
+    // console.log("更新")
+    // console.log(JSON.stringify(options.value))
 }, {
-    // deep: true
+    deep: true
 })    
 
 
