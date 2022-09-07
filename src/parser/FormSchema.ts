@@ -53,8 +53,13 @@ export class FormSchema {
     }
 
     placeholder(placeholder: string) {
-        this.context = "widget"
-        set(this.json, 'widget.placeholder', placeholder)
+        
+        if (this.context === "widget") {
+            set(this.json, 'widget.placeholder', placeholder)
+        }
+        if (this.context === "searchable") {
+            set(this.json, 'searchable.placeholder', placeholder)
+        }
         return this
     }
 
@@ -229,6 +234,21 @@ export class FormSchema {
         }
         return this
     }
+
+    
+    searchable() {
+        this.context = "searchable"
+        set(this.json, 'searchable', {})
+        return this
+    }
+
+    advandedOnly(enabled = true) {
+        if (this.context === "searchable") {
+            set(this.json, 'searchable.advancedOnly', enabled)
+        }
+        return this
+    }
+
 
     cell() {
         this.context = "cell"

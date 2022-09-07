@@ -9,6 +9,7 @@
             </template>
         </Switch>
 
+ 
         <ArcoCrudTable 
             :key="editable + '_'"
             @showItem="showItem"
@@ -19,13 +20,13 @@
             :schema="schema" 
         />
 
-        <ArcoCrudForm 
+        <!-- <ArcoCrudForm 
             class="mt-2" 
-            :style="{width: '600px'}"
             :data="data[0]" 
             :options="options" 
             :schema="schema" 
-        />
+        /> -->
+
 
     </div>
 </template>
@@ -46,6 +47,8 @@ let options = ref(new CrudOptions()
     // .header().visible(false) // 不显示表头
     // .row().hover().border().stripe()
     // .row().selection().radioType()
+    .layout().inline().cols(8)
+    .search(true)
     .row().selection().checkboxType().checkAll().currentOnly(false)
     .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
@@ -73,6 +76,7 @@ const schema: Ref = ref({
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
         .cell().ellipsis().tooltip().width(150) // width会覆盖前面的
+        .searchable() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
     salary: new FormSchema()
         .title("工资").width(150) // .left() 
@@ -82,6 +86,7 @@ const schema: Ref = ref({
             // })
         .sortable().asc().desc()
         .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
+        .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
     address: new FormSchema()
         .title("地址").width(250).center()
@@ -90,6 +95,7 @@ const schema: Ref = ref({
                 .props({
                     autoSize: true
                 })
+        .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
     province: new FormSchema()
         .title("省份") // .width(100)
@@ -168,7 +174,10 @@ for (let i = 10; i < 1000; i++) {
 }
 
 const pagination = ref({
-    pageSize: 5
+    pageSize: 5,
+    showTotal: true, 
+    showJumper: true, 
+    showPageSize: true
 })
 
 const showItem = (argv: any) => {

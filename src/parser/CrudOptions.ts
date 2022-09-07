@@ -19,6 +19,24 @@ export class CrudOptions {
         return this
     }
 
+    layout() {
+        this.context = "layout"
+        return this
+    }
+
+    inline() {
+        if (this.context === "layout") {
+            set(this.json, "layout.type", "inline")
+        }
+        return this
+    }
+
+    cols(num: number) {
+        if (this.context = "layout") {
+            set(this.json, "layout.cols", num)
+        }
+        return this
+    }
 
     header(visible = true) {
         this.context = "header"
@@ -38,6 +56,12 @@ export class CrudOptions {
 
     body() {
         this.context = "body"
+        return this
+    }
+
+    search(enabled = true) {
+        this.context = "search"
+        set(this.json, "search", enabled)
         return this
     }
 

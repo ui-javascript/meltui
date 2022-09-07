@@ -146,6 +146,19 @@ const showItem = (argv) => {
 }
 ```
 
+- 高级查询
+
+```js
+const schema: Ref = ref({
+    name: new FormSchema()
+        .searchable()
+        .parse(),
+    salary: new FormSchema()
+        .searchable().advancedOnly() // 仅在高级查询中显示
+        .parse(),  
+})
+```
+
 - 虚拟列表
 
 ```js

@@ -1,6 +1,8 @@
 <template>
-    <Form v-model="props.data">
-        <FormItem v-for="column in columns" :field="column.dataIndex" :label="column.title">
+    <Form auto-label-width v-model="props.data" :layout="get(props.options, 'layout.type')">
+        <Row>
+            <Col :span="get(props.options, 'layout.cols')" v-for="column in columns" >
+        <FormItem :field="column.dataIndex" :label="column.title">
             <Component 
                 v-if="props.options.edit"
                 :is="column.widget.type" 
@@ -17,6 +19,18 @@
                 {{ props.data[column.dataIndex] }}
             </span>
         </FormItem>
+        </Col>
+
+        
+        <Col :span="get(props.options, 'layout.cols')">
+            <Space>
+                <Button type="primary">查询</Button>
+                <Button>重置</Button>
+            </Space>
+        </Col>
+        </Row>
+
+
 
         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
     </Form>

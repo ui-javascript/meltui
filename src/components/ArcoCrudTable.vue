@@ -1,4 +1,86 @@
 <template>
+    <div>
+        <Divider />
+
+        <Row class="mb-1">
+
+    <Form :layout="get(props.options, 'layout.type')">
+            <Col :span="get(props.options, 'layout.cols')"  v-for="column in columns" >
+                <!-- &&   -->
+                <FormItem 
+                    v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
+                    :field="column.dataIndex" :label="column.title">
+                    <!-- &&  -->
+                    <Component 
+                        v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
+                    :is="column.widget?.type || 'Input'" 
+                    v-model="keyword[column.dataIndex]" 
+                @change="handleKeepWatchDeps(column, props.data)" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || '请输入' + column.title, 
+                    ...get(column.formSchema, 'widget.props'),
+                    options: column.keepWatch ? selectOptions[props.data[column.keepWatch]] : selectOptions[column.dataIndex],
+               }"
+            /></FormItem>
+        </Col>
+
+
+    
+        <!-- {{ JSON.stringify(props.data, null, 2) }} -->
+    </Form>
+</Row>
+
+<Divider />
+
+<Row :gutter="12">
+    <Col :span="12" align="left">
+        <Space>
+            <Button type="primary">
+                <IconPlus class="cursor-pointer" />
+                新增
+            </Button>
+            <Button status="danger" v-if="selectedKeys.length > 0">
+                <IconDelete class="cursor-pointer" />
+                批量删除
+            </Button>
+        </Space>
+    </Col>
+
+
+    <Col :span="12" align="right">
+        <Space>
+
+            <!-- <Divider direction="vertical" /> -->
+
+            <ButtonGroup>
+                <Button status="success" type="primary" >
+                    <template #icon>
+                        <IconSearch />
+                    </template>
+                    查询
+                </Button>
+                <Button type="primary" @click="advancedSearch = !advancedSearch">
+                    <template  #icon>
+                        <IconUp v-if="advancedSearch" />
+                        <IconDown v-else /> 
+                    </template>
+                    {{ advancedSearch ? '普通查询' : '高级查询' }}
+                </Button>
+                <Button status="warning" type="primary"  @click="keyword = {}">
+                    <template #icon>
+                        <IconCloseCircle />
+                    </template>
+                    重置
+                </Button>
+            </ButtonGroup>
+        </Space>
+    </Col>
+
+</Row>
+
+<Divider />
+
     <Table 
         @change="handleTableChange"
         :hoverable="props.options?.row?.hover"
@@ -12,6 +94,7 @@
         :show-header="get(props.options, 'header.visible')"
         :scroll="get(props.options, 'body.scroll')"
         :row-selection="get(props.options, 'row.selection')"
+        v-model:selectedKeys="selectedKeys"
         :data="props.data">
 
         <template #input="{ rowIndex, column, record }">
@@ -92,6 +175,7 @@
         </template>
 
     </Table>
+    </div>
 
 </template>
 
@@ -99,6 +183,8 @@
 
 import { getEval, getEval2 } from "@/utils";
 import { get, merge, set, upperFirst } from "lodash"
+
+import { IconRefresh, IconSearch, IconPlus, IconCloseCircle, IconDelete, IconUp, IconDown } from "@arco-design/web-vue/es/icon"
 
 const props = defineProps({
     data: {
@@ -124,6 +210,9 @@ const props = defineProps({
 })
 
 
+const selectedKeys = ref([]);
+const keyword = ref({})
+const advancedSearch = ref(false)
 const columns = ref([]);
 const selectOptions = ref({})
 const keepWatchDeps = ref({})
@@ -239,6 +328,9 @@ onMounted(() => {
 
     console.log("columns: ")
     console.log(JSON.stringify(columns.value))
+
+    console.log("options: ")
+    console.log(JSON.stringify(props.options))
 
 })
 
