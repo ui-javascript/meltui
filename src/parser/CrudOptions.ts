@@ -80,6 +80,48 @@ export class CrudOptions {
     }
 
 
+    size(size?: 'mini' | 'small' | 'medium' | 'large') {
+        this.context = "size"
+        if (size) {
+            set(this.json, "size", size)
+        }
+        return this
+    }
+
+
+    mini() {
+        if (this.context = "size") {
+            set(this.json, "size", "mini")
+        }
+        
+        return this
+    }
+
+    small() {
+        if (this.context = "size") {
+            set(this.json, "size", "small")
+        }
+        
+        return this
+    }
+
+    medium() {
+        if (this.context = "size") {
+            set(this.json, "size", "medium")
+        }
+        
+        return this
+    }
+    large() {
+        if (this.context = "size") {
+            set(this.json, "size", "large")
+        }
+        
+        return this
+    }
+
+    
+
     column() {
         this.context = "column"
         return this

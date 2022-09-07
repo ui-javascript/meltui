@@ -1,17 +1,30 @@
 <template>
     <div style="padding: 20px">
-        <Switch type="round" v-model="editable">
-            <template #checked>
-                编辑模式
-            </template>
-            <template #unchecked>
-                只读模式
-            </template>
-        </Switch>
+        <Space>
+            <Switch type="round" v-model="editable">
+                <template #checked>
+                    编辑模式
+                </template>
+                <template #unchecked>
+                    只读模式
+                </template>
+            </Switch>
+
+            <Switch type="round" v-model="searchable">
+                <template #checked>
+                    搜索模式
+                </template>
+                <template #unchecked>
+                    普通模式
+                </template>
+            </Switch>
+        </Space>
 
  
+        <Divider />
+        
         <ArcoCrudTable 
-            :key="editable + '_'"
+            :key="editable + '_' + searchable"
             @showItem="showItem"
             class="mt-2" 
             :data="data" 
@@ -40,15 +53,17 @@ import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
 import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
-const editable = ref(true)
+const editable = ref(false)
+const searchable = ref(false)
 
 let options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
     // .header().visible(false) // 不显示表头
     // .row().hover().border().stripe()
     // .row().selection().radioType()
-    .layout().inline().cols(12)
-    .search(true)
+    // .size().large()
+    .layout().inline().cols(24)
+    .search(searchable.value)
     .row().selection().checkboxType().checkAll().currentOnly(false)
     // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
@@ -69,6 +84,16 @@ watch(() => editable.value, (current, prev) => {
     deep: true
 })    
 
+watch(() => searchable.value, (current, prev) => {    
+    // console.log(current, prev)
+    // console.log(new CrudOptions(options.value).edit(current).parse())
+    options.value = new CrudOptions(options.value).search(current).parse()
+
+    // console.log("更新")
+    // console.log(JSON.stringify(options.value))
+}, {
+    deep: true
+})    
 
 const schema: Ref = ref({
     name: new FormSchema()
@@ -79,6 +104,7 @@ const schema: Ref = ref({
         .cell().ellipsis().tooltip().width(150) // width会覆盖前面的
         .searchable() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
+
     salary: new FormSchema()
         .title("工资").width(150) // .left() 
         .inputNumber().placeholder("输入工资").clearable(false)
@@ -89,6 +115,7 @@ const schema: Ref = ref({
         .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
         .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
+   
     address: new FormSchema()
         .title("地址").width(250).center()
         .filterable().eq("北京海淀知春路").eq("35 Park Road, London").filter(`{{ record.address === value[0] }}`) // @tofix
@@ -98,6 +125,7 @@ const schema: Ref = ref({
                 })
         .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
+
     province: new FormSchema()
         .title("省份") // .width(100)
         // .column().fixed().right()
@@ -112,6 +140,7 @@ const schema: Ref = ref({
         //     allowClear: true
         // })
         .parse(),
+
     city: new FormSchema()
         .title("城市") // .width(100)
         // .column().fixed().right()
@@ -177,8 +206,8 @@ for (let i = 10; i < 1000; i++) {
 const pagination = ref({
     pageSize: 5,
     showTotal: true, 
-    showJumper: true, 
-    showPageSize: true
+    // showJumper: true, 
+    // showPageSize: true
 })
 
 const showItem = (argv: any) => {

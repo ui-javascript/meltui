@@ -1,14 +1,13 @@
 <template>
     <div>
-        <Divider />
 
-        <Row class="mb-1">
+        <Row class="mb-1" v-if="get(props.options, 'search')">
             <Col flex="auto">
                 <Row>
                     <Form :layout="get(props.options, 'layout.type')">
                         <Col :span="get(props.options, 'layout.cols')" v-for="column in columns">
                         <FormItem
-                            v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
+                            v-if="get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
                             :field="column.dataIndex" :label="column.title">
                             <Component
                                 v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
@@ -35,7 +34,6 @@
             <Col flex="50px">
                 <Space direction="vertical">
     
-
                     <Button status="success" type="primary">
                         <template #icon>
                             <IconSearch />
@@ -62,7 +60,7 @@
             </Col>
         </Row>
 
-        <Divider />
+        <Divider v-if="get(props.options, 'search')" />
 
         <Row :gutter="12" class="mb-2">
             <Col :span="12" align="left">
@@ -98,7 +96,9 @@
 
         <!-- <Divider /> -->
 
-        <Table @change="handleTableChange" :hoverable="props.options?.row?.hover"
+        <Table 
+            :size="get(props.options, 'size')"
+            @change="handleTableChange" :hoverable="props.options?.row?.hover"
             :bordered="get(props.options, 'row.border')" :stripe="props.options?.row?.stripe" :columns="columns"
             :expandable="expandable" :column-resizable="get(props.options, 'column.resizable')"
             :virtual-list-props="get(props.options, 'body.virtualList')"
