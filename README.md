@@ -24,10 +24,11 @@
 <script setup lang="ts">
 const options = new CrudOptions()
     .edit() // 编辑模式
+    .search() // 搜索模式
     .hover().border().stripe()
     .parse()
 
-const schema: Ref = ref({
+const schema = {
     name: new FormSchema().upperFirst().width(100).left()
         // .readonly()
         .input().placeholder("输入姓名")
@@ -52,7 +53,7 @@ const schema: Ref = ref({
     city: new FormSchema().title("城市").width(100)
         .select().keepWatch("province") // 联动
         .parse(),
-})
+}
 </script>
 ```
 
@@ -61,54 +62,48 @@ const schema: Ref = ref({
 - 行选择器
 
 ```js 
-const options = ref(
-    new CrudOptions()
-        // .row().selection().radioType() // 单选
-        .row().selection().checkboxType().checkAll().currentOnly(false) // 复选
-        .parse()
-)
+const options = new CrudOptions()
+    // .row().selection().radioType() // 单选
+    .row().selection().checkboxType().checkAll().currentOnly(false) // 复选
+    .parse()
 ```
 
 - 展开行
 
 ```js
-const options = ref(
-    new CrudOptions()
-        .row().expand().width(50).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
-        .parse()
-)
+const options = new CrudOptions()
+    .row().expand().width(50).title("展开行").render("{{ '我的名字是 ' + record.name }}") 
+    .parse()
 ```
 
 - 文本省略和提示
 
 ```js
-const schema: Ref = ref({
+const schema = {
     address: new FormSchema()
         .cell().ellipsis().tooltip().width(50)
         .parse(),
-})
+}
 ```
 
 - 调整列宽
 
 ```js 
-const options = ref(
-    new CrudOptions()
-        .column().resizable()
-        .parse()
-)
+const options = new CrudOptions()
+    .column().resizable()
+    .parse()
 ```
 
 
 - 排序筛选
 
 ```js
-const schema: Ref = ref({
+const schema = {
     salary: new FormSchema()
         .sortable().asc().desc() // 排序
         .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}") // 筛选
         .parse(),
-})
+}
 ```
 
 - 单元格合并
@@ -116,11 +111,9 @@ const schema: Ref = ref({
 - 调整列宽
 
 ```js
-const options = ref(
-    new CrudOptions()
-        .column().resizable()
-        .parse()
-)
+const options = new CrudOptions()
+    .column().resizable()
+    .parse()
 ```
 
 - 分组表头
@@ -128,11 +121,10 @@ const options = ref(
 - 自定义操作列
 
 ```js
-const options = ref(
-    new CrudOptions()
-        .viewOperation().clickEmit("showItem")
-        .parse()
-)
+const options = new CrudOptions()
+    .viewOperation().clickEmit("showItem")
+    // .deleteOperation()
+    .parse()
 
 ===
 <ArcoCrudTable 
@@ -149,24 +141,27 @@ const showItem = (argv) => {
 - 高级查询
 
 ```js
-const schema: Ref = ref({
+const options = new CrudOptions()
+    .search(true)
+    .parse()
+
+const schema = {
     name: new FormSchema()
         .searchable()
         .parse(),
+
     salary: new FormSchema()
         .searchable().advancedOnly() // 仅在高级查询中显示
         .parse(),  
-})
+}
 ```
 
 - 虚拟列表
 
 ```js
-const options = ref(
-    new CrudOptions()
-        .body().virtualList().height(300)
-        .parse()
-)
+const options = new CrudOptions()
+    .body().virtualList().height(300)
+    .parse()
 ```
 
 ---
