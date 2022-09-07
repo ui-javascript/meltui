@@ -120,6 +120,18 @@ const options = ref(
 
 - 自定义操作列
 
+```js
+const options = ref(
+    new CrudOptions()
+        .viewOperation().clickEmit("showItem")
+        .parse()
+)
+
+===
+<ArcoCrudTable 
+    @showItem="showItem"
+/>
+```
 
 - 虚拟列表
 

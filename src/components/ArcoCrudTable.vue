@@ -64,7 +64,7 @@
     
             <Component :is="item.type" 
                 v-for="item in props.options.operation.operationList" 
-                @click="$modal.info({ title:'Name', content: record.name })">{{item.title}}</Component>
+                @click="$emit(item.clickEmit, {record})">{{item.title}}</Component>
     
         </template>
 
@@ -200,8 +200,9 @@ onMounted(() => {
 
     })
 
+    let virtualList = get(props.options, "body.virtualList")
     let operationList = get(props.options, "operation.operationList")
-    if (operationList && Object.keys(operationList).length > 0) {
+    if (!virtualList && operationList && Object.keys(operationList).length > 0) {
         columns.value.push({
             title: '操作栏',
             slotName: 'operationList'

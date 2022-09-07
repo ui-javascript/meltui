@@ -10,6 +10,7 @@
         </Switch>
 
         <ArcoCrudTable 
+            @showItem="showItem"
             :key="editable + '_'" 
             class="mt-2" 
             :data="data" 
@@ -22,8 +23,9 @@
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
-import { Ref } from 'vue';
+import { Ref, getCurrentInstance } from 'vue';
 import { FormSchema } from './parser';
+import { Modal } from '@arco-design/web-vue';
 
 const editable = ref(false)
 
@@ -36,8 +38,8 @@ const options = ref(new CrudOptions()
     .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
     .body().scroll().x(1500)
-    .column().resizable()
-    .viewOperation()
+    // .column().resizable()
+    .viewOperation().clickEmit("showItem")
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -136,6 +138,16 @@ for (let i = 10; i < 1000; i++) {
 const pagination = ref({
     pageSize: 5
 })
+
+const showItem = (argv: any) => {
+    const { record } = argv
+    // getCurrentInstance()?.appContext.config.globalProperties.$modal.info({ title:'Name', content: record.name })
+
+    Modal.info({
+        title: 'Info Title',
+        content: JSON.stringify(record, null, 2)
+    });
+}
 
 </script>
     

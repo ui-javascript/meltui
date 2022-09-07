@@ -28,6 +28,10 @@ import '@arco-design/web-vue/dist/arco.css';
 // }
 
 const app = createApp(App);
+
+import { Modal } from '@arco-design/web-vue';
+Modal._context = app._context;
+
 // 加载UI
 // app.use(Antd);
 app.use(ArcoVue, {
@@ -35,3 +39,5 @@ app.use(ArcoVue, {
 });
 // app.use(useTable);
 app.mount('#app');
+
+

@@ -1,4 +1,5 @@
 import { merge, set, get } from "lodash"
+import { toHandlers } from "vue"
 
 export class CrudOptions {
 
@@ -134,6 +135,20 @@ export class CrudOptions {
         }
         set(this.json, "operation.operationList", op)
 
+        return this
+    }
+
+    clickEmit(eventName: string) {
+        if (this.context === "operation.view") {
+            const op = get(this.json, "operation.operationList") || {}
+            op.view = {
+                type: 'Button',
+                title: "查看",
+                clickEmit: eventName
+            }
+            set(this.json, "operation.operationList", op)
+        }
+        
         return this
     }
 
