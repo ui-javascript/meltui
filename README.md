@@ -131,6 +131,12 @@ const options = ref(
 <ArcoCrudTable 
     @showItem="showItem"
 />
+
+===
+const showItem = (argv) => {
+    const { record } = argv
+    Modal.info({ title: 'Info Title', content: JSON.stringify(record, null, 2)});
+}
 ```
 
 - 虚拟列表
