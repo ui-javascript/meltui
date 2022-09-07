@@ -5,8 +5,11 @@
                 v-if="props.options.edit"
                 :is="column.widget.type" 
                 v-model="props.data[column.dataIndex]" 
-                :placeholder="column.widget.placeholder" 
-                :property="column.widget"
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), props.data) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
             />
             <span v-else>
                 {{ props.data[column.dataIndex] }}
@@ -19,6 +22,7 @@
 
 <script setup name="ArcoCrudForm">
 
+import { getEval, getEval2 } from "@/utils";
 import {get, set, upperFirst, merge } from "lodash"
 
 const props = defineProps({

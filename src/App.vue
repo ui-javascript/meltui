@@ -69,6 +69,9 @@ const schema: Ref = ref({
     salary: new FormSchema()
         .title("工资").width(150) // .left() 
         .inputNumber().placeholder("输入工资").clearable(false)
+            // .props({
+            //     allowClear: true
+            // })
         .sortable().asc().desc()
         .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
         .parse(),
@@ -76,6 +79,9 @@ const schema: Ref = ref({
         .title("地址").width(250).center()
         .filterable().eq("北京海淀知春路").eq("35 Park Road, London").filter(`{{ record.address === value[0] }}`) // @tofix
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
+                .props({
+                    autoSize: true
+                })
         .parse(),
     province: new FormSchema()
         .title("省份") // .width(100)
@@ -87,6 +93,9 @@ const schema: Ref = ref({
             '四川': ['成都', '绵阳'],
             '广东': ['广州', '深圳']
         })
+        // .props({
+        //     allowClear: true
+        // })
         .parse(),
     city: new FormSchema()
         .title("城市") // .width(100)

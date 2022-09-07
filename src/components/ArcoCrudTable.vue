@@ -17,27 +17,36 @@
 
         <template #input="{ rowIndex, column, record }">
             <Input 
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
-                :allow-clear="column.widget?.clearable"
                 v-model="record[column.dataIndex]" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
             />
         </template>
 
         <template #InputNumber="{ rowIndex, column, record }">
             <InputNumber 
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
-                :allow-clear="column.widget?.clearable"
+    
                 v-model="record[column.dataIndex]" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
             />
         </template>
 
         <template #Textarea="{ rowIndex, column, record }">
             <!-- {{ column }} -->
             <Textarea 
-                auto-size
-                :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
-                :allow-clear="column.widget?.clearable"
                 v-model="record[column.dataIndex]"
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
             />
         </template>
 
@@ -47,22 +56,39 @@
             <Select 
                 :options="selectOptions[column.dataIndex] || []" 
                 @change="handleKeepWatchDeps(column, record)" 
-                v-model="record[column.dataIndex]" />
+                v-model="record[column.dataIndex]" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
+            />
         </template>
 
         <template #SelectCascader="{ rowIndex, column, record }">
             <Select 
                 :options="selectOptions[record[column.keepWatch]] || []" 
-                v-model="record[column.dataIndex]" />
+                v-model="record[column.dataIndex]" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+               }"
+            />
         </template>
 
         <template #format="{ rowIndex, column, record }">
             {{ getEval(column.format, record, column, rowIndex) }}
         </template>
 
-        <template #operationList="{ record }">
+        <template #operationList="{ record, column, rowIndex }">
             <Component :is="item.type" 
                 v-for="item in props.options.operation.operationList" 
+                v-bind="{
+                    'allow-clear': get(column.formSchema, 'widget.clearable'),
+                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                    ...get(column.formSchema, 'widget.props'),
+                }"
                 @click="$emit(item.clickEmit, {record})">{{item.title}}</Component>
         </template>
 

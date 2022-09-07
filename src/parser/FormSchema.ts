@@ -71,6 +71,13 @@ export class FormSchema {
         return this
     }
 
+    props(props: {}) {
+        if (this.context = "widget") {
+            set(this.json, 'widget.props', props)
+        }
+        return this
+    }
+
     inputNumber() {
         this.context = "widget"
         set(this.json, 'widget.type', 'InputNumber')
