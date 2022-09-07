@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    ArcoCrudForm: typeof import('./src/components/ArcoCrudForm.vue')['default']
     ArcoCrudTable: typeof import('./src/components/ArcoCrudTable.vue')['default']
   }
 }

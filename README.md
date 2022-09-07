@@ -40,7 +40,14 @@ const schema: Ref = ref({
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
         .parse(),
     province: new FormSchema().width(100).title("省份")
-        .select(['北京', '四川', '广东']) // 下拉框选项
+        // 下拉框
+        .select({
+            province: ['北京', '四川', '广东'],
+            // 'province': ['海淀', '朝阳', '昌平'],
+            '北京': ['海淀', '朝阳', '昌平'],
+            '四川': ['成都', '绵阳'],
+            '广东': ['广州', '深圳']
+        }) 
         .parse(),
     city: new FormSchema().title("城市").width(100)
         .select().keepWatch("province") // 联动

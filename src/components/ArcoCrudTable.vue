@@ -22,7 +22,7 @@
             />
         </template>
 
-        <template #inputNumber="{ rowIndex, column, record }">
+        <template #InputNumber="{ rowIndex, column, record }">
             <InputNumber 
                 :placeholder="getEval(get(column.formSchema, 'widget.placeholder') || '请输入', record, column, rowIndex)"
                 :allow-clear="column.widget?.clearable"
@@ -30,7 +30,7 @@
             />
         </template>
 
-        <template #textArea="{ rowIndex, column, record }">
+        <template #Textarea="{ rowIndex, column, record }">
             <!-- {{ column }} -->
             <Textarea 
                 auto-size
@@ -40,7 +40,7 @@
             />
         </template>
 
-        <template #select="{ rowIndex, column, record }">
+        <template #Select="{ rowIndex, column, record }">
              <!-- <p>{{column}}</p>
              <p>{{record}}</p>  -->
             <Select 
@@ -49,7 +49,7 @@
                 v-model="record[column.dataIndex]" />
         </template>
 
-        <template #selectCascader="{ rowIndex, column, record }">
+        <template #SelectCascader="{ rowIndex, column, record }">
             <Select 
                 :options="selectOptions[record[column.keepWatch]] || []" 
                 v-model="record[column.dataIndex]" />
@@ -60,12 +60,9 @@
         </template>
 
         <template #operationList="{ record }">
-            
-    
             <Component :is="item.type" 
                 v-for="item in props.options.operation.operationList" 
                 @click="$emit(item.clickEmit, {record})">{{item.title}}</Component>
-    
         </template>
 
     </Table>
@@ -103,18 +100,9 @@ const props = defineProps({
 
 const columns = ref([]);
 
-const selectOptions = ref({
-    '北京': ['海淀', '朝阳', '昌平'],
-    '四川': ['成都', '绵阳'],
-    '广东': ['广州', '深圳']
-})
+const selectOptions = ref({})
 
-const keepWatchDeps = ref({
-    'province': ['海淀', '朝阳', '昌平'],
-})
-
-
-debugger
+const keepWatchDeps = ref({})
 
 let expandable = false
 let expandRender = get(props.options, "row.expand")
@@ -131,7 +119,6 @@ if (expandRender && expandRender.render) {
 }
 
 
-
 const getWidgetType = (formSchema) => {
     const widget = get(formSchema, "widget.type")
     const keepWatch = get(formSchema, "widget.keepWatch")
@@ -144,7 +131,7 @@ const getWidgetType = (formSchema) => {
         return widget
     }
 
-    return 'input' 
+    return 'Input' 
 }
 
 onMounted(() => {
@@ -157,7 +144,7 @@ onMounted(() => {
 
         let selectOpList = get(formSchema, "widget.options")
         if (selectOpList) {
-            selectOptions.value[key] = selectOpList
+            selectOptions.value = Object.assign({}, selectOpList.value, selectOpList)
         }
 
         let keepWatch = get(formSchema, "widget.keepWatch")
@@ -177,6 +164,8 @@ onMounted(() => {
         const filter = get(formSchema, "filterable")
         console.log("filter")
         console.log(filter)
+
+        debugger
 
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
@@ -202,12 +191,18 @@ onMounted(() => {
 
     let virtualList = get(props.options, "body.virtualList")
     let operationList = get(props.options, "operation.operationList")
+
+    // 虚拟列表情况下不需要操作栏
     if (!virtualList && operationList && Object.keys(operationList).length > 0) {
         columns.value.push({
             title: '操作栏',
             slotName: 'operationList'
         })
     }
+
+    console.log("columns: ")
+    console.log(JSON.stringify(columns.value))
+
 })
 
 

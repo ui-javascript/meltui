@@ -10,24 +10,35 @@
         </Switch>
 
         <ArcoCrudTable 
-            @showItem="showItem"
             :key="editable + '_'" 
+            @showItem="showItem"
             class="mt-2" 
             :data="data" 
             :pagination="pagination"
             :options="options" 
-            :schema="schema" />
+            :schema="schema" 
+        />
+
+        <ArcoCrudForm 
+            :key="editable + '_'" 
+            :data="data[0]" 
+            :options="options" 
+            :schema="schema" 
+            :style="{width: '600px'}"
+        />
+
     </div>
 </template>
 
 <script setup lang="ts">
 
 import { CrudOptions } from '@/parser/CrudOptions';
-import { Ref, getCurrentInstance } from 'vue';
+import { Ref } from 'vue';
 import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
+import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
-const editable = ref(false)
+const editable = ref(true)
 
 const options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
@@ -35,10 +46,10 @@ const options = ref(new CrudOptions()
     .row().hover().border().stripe()
     // .row().selection().radioType()
     .row().selection().checkboxType().checkAll().currentOnly(false)
-    // .row().expand().width(50).title('展开行').filter("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 0 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // .body().virtualList().height(300)
     .body().scroll().x(1500)
-    // .column().resizable()
+    .column().resizable()
     .viewOperation().clickEmit("showItem")
     .parse())
 
@@ -61,7 +72,7 @@ const schema: Ref = ref({
         .title("工资").width(150) // .left() 
         .inputNumber().placeholder("输入工资").clearable(false)
         .sortable().asc().desc()
-        .filterable().gt(10000).gt(20000).gt(100000).filter("{{ record.salary > value }}")
+        .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
         .parse(),
     address: new FormSchema()
         .title("地址").width(250).center()
@@ -71,7 +82,13 @@ const schema: Ref = ref({
     province: new FormSchema()
         .title("省份") // .width(100)
         // .column().fixed().right()
-        .select(['北京', '四川', '广东']) // 下拉框选项
+        .select({ 
+            province: ['北京', '四川', '广东'],
+            // 'province': ['海淀', '朝阳', '昌平'],
+            '北京': ['海淀', '朝阳', '昌平'],
+            '四川': ['成都', '绵阳'],
+            '广东': ['广州', '深圳']
+        })
         .parse(),
     city: new FormSchema()
         .title("城市") // .width(100)
