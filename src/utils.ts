@@ -25,6 +25,26 @@ export const getEval = (string: string, record: {}, column: {}, rowIndex: number
   `);  
 }
 
+export const getEval2 = (string: string, value: number, record: {}) => {
+  
+  debugger
+  
+  if (string) {
+      if (string.includes("{{")) {
+        string = string.replace(/\{\{/g, "").replace(/\}\}/g, "")
+      } else {
+          return string
+      }
+  }
+
+  debugger
+  return safeEval(`
+    const value = ${value};
+    const record = ${JSON.stringify(record)};
+    return (${string})
+  `);  
+}
+
 export const justEval = (string: string, record: {}, column: {}, rowIndex: number) => {
   
   safeEval(`

@@ -71,7 +71,7 @@ export class CrudOptions {
         return this
     }
 
-    x(num: number) {
+    x(num: number| string) {
         if (this.context === "body.scroll") {
             set(this.json, "body.scroll.x", num)
         }
@@ -79,7 +79,7 @@ export class CrudOptions {
         return this
     }
 
-    y(num: number) {
+    y(num: number | string) {
         if (this.context === "body.scroll") {
             set(this.json, "body.scroll.y", num)
         }

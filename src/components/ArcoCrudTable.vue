@@ -65,8 +65,8 @@
 
 <script setup name="ArcoCrudTable">
 
-import { getEval } from "@/utils";
-import { get, merge, upperFirst } from "lodash"
+import { getEval, getEval2 } from "@/utils";
+import { get, merge, set, upperFirst } from "lodash"
 
 const props = defineProps({
     data: {
@@ -107,7 +107,7 @@ const keepWatchDeps = ref({
 
 debugger
 
-let expandable = {}
+let expandable = false
 let expandRender = get(props.options, "row.expand")
 
 if (expandRender && expandRender.render) {
@@ -158,6 +158,16 @@ onMounted(() => {
 
         let format = get(formSchema, "widget.format")
 
+        let filterRender = get(formSchema, "filterable.render")
+        if (filterRender) {
+            set(formSchema, "filterable.filter", (value, record) => {
+                return getEval2(filterRender, value, record)
+            })
+        }
+
+        const filter = get(formSchema, "filterable")
+        console.log("filter")
+        console.log(filter)
 
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
@@ -168,6 +178,8 @@ onMounted(() => {
             keepWatch,
             format,
             formSchema,
+            sortable: get(formSchema, "sortable"),
+            filterable: get(formSchema, "filterable"),
             fixed: get(formSchema, "column.fixed"),
             ellipsis: get(formSchema, "cell.ellipsis"),
             tooltip: get(formSchema, "cell.tooltip"), 

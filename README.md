@@ -102,6 +102,17 @@ const options = ref(
 )
 ```
 
+- 排序筛选
+
+```js
+const schema: Ref = ref({
+    salary: new FormSchema()
+        .sortable().asc().desc() // 排序
+        .filterable().gt(10000).gt(20000).gt(100000).render("{{ record.salary > value }}") // 筛选
+        .parse(),
+})
+```
+
 - 自定义操作列
 
 ---

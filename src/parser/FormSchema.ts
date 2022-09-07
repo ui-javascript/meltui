@@ -2,11 +2,11 @@ import { merge, set, upperFirst, get } from "lodash"
 import { toHandlers } from "vue"
 
 export class FormSchema {
-    
+
     json = {}
-    
+
     context = ''
-    
+
     constructor(json?: {}) {
         if (json) {
             this.json = merge(this.json, json)
@@ -64,7 +64,7 @@ export class FormSchema {
         return this
     }
 
-    select(options? : any[]) {
+    select(options?: any[]) {
         this.context = "widget"
         set(this.json, 'widget.type', 'select')
         set(this.json, 'widget.options', options)
@@ -90,7 +90,7 @@ export class FormSchema {
 
     width(width: number) {
         set(this.json, 'title.width', width)
-        
+
         return this
     }
 
@@ -99,7 +99,7 @@ export class FormSchema {
             set(this.json, 'column.fixed', 'left')
             return this
         }
-    
+
         set(this.json, 'title.align', 'left')
         return this
     }
@@ -141,6 +141,88 @@ export class FormSchema {
         return this
     }
 
+
+    search() {
+        this.context = "search"
+        return this
+    }
+
+    sortable() {
+        this.context = "sortable"
+        return this
+    }
+
+    asc() {
+        if (this.context === "sortable") {
+            let sortDirections = get(this.json, "sortable.sortDirections") || []
+            sortDirections.push('ascend')
+            set(this.json, "sortable.sortDirections", sortDirections)
+        }
+        return this
+    }
+
+
+    desc() {
+        if (this.context === "sortable") {
+            let sortDirections = get(this.json, "sortable.sortDirections") || []
+            sortDirections.push('descend')
+            set(this.json, "sortable.sortDirections", sortDirections)
+        }
+        return this
+    }
+
+
+    filterable() {
+        this.context = "filterable"
+        return this
+    }
+
+    render(render: string) {
+        if (this.context === "filterable") {
+            set(this.json, "filterable.render", render)
+        }
+        return this
+    }
+
+    gt(num: number) {
+        if (this.context === "filterable") {
+            let filters = get(this.json, "filterable.filters") || []
+            filters.push({
+                text: '> ' + num,
+                value: num + "",
+            })
+
+            set(this.json, "filterable.filters", filters)
+        }
+        return this
+    }
+
+    eq(num: any) {
+        if (this.context === "filterable") {
+            let filters = get(this.json, "filterable.filters") || []
+            filters.push({
+                text: '= ' + num,
+                value: num,
+            })
+
+            set(this.json, "filterable.filters", filters)
+        }
+        return this
+    }
+
+    lt(num: number) {
+        if (this.context === "filterable") {
+            let filters = get(this.json, "filterable.filters") || []
+            filters.push({
+                text: '< ' + num,
+                value: num + "",
+            })
+
+            set(this.json, "filterable.filters", filters)
+        }
+        return this
+    }
+
     cell() {
         this.context = "cell"
         return this
@@ -162,5 +244,5 @@ export class FormSchema {
         }
         return this.json
     }
-    
+
 }
