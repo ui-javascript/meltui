@@ -154,10 +154,6 @@ export class FormSchema {
     }
 
 
-    search() {
-        this.context = "search"
-        return this
-    }
 
     sortable() {
         this.context = "sortable"
@@ -236,9 +232,9 @@ export class FormSchema {
     }
 
     
-    searchable() {
+    searchable(enabled = true) {
         this.context = "searchable"
-        set(this.json, 'searchable', {})
+        set(this.json, 'searchable.enabled', enabled)
         return this
     }
 

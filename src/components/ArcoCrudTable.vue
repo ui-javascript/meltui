@@ -1,24 +1,35 @@
 <template>
     <div>
 
-        <ARow class="mb-1" v-if="get(props.options, 'search')" :gutter="20">
+        <ARow class="mb-1" v-if="get(props.options, 'search.enabled')" :gutter="20">
+            
             <ACol flex="auto">
-                <AForm :layout="get(props.options, 'layout.type')">
 
-                <ARow :gutter="20">
-                    <ACol :span="get(props.options, 'layout.cols')" v-for="column in columns">
+                <AForm :layout="get(props.options, 'search.layout')">
+
+                <!-- @fix 需要指定宽度为100%  -->
+                <ARow :gutter="20" style="width: 100%">
+                        
+                    <ACol 
+                        :key="advancedSearch + '_'"
+                        v-for="column in columns.filter(column => get(column.formSchema, 'searchable.enabled') && ( advancedSearch || (!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly'))) )"
+                        :span="get(props.options, 'search.cols') || 8">
+
                         <AFormItem
                             label-col-flex="80px"
-                            v-if="get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
-                            :field="column.dataIndex" :label="column.title">
+
+                            :field="column.dataIndex" 
+                            :label="column.title">
+
                             <Component
-                                v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
-                                :is="column.widget?.type || 'AInput'" v-model="keyword[column.dataIndex]"
-                                @change="handleKeepWatchDeps(column, props.data)" v-bind="{
+                                :is="column.widget?.type || 'AInput'" 
+                                v-model="keyword[column.dataIndex]"
+                                @change="handleKeepWatchDeps(column, props.data)" 
+                                v-bind="{
                                      ...get(column.formSchema, 'widget.props'),
                                      options: column.keepWatch ? selectOptions[props.data[column.keepWatch]] : selectOptions[column.dataIndex],
                                      'allow-clear': get(column.formSchema, 'widget.clearable'),
-                                     placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || '请输入' + column.title,                                
+                                     placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
                                }" />
                         </AFormItem>
                     </ACol>
@@ -28,7 +39,7 @@
                         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
                    
 
-                    </ARow>
+                </ARow>
                 </AForm>
 
                 
@@ -36,6 +47,7 @@
             <!-- <Col flex="20px">
                 <Divider direction="vertical" style="height: 100%;" />
             </Col> -->
+
             <ACol flex="50px">
                 <ASpace direction="vertical">
     
@@ -67,7 +79,7 @@
             </ACol>
         </ARow>
 
-        <ADivider v-if="get(props.options, 'search')" />
+        <ADivider v-if="get(props.options, 'search.enabled')" />
 
         <ARow :gutter="12" class="mb-2">
             <ACol :span="12" align="left">

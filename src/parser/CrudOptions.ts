@@ -44,15 +44,19 @@ export class CrudOptions {
     }
 
     inline(enabled = true) {
-        if (this.context === "layout" && enabled) {
-            set(this.json, "layout.type", "inline")
+        if (this.context === "search" && enabled) {
+            set(this.json, "search.layout", "inline")
         }
+
+        // if (this.context === "layout" && enabled) {
+        //     set(this.json, "layout.type", "inline")
+        // }
         return this
     }
 
     cols(num: number) {
-        if (this.context = "layout") {
-            set(this.json, "layout.cols", num)
+        if (this.context = "search") {
+            set(this.json, "search.cols", num)
         }
         return this
     }
@@ -80,7 +84,7 @@ export class CrudOptions {
 
     search(enabled = true) {
         this.context = "search"
-        set(this.json, "search", enabled)
+        set(this.json, "search.enabled", enabled)
         return this
     }
 
