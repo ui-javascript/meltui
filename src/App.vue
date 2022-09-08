@@ -55,8 +55,8 @@ import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
 
 
+const searchable = ref(true)
 const editable = ref(false)
-const searchable = ref(false)
 
 let options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
@@ -64,13 +64,13 @@ let options = ref(new CrudOptions()
     // .row().hover().border().stripe()
     .size().medium()
     .layout()
-    .search().inline().cols().sm(1).md(2).xl(3)
+    .search(searchable.value).inline().cols().sm(1).md(2).xl(3)
     // .row().selection().radioType()
     .row().selection().checkboxType().checkAll() // .currentOnly(false)
     // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(300)
-    .body().scroll().x(1000)
+    // .body().scroll().x(1000) 
     .column().resizable()
     .viewOperation() // .clickEmit("showItem")
     .editOperation()
@@ -121,7 +121,7 @@ const schema: Ref = ref({
         .parse(),
    
     address: new FormSchema()
-        .title("地址").center()
+        .title("地址").width(250).center()
         .filterable().eq("北京海淀知春路").eq("35 Park Road, London").filter(`{{ record.address === value[0] }}`) // @tofix
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
                 .props({
