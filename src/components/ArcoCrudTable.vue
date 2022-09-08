@@ -401,7 +401,7 @@ onMounted(() => {
             title: '操作栏',
             fixed: 'right',
             align: 'center',
-            width: Object.keys(operationList).length * 60 + 40,
+            // width: Object.keys(operationList).length * 60 + 40,
             slotName: 'operationList'
         })
     }
