@@ -23,32 +23,17 @@
  
         <ADivider />
      
-        <ARow :gutter="20">
-            <ACol :span="20">
-                <ArcoCrudTable 
-                    :key="editable + '_' + searchable"
-                    @showItem="showItem"
-                    class="mt-2"
-                    :data="data" 
-                    :pagination="pagination"
-                    :options="options" 
-                    :schema="schema" 
-                /> 
-            </ACol>
 
-            <ACol :span="4">
-                <ArcoCrudForm 
-                    class="mt-2" 
-                    :data="data[0]" 
-                    :options="options" 
-                    :schema="schema" 
-                />
-            </ACol>
-        </ARow>
-
-
-
-
+        <ArcoCrudTable 
+            :key="editable + '_' + searchable"
+            @showItem="showItem"
+            class="mt-2"
+            :data="data" 
+            :pagination="pagination"
+            :options="options" 
+            :schema="schema" 
+        /> 
+    
 
     </div>
 </template>
@@ -83,7 +68,8 @@ let options = ref(new CrudOptions()
     // .body().virtualList().height(300)
     // .body().scroll().x(1500)
     .column().resizable()
-    .viewOperation().clickEmit("showItem")
+    .viewOperation() // .clickEmit("showItem")
+    .editOperation()
     .deleteOperation()
     .parse())
 

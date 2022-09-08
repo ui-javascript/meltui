@@ -15,7 +15,26 @@ export class CrudOptions {
 
     edit(editable: boolean = true) {
         this.context = ""
-        set(this.json, "edit", editable)
+        set(this.json, "edit.enabled", editable)
+        set(this.json, "edit.mode", 'modal')
+        return this
+    }
+
+    inlineMode() {
+        this.context = ""
+        set(this.json, "edit.mode", 'inline')
+        return this
+    }
+
+    modalMode() {
+        this.context = ""
+        set(this.json, "edit.mode", 'modal')
+        return this
+    }
+
+    drawerMode() {
+        this.context = ""
+        set(this.json, "edit.mode", 'drawer')
         return this
     }
 
@@ -197,8 +216,23 @@ export class CrudOptions {
         this.context = "operation.view"
         const op = get(this.json, "operation.operationList") || {}
         op.view = {
-            type: 'Button',
+            type: 'AButton',
             title: "查看"
+        }
+        set(this.json, "operation.operationList", op)
+
+        return this
+    }
+
+    editOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "operation.edit"
+        const op = get(this.json, "operation.operationList") || {}
+        op.edit = {
+            type: 'AButton',
+            title: "编辑"
         }
         set(this.json, "operation.operationList", op)
 
@@ -224,11 +258,17 @@ export class CrudOptions {
     clickEmit(eventName: string) {
         if (this.context === "operation.view") {
             const op = get(this.json, "operation.operationList") || {}
-            op.view = {
-                type: 'AButton',
-                title: "查看",
+            op.view = Object.assign({}, op, {
                 clickEmit: eventName
-            }
+            })
+            set(this.json, "operation.operationList", op)
+        }
+
+        if (this.context === "operation.edit") {
+            const op = get(this.json, "operation.operationList") || {}
+            op.edit = Object.assign({}, op, {
+                clickEmit: eventName
+            })
             set(this.json, "operation.operationList", op)
         }
         

@@ -48,7 +48,7 @@
                     </AButton>
              
               
-                    <AButton @click="keyword = {}">
+                    <AButton type="primary" status="warning" @click="keyword = {}">
                         <template #icon>
                             <IconCloseCircle />
                         </template>
@@ -73,11 +73,17 @@
             <ACol :span="12" align="left">
             <ASpace>
                 <AButton type="primary">
-                
                     <template #icon>
                         <IconPlus class="cursor-pointer" />
                         </template>
                     新增
+                </AButton>
+                <AButton v-if="selectedKeys.length > 0">
+                    <template #icon>
+                        <IconEdit class="cursor-pointer" />
+                        </template>
+                  
+                    批量更新
                 </AButton>
                 <AButton status="danger" v-if="selectedKeys.length > 0">
                     <template #icon>
@@ -169,20 +175,29 @@
             </template>
 
             <template #operationList="{ record, column, rowIndex }">
-                <Component :is="item.type" v-for="item in props.options.operation.operationList" v-bind="{
-                    'allow-clear': get(column.formSchema, 'widget.clearable'),
-                    type: 'text',
-                    status: item.status,
-                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                    ...get(column.formSchema, 'widget.props'),
-                }" @click="$emit(item.clickEmit, {record})">{{item.title}}</Component>
-
-
+                    <Component :is="props.options.operation.operationList[key].type || 'AButton'" v-for="key of Object.keys(props.options.operation.operationList)" v-bind="{
+                        'allow-clear': get(column.formSchema, 'widget.clearable'),
+                        type: 'text',
+                        status: props.options.operation.operationList[key].status,
+                        placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                        ...get(column.formSchema, 'widget.props'),
+                    }" 
+                    
+                    @click="props.options.operation.operationList[key].clickEmit ? $emit(props.options.operation.operationList[key].clickEmit, {record}) : defaultTrigger(key, props.options.operation.operationList[key], record)">{{props.options.operation.operationList[key].title}}</Component>
+                
             </template>
 
         </ATable>
      
-   
+
+        <AModal v-model:visible="visible" :title="formEditMode ? '编辑' : '查看'">
+            <ArcoCrudForm 
+                class="mt-2" 
+                :data="currentRecord" 
+                :options="formOptions" 
+                :schema="props.schema" 
+            />
+        </AModal>
 
     </div>
 
@@ -193,7 +208,11 @@
 import { getEval, getEval2 } from "@/utils";
 import { get, merge, set, upperFirst } from "lodash"
 
-import { IconRefresh, IconSearch, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDoubleRight, IconDoubleLeft } from "@arco-design/web-vue/es/icon"
+import {CrudOptions} from "@/parser"
+
+import { ArcoCrudForm } from "@/components"
+import { IconSearch, IconEdit, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDoubleRight, IconDoubleLeft } from "@arco-design/web-vue/es/icon"
+import { Modal } from '@arco-design/web-vue';
 
 const props = defineProps({
     data: {
@@ -218,7 +237,8 @@ const props = defineProps({
     },
 })
 
-
+const visible = ref(false)
+const currentRecord = ref({})
 const selectedKeys = ref([]);
 const keyword = ref({})
 const advancedSearch = ref(false)
@@ -229,6 +249,9 @@ const keepWatchDeps = ref({})
 let expandable = ref(void 0)
 let expandRender = ref()
 const isVirtualList = ref(false)
+
+const formEditMode = ref(false) 
+const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value).parse())
 
 const init = () => {
     debugger
@@ -271,6 +294,34 @@ const getWidgetType = (formSchema) => {
     }
 
     return 'AInput'
+}
+
+const defaultTrigger = (key, item, record) => {  
+    console.log("key: ")
+    console.log(key)
+    console.log("item: ")
+    console.log(JSON.stringify(item, null, 2))
+
+    currentRecord.value = record
+    // currentRecord.value = Object.assign({}, record) // 副本模式
+
+    if (key === 'view') {
+        formEditMode.value = false
+        visible.value = true
+    }
+
+    if (key === 'edit') {
+        formEditMode.value = true
+        visible.value = true
+    }
+
+    if (key === "delete") {
+        Modal.confirm({
+            title: "删除确认",
+            content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
+            status: 'danger'
+        })
+    }
 }
 
 onMounted(() => {
@@ -322,7 +373,7 @@ onMounted(() => {
             ellipsis: get(formSchema, "cell.ellipsis"),
             tooltip: get(formSchema, "cell.tooltip"),
             widget: get(formSchema, "widget") || {},
-            slotName: (!get(props.options, "body.virtualList") && props.options.edit && get(formSchema, "editable") != false)
+            slotName: (!get(props.options, "body.virtualList") && props.options?.edit?.enabled && get(formSchema, "editable") != false)
                 ? getWidgetType(formSchema)
                 : (format ? 'format' : null),
         })
@@ -335,7 +386,8 @@ onMounted(() => {
         columns.value.push({
             title: '操作栏',
             fixed: 'right',
-            width: Object.keys(operationList).length * 50 + 60,
+            align: 'center',
+            width: Object.keys(operationList).length * 80 + 20,
             slotName: 'operationList'
         })
     }

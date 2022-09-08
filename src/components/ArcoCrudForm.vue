@@ -2,7 +2,7 @@
     <AForm auto-label-width v-model="props.data" :layout="get(props.options, 'layout.type')">
         <AFormItem :field="column.dataIndex" :label="column.title" v-for="column in columns" >
             <Component 
-                v-if="props.options.edit"
+                v-if="props.options.edit?.enabled"
                 :is="column.widget.type" 
                 v-model="props.data[column.dataIndex]" 
                 @change="handleKeepWatchDeps(column, props.data)" 
@@ -19,12 +19,12 @@
         </AFormItem>
         
 
-        <AFormItem>
+        <!-- <AFormItem>
         <ASpace>
                 <AButton type="primary">查询</AButton>
                 <AButton>重置</AButton>
             </ASpace>
-            </AFormItem>
+            </AFormItem> -->
 
         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
     </AForm>
