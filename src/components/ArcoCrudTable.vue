@@ -49,7 +49,7 @@
                 <Divider direction="vertical" style="height: 100%;" />
             </Col> -->
 
-            <ACol :flex="advancedSearch ? '50px' : '300px' ">
+            <ACol :flex="advancedSearch ? '50px' : '290px' ">
                 <ASpace :direction="advancedSearch ? 'vertical' : 'horizontal'">
     
                     <AButton status="success" type="primary" @click="advancedSearch = !advancedSearch">
