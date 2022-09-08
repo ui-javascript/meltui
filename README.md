@@ -6,6 +6,8 @@
 
 - https://static-59728804-d890-4267-8e45-393e10b3c780.bspapp.com/#/pages/test/noteDetail?id=63093bda553eac0001a5472e
 
+![image](https://user-images.githubusercontent.com/16240829/189215628-c5fe9741-6e3c-47b5-8253-def7163b1593.png)
+
 ---
 
 # 示例 @demo
@@ -56,8 +58,6 @@ const schema = {
 }
 </script>
 ```
-
-![image](https://user-images.githubusercontent.com/16240829/188521161-be5557dc-112f-49a9-a91e-930a086948f3.png)
 
 - 行选择器
 
