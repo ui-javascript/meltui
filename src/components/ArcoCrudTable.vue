@@ -335,6 +335,7 @@ onMounted(() => {
         columns.value.push({
             title: '操作栏',
             fixed: 'right',
+            width: Object.keys(operationList).length * 50 + 60,
             slotName: 'operationList'
         })
     }
