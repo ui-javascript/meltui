@@ -74,7 +74,7 @@ let options = ref(new CrudOptions()
     // .header().visible(false) // 不显示表头
     // .row().hover().border().stripe()
     // .size().large()
-    .layout().inline(false).cols(12)
+    .layout().inline(false).cols(8)
     .search(searchable.value)
     // .row().selection().radioType()
     .row().selection().checkboxType().checkAll() // .currentOnly(false)
@@ -221,7 +221,7 @@ const pagination = ref({
     pageSize: 5,
     showTotal: true, 
     // showJumper: true, 
-    // showPageSize: true
+    showPageSize: true
 })
 
 const showItem = (argv: any) => {

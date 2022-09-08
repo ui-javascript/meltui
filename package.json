@@ -16,8 +16,9 @@
     "rm:nm": "rimraf node_modules"
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.34.1",
     "5a.css": "^0.1.20",
+    "@arco-design/web-vue": "^2.34.1",
+    "async-validator": "^4.2.5",
     "await-to-js": "^3.0.0",
     "axios": "^0.27.2",
     "be-full": "^0.1.4",

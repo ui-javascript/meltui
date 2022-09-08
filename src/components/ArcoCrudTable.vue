@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <ARow class="mb-1" v-if="get(props.options, 'search')">
+        <ARow class="mb-1" v-if="get(props.options, 'search')" :gutter="20">
             <ACol flex="auto">
                 <AForm :layout="get(props.options, 'layout.type')">
 
                 <ARow :gutter="20">
-                        <ACol :span="get(props.options, 'layout.cols')" v-for="column in columns">
+                    <ACol :span="get(props.options, 'layout.cols')" v-for="column in columns">
                         <AFormItem
                             label-col-flex="80px"
                             v-if="get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
@@ -21,7 +21,7 @@
                                      placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || '请输入' + column.title,                                
                                }" />
                         </AFormItem>
-                        </ACol>
+                    </ACol>
 
 
 
