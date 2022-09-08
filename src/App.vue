@@ -1,39 +1,41 @@
 <template>
     <div style="padding: 20px">
-        <ASpace>
-            <ASwitch type="round" v-model="searchable">
-                <template #checked>
-                    搜索模式
-                </template>
-                <template #unchecked>
-                    简约模式
-                </template>
-            </ASwitch>
+        <AConfigProvider size="small">
+            <ASpace>
+                <ASwitch type="round" v-model="searchable">
+                    <template #checked>
+                        搜索模式
+                    </template>
+                    <template #unchecked>
+                        简约模式
+                    </template>
+                </ASwitch>
 
-            <ASwitch type="round" v-model="editable">
-                <template #checked>
-                    编辑模式
-                </template>
-                <template #unchecked>
-                    阅读模式
-                </template>
-            </ASwitch>
-        </ASpace>
+                <ASwitch type="round" v-model="editable">
+                    <template #checked>
+                        编辑模式
+                    </template>
+                    <template #unchecked>
+                        阅读模式
+                    </template>
+                </ASwitch>
+            </ASpace>
 
- 
-        <ADivider />
-     
-
-        <ArcoCrudTable 
-            :key="editable + '_' + searchable"
-            @showItem="showItem"
-            class="mt-2"
-            :data="data" 
-            :pagination="pagination"
-            :options="options" 
-            :schema="schema" 
-        /> 
     
+            <ADivider />
+        
+
+            <ArcoCrudTable 
+                :key="editable + '_' + searchable"
+                @showItem="showItem"
+                class="mt-2"
+                :data="data" 
+                :pagination="pagination"
+                :options="options" 
+                :schema="schema" 
+            /> 
+        </AConfigProvider>
+       
 
     </div>
 </template>
@@ -113,7 +115,7 @@ const schema: Ref = ref({
             // })
         .sortable().asc().desc()
         .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
-        .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
+        .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
    
     address: new FormSchema()
@@ -123,7 +125,7 @@ const schema: Ref = ref({
                 .props({
                     autoSize: true
                 })
-        .searchable().advandedOnly() // .placeholder("{{ '请输入' + column.title }}")
+        .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
 
     province: new FormSchema()

@@ -44,12 +44,13 @@
 
                 
             </ACol>
+
             <!-- <Col flex="20px">
                 <Divider direction="vertical" style="height: 100%;" />
             </Col> -->
 
-            <ACol flex="50px">
-                <ASpace direction="vertical">
+            <ACol :flex="advancedSearch ? '50px' : '300px' ">
+                <ASpace :direction="advancedSearch ? 'vertical' : 'horizontal'">
     
                     <AButton status="success" type="primary" @click="advancedSearch = !advancedSearch">
                         <template  #icon>
@@ -77,6 +78,7 @@
                 </ASpace>
 
             </ACol>
+
         </ARow>
 
         <ADivider v-if="get(props.options, 'search.enabled')" />

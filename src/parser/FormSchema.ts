@@ -238,7 +238,7 @@ export class FormSchema {
         return this
     }
 
-    advandedOnly(enabled = true) {
+    advancedOnly(enabled = true) {
         if (this.context === "searchable") {
             set(this.json, 'searchable.advancedOnly', enabled)
         }

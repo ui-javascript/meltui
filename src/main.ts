@@ -34,7 +34,8 @@ const app = createApp(App);
 // 加载UI
 // app.use(Antd);
 app.use(ArcoVue, {
-    // componentPrefix: ''
+    // componentPrefix: '',
+    size: "small"
 });
 // app.use(useTable);
 app.mount('#app');
