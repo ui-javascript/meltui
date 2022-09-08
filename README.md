@@ -143,7 +143,7 @@ const showItem = (argv) => {
 ```js
 const options = new CrudOptions()
     .layout()
-    .search(true).inline().cols(8)
+    .search(true).inline().cols().sm(1).md(2).xl(3)
     .parse()
 
 const schema = {

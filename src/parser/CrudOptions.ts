@@ -54,9 +54,76 @@ export class CrudOptions {
         return this
     }
 
-    cols(num: number) {
-        if (this.context = "search") {
+    cols(num?: number) {
+        if (this.context === "search" && num) {
             set(this.json, "search.cols", num)
+        }
+        return this
+    }
+
+    /**
+     * >= 1600px 响应式配置
+     */
+    xxl(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { xxl: num }))
+        }
+        return this
+    }
+
+    /**
+     * >= 1200px 响应式配置
+     */
+    xl(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { xl: num }))
+        }
+        return this
+    }
+
+
+    /**
+     * >= 992px 响应式配置
+     */
+    lg(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { lg: num }))
+        }
+        return this
+    }
+
+    /**
+     * >= 768px 响应式配置
+     */
+    md(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { md: num }))
+        }
+        return this
+    }
+
+    /**
+     * >= 576px 响应式配置
+     */
+    sm(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { sm: num }))
+        }
+        return this
+    }
+
+    /**
+     * < 576px 响应式配置
+     */
+    xs(num: number) {
+        if (this.context === "search" && num) {
+            let cols = get(this.json, "search.cols")
+            set(this.json, "search.cols", merge(cols, { lg: num }))
         }
         return this
     }

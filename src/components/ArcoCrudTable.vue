@@ -8,12 +8,12 @@
                 <AForm :layout="get(props.options, 'search.layout')">
 
                 <!-- @fix 需要指定宽度为100%  -->
-                <ARow :gutter="20" style="width: 100%">
+                <AGrid :cols="get(props.options, 'search.cols')" :colGap="12" style="width: 100%;">
                         
-                    <ACol 
+                    <AGridItem 
                         :key="advancedSearch + '_'"
                         v-for="column in columns.filter(column => get(column.formSchema, 'searchable.enabled') && ( advancedSearch || (!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly'))) )"
-                        :span="get(props.options, 'search.cols') || 8">
+                    >
 
                         <AFormItem
                             label-col-flex="80px"
@@ -32,14 +32,14 @@
                                      placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
                                }" />
                         </AFormItem>
-                    </ACol>
+                    </AGridItem>
 
 
 
                         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
                    
 
-                </ARow>
+                </AGrid>
                 </AForm>
 
                 
