@@ -1,28 +1,30 @@
 <template>
     <div style="padding: 20px">
+        <ASpace>
+            <ASwitch type="round" v-model="searchable">
+                <template #checked>
+                    搜索模式
+                </template>
+                <template #unchecked>
+                    简约模式
+                </template>
+            </ASwitch>
+
+            <ASwitch type="round" v-model="editable">
+                <template #checked>
+                    编辑模式
+                </template>
+                <template #unchecked>
+                    阅读模式
+                </template>
+            </ASwitch>
+        </ASpace>
+
+
+        <ADivider />
+
         <AConfigProvider size="small">
-            <ASpace>
-                <ASwitch type="round" v-model="searchable">
-                    <template #checked>
-                        搜索模式
-                    </template>
-                    <template #unchecked>
-                        简约模式
-                    </template>
-                </ASwitch>
-
-                <ASwitch type="round" v-model="editable">
-                    <template #checked>
-                        编辑模式
-                    </template>
-                    <template #unchecked>
-                        阅读模式
-                    </template>
-                </ASwitch>
-            </ASpace>
-
-    
-            <ADivider />
+            
         
 
             <ArcoCrudTable 
