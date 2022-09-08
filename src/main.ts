@@ -4,13 +4,12 @@ import { App as VueApp, createApp } from 'vue'
 
 import '@5a.css/reset';
 import '@5a.css/helpers';
-// import '@/assets/iconfont/iconfont.css'
 
-import 'xe-utils'
+// import 'xe-utils'
 // import VXETable from 'vxe-table'
 // import 'vxe-table/lib/style.css'
 
-import * as a from './lib'
+// import * as a from './lib'
 // console.log(a);
 
 import ArcoVue from '@arco-design/web-vue';
@@ -29,13 +28,13 @@ import '@arco-design/web-vue/dist/arco.css';
 
 const app = createApp(App);
 
-import { Modal } from '@arco-design/web-vue';
-Modal._context = app._context;
+// import { Modal } from '@arco-design/web-vue';
+// Modal._context = app._context;
 
 // 加载UI
 // app.use(Antd);
 app.use(ArcoVue, {
-    componentPrefix: ''
+    // componentPrefix: ''
 });
 // app.use(useTable);
 app.mount('#app');

@@ -1,8 +1,6 @@
 <template>
-    <Form auto-label-width v-model="props.data" :layout="get(props.options, 'layout.type')">
-        <Row>
-            <Col :span="get(props.options, 'layout.cols')" v-for="column in columns" >
-        <FormItem :field="column.dataIndex" :label="column.title">
+    <AForm auto-label-width v-model="props.data" :layout="get(props.options, 'layout.type')">
+        <AFormItem :field="column.dataIndex" :label="column.title" v-for="column in columns" >
             <Component 
                 v-if="props.options.edit"
                 :is="column.widget.type" 
@@ -18,22 +16,20 @@
             <span v-else>
                 {{ props.data[column.dataIndex] }}
             </span>
-        </FormItem>
-        </Col>
-
+        </AFormItem>
         
-        <Col :span="get(props.options, 'layout.cols')">
-            <Space>
-                <Button type="primary">查询</Button>
-                <Button>重置</Button>
-            </Space>
-        </Col>
-        </Row>
 
-
+        <AFormItem>
+        <ASpace>
+                <AButton type="primary">查询</AButton>
+                <AButton>重置</AButton>
+            </ASpace>
+            </AFormItem>
 
         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
-    </Form>
+    </AForm>
+
+
 </template>
 
 <script setup name="ArcoCrudForm">
@@ -71,7 +67,7 @@ const handleKeepWatchDeps = (column, record) => {
     // console.log(JSON.stringify(record))
     // console.log(JSON.stringify(keepWatchDeps.value))
 
-    if (column.widget.type === "Select" && Object.keys(keepWatchDeps.value).includes(column.dataIndex)) {
+    if (column.widget.type === "ASelect" && Object.keys(keepWatchDeps.value).includes(column.dataIndex)) {
         let deps = keepWatchDeps.value[column.dataIndex]
         // console.log("deps:")
         // console.log(JSON.stringify(deps))

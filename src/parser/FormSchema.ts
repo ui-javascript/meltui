@@ -42,7 +42,7 @@ export class FormSchema {
 
     input() {
         this.context = "widget"
-        set(this.json, 'widget.type', 'Input')
+        set(this.json, 'widget.type', 'AInput')
         return this
     }
 
@@ -71,7 +71,7 @@ export class FormSchema {
 
     select(options?: any) {
         this.context = "widget"
-        set(this.json, 'widget.type', 'Select')
+        set(this.json, 'widget.type', 'ASelect')
         set(this.json, 'widget.options', options)
         return this
     }
@@ -85,13 +85,13 @@ export class FormSchema {
 
     inputNumber() {
         this.context = "widget"
-        set(this.json, 'widget.type', 'InputNumber')
+        set(this.json, 'widget.type', 'AInputNumber')
         return this
     }
 
     textArea() {
         this.context = "widget"
-        set(this.json, 'widget.type', 'Textarea')
+        set(this.json, 'widget.type', 'ATextarea')
         return this
     }
 

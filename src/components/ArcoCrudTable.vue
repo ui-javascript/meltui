@@ -1,140 +1,153 @@
 <template>
     <div>
 
-        <Row class="mb-1" v-if="get(props.options, 'search')">
-            <Col flex="auto">
-                <Row>
-                    <Form :layout="get(props.options, 'layout.type')">
-                        <Col :span="get(props.options, 'layout.cols')" v-for="column in columns">
-                        <FormItem
+        <ARow class="mb-1" v-if="get(props.options, 'search')">
+            <ACol flex="auto">
+                <AForm :layout="get(props.options, 'layout.type')">
+
+                <ARow :gutter="20">
+                        <ACol :span="get(props.options, 'layout.cols')" v-for="column in columns">
+                        <AFormItem
+                            label-col-flex="80px"
                             v-if="get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
                             :field="column.dataIndex" :label="column.title">
                             <Component
                                 v-if="get(props.options, 'search') && get(column.formSchema, 'searchable') && ((!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly')) || advancedSearch)"
-                                :is="column.widget?.type || 'Input'" v-model="keyword[column.dataIndex]"
+                                :is="column.widget?.type || 'AInput'" v-model="keyword[column.dataIndex]"
                                 @change="handleKeepWatchDeps(column, props.data)" v-bind="{
-                                     'allow-clear': get(column.formSchema, 'widget.clearable'),
-                                     placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || '请输入' + column.title, 
                                      ...get(column.formSchema, 'widget.props'),
                                      options: column.keepWatch ? selectOptions[props.data[column.keepWatch]] : selectOptions[column.dataIndex],
-                                }" />
-                        </FormItem>
-                        </Col>
+                                     'allow-clear': get(column.formSchema, 'widget.clearable'),
+                                     placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || '请输入' + column.title,                                
+                               }" />
+                        </AFormItem>
+                        </ACol>
 
 
 
                         <!-- {{ JSON.stringify(props.data, null, 2) }} -->
-                    </Form>
+                   
 
-                </Row>
-            </Col>
+                    </ARow>
+                </AForm>
+
+                
+            </ACol>
             <!-- <Col flex="20px">
                 <Divider direction="vertical" style="height: 100%;" />
             </Col> -->
-            <Col flex="50px">
-                <Space direction="vertical">
+            <ACol flex="50px">
+                <ASpace direction="vertical">
     
-                    <Button status="success" type="primary">
-                        <template #icon>
-                            <IconSearch />
+                    <AButton status="success" type="primary" @click="advancedSearch = !advancedSearch">
+                        <template  #icon>
+                            <IconDoubleLeft v-if="advancedSearch" />
+                            <IconDoubleRight v-else /> 
                         </template>
-                        查询
-                    </Button>
+                        {{ advancedSearch ? '收起' : '展开' }}
+                    </AButton>
+             
               
-                    <Button @click="keyword = {}">
+                    <AButton @click="keyword = {}">
                         <template #icon>
                             <IconCloseCircle />
                         </template>
                         重置
-                    </Button>
-
-                    <Button type="primary" @click="advancedSearch = !advancedSearch">
-                        <template  #icon>
-                            <IconUp v-if="advancedSearch" />
-                            <IconDown v-else /> 
+                    </AButton>
+       
+                    <AButton type="primary">
+                        <template #icon>
+                            <IconSearch />
                         </template>
-                        {{ advancedSearch ? '收起' : '展开' }}
-                    </Button>
-                </Space>
+                        查询
+                    </AButton>
+             
+                </ASpace>
 
-            </Col>
-        </Row>
+            </ACol>
+        </ARow>
 
-        <Divider v-if="get(props.options, 'search')" />
+        <ADivider v-if="get(props.options, 'search')" />
 
-        <Row :gutter="12" class="mb-2">
-            <Col :span="12" align="left">
-            <Space>
-                <Button type="primary">
+        <ARow :gutter="12" class="mb-2">
+            <ACol :span="12" align="left">
+            <ASpace>
+                <AButton type="primary">
                 
                     <template #icon>
                         <IconPlus class="cursor-pointer" />
                         </template>
                     新增
-                </Button>
-                <Button status="danger" v-if="selectedKeys.length > 0">
+                </AButton>
+                <AButton status="danger" v-if="selectedKeys.length > 0">
                     <template #icon>
                         <IconDelete class="cursor-pointer" />
                         </template>
                   
                     批量删除
-                </Button>
-            </Space>
-            </Col>
+                </AButton>
+            </ASpace>
+            </ACol>
 
-            <Col :span="12" align="right">
-                <Button>
+            <ACol :span="12" align="right">
+                <AButton>
                     <template #icon>
                         <IconDownload class="cursor-pointer" />
                         </template>
                  
                     下载
-                </Button>
-            </Col>
+                </AButton>
+            </ACol>
 
-        </Row>
+        </ARow>
 
         <!-- <Divider /> -->
 
-        <Table 
+        <ATable 
             :size="get(props.options, 'size')"
-            @change="handleTableChange" :hoverable="props.options?.row?.hover"
-            :bordered="get(props.options, 'row.border')" :stripe="props.options?.row?.stripe" :columns="columns"
-            :expandable="expandable" :column-resizable="get(props.options, 'column.resizable')"
-            :virtual-list-props="get(props.options, 'body.virtualList')"
-            :pagination="get(props.options, 'pagination') !== false && props.pagination"
-            :show-header="get(props.options, 'header.visible')" :scroll="get(props.options, 'body.scroll')"
-            :row-selection="get(props.options, 'row.selection')" v-model:selectedKeys="selectedKeys" :data="props.data">
+            :hoverable="props.options?.row?.hover"
+            :stripe="props.options?.row?.stripe" 
+            :bordered="get(props.options, 'row.border')" 
+            :column-resizable="get(props.options, 'column.resizable')"
+            :expandable="expandable" 
+            :pagination="get(props.options, 'pagination')"
+            :show-header="get(props.options, 'header.visible')" 
+            :scroll="get(props.options, 'body.scroll')"
+            :row-selection="get(props.options, 'row.selection')" 
+            :virtual-list-props="get(props.options, 'body.virtualList')" 
+            v-model:selectedKeys="selectedKeys"
+            :columns="columns"
+            :data="props.data">
 
-            <template #input="{ rowIndex, column, record }">
-                <Input v-model="record[column.dataIndex]" v-bind="{
+            <template #AInput="{ rowIndex, column, record }">
+                <AInput v-model="record[column.dataIndex]" v-bind="{
                      'allow-clear': get(column.formSchema, 'widget.clearable'),
                      placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(column.formSchema, 'widget.props'),
                 }" />
             </template>
 
-            <template #InputNumber="{ rowIndex, column, record }">
-                <InputNumber v-model="record[column.dataIndex]" v-bind="{
+            <template #AInputNumber="{ rowIndex, column, record }">
+                <AInputNumber v-model="record[column.dataIndex]" v-bind="{
                      'allow-clear': get(column.formSchema, 'widget.clearable'),
                      placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(column.formSchema, 'widget.props'),
                 }" />
             </template>
 
-            <template #Textarea="{ rowIndex, column, record }">
+            <template #ATextarea="{ rowIndex, column, record }">
                 <!-- {{ column }} -->
-                <Textarea v-model="record[column.dataIndex]" v-bind="{
+                <ATextarea v-model="record[column.dataIndex]" v-bind="{
                      'allow-clear': get(column.formSchema, 'widget.clearable'),
                      placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(column.formSchema, 'widget.props'),
                 }" />
             </template>
 
-            <template #Select="{ rowIndex, column, record }">
+            <template #ASelect="{ rowIndex, column, record }">
                 <!-- <p>{{column}}</p>
              <p>{{record}}</p>  -->
-                <Select :options="selectOptions[column.dataIndex] || []" @change="handleKeepWatchDeps(column, record)"
+                <ASelect :options="selectOptions[column.dataIndex] || []" @change="handleKeepWatchDeps(column, record)"
                     v-model="record[column.dataIndex]" v-bind="{
                          'allow-clear': get(column.formSchema, 'widget.clearable'),
                          placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
@@ -142,8 +155,8 @@
                     }" />
             </template>
 
-            <template #SelectCascader="{ rowIndex, column, record }">
-                <Select :options="selectOptions[record[column.keepWatch]] || []" v-model="record[column.dataIndex]"
+            <template #ASelectCascader="{ rowIndex, column, record }">
+                <ASelect :options="selectOptions[record[column.keepWatch]] || []" v-model="record[column.dataIndex]"
                     v-bind="{
                          'allow-clear': get(column.formSchema, 'widget.clearable'),
                          placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
@@ -167,7 +180,10 @@
 
             </template>
 
-        </Table>
+        </ATable>
+     
+   
+
     </div>
 
 </template>
@@ -177,7 +193,7 @@
 import { getEval, getEval2 } from "@/utils";
 import { get, merge, set, upperFirst } from "lodash"
 
-import { IconRefresh, IconSearch, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconUp, IconDown } from "@arco-design/web-vue/es/icon"
+import { IconRefresh, IconSearch, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDoubleRight, IconDoubleLeft } from "@arco-design/web-vue/es/icon"
 
 const props = defineProps({
     data: {
@@ -212,9 +228,15 @@ const keepWatchDeps = ref({})
 
 let expandable = ref(void 0)
 let expandRender = ref()
+const isVirtualList = ref(false)
 
 const init = () => {
     debugger
+
+    isVirtualList.value = !!get(props.options, "body.virtualList")
+
+    console.log("isVirtualList: ")
+    console.log(isVirtualList.value)
 
     columns.value = []
     selectOptions.value = {}
@@ -231,8 +253,8 @@ const init = () => {
                 }
         })
 
-        console.log("展开")
-        console.log(expandable.value)
+        // console.log("展开")
+        // console.log(expandable.value)
     }
 }
 
@@ -248,7 +270,7 @@ const getWidgetType = (formSchema) => {
         return widget
     }
 
-    return 'Input'
+    return 'AInput'
 }
 
 onMounted(() => {
@@ -281,8 +303,8 @@ onMounted(() => {
         }
 
         const filter = get(formSchema, "filterable")
-        console.log("filter")
-        console.log(filter)
+        // console.log("filter")
+        // console.log(filter)
 
         debugger
 
@@ -290,7 +312,6 @@ onMounted(() => {
             title: titleUpperFirst ? upperFirst(title) : title,
             dataIndex: key,
             width: get(formSchema, "title.width"),
-            // slotName: 'name',
             align: get(formSchema, "title.align") || 'left',
             keepWatch,
             format,
@@ -301,26 +322,25 @@ onMounted(() => {
             ellipsis: get(formSchema, "cell.ellipsis"),
             tooltip: get(formSchema, "cell.tooltip"),
             widget: get(formSchema, "widget") || {},
-            slotName: (props.options.edit && get(formSchema, "editable") != false)
+            slotName: (!get(props.options, "body.virtualList") && props.options.edit && get(formSchema, "editable") != false)
                 ? getWidgetType(formSchema)
                 : (format ? 'format' : null),
         })
 
     })
 
-    let virtualList = get(props.options, "body.virtualList")
     let operationList = get(props.options, "operation.operationList")
 
-    // 虚拟列表情况下不需要操作栏
-    if (!virtualList && operationList && Object.keys(operationList).length > 0) {
+    if (operationList && Object.keys(operationList).length > 0) {
         columns.value.push({
             title: '操作栏',
+            fixed: 'right',
             slotName: 'operationList'
         })
     }
 
-    console.log("columns: ")
-    console.log(JSON.stringify(columns.value))
+    // console.log("columns: ")
+    // console.log(JSON.stringify(columns.value))
 
     console.log("options: ")
     console.log(JSON.stringify(props.options))
@@ -329,7 +349,7 @@ onMounted(() => {
 
 
 const handleTableChange = (data) => {
-    console.log(data)
+    // console.log(data)
 }
 
 const handleKeepWatchDeps = (column, record) => {

@@ -24,8 +24,8 @@ export class CrudOptions {
         return this
     }
 
-    inline() {
-        if (this.context === "layout") {
+    inline(enabled = true) {
+        if (this.context === "layout" && enabled) {
             set(this.json, "layout.type", "inline")
         }
         return this
@@ -69,6 +69,7 @@ export class CrudOptions {
         this.context = "body.virtualList"
         set(this.json, "row.expand", false)
         set(this.json, "pagination", false)
+        set(this.json, "edit", false)
         return this
     }
 
@@ -211,7 +212,7 @@ export class CrudOptions {
         this.context = "operation.delete"
         const op = get(this.json, "operation.operationList") || {}
         op.delete = {
-            type: 'Button',
+            type: 'AButton',
             title: "删除",
             status: "danger"
         }
@@ -224,7 +225,7 @@ export class CrudOptions {
         if (this.context === "operation.view") {
             const op = get(this.json, "operation.operationList") || {}
             op.view = {
-                type: 'Button',
+                type: 'AButton',
                 title: "查看",
                 clickEmit: eventName
             }

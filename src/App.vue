@@ -1,50 +1,61 @@
 <template>
     <div style="padding: 20px">
-        <Space>
-            <Switch type="round" v-model="editable">
+        <ASpace>
+            <ASwitch type="round" v-model="editable">
                 <template #checked>
                     编辑模式
                 </template>
                 <template #unchecked>
-                    只读模式
+                    阅读模式
                 </template>
-            </Switch>
+            </ASwitch>
 
-            <Switch type="round" v-model="searchable">
+            <ASwitch type="round" v-model="searchable">
                 <template #checked>
                     搜索模式
                 </template>
                 <template #unchecked>
-                    普通模式
+                    简约模式
                 </template>
-            </Switch>
-        </Space>
+            </ASwitch>
+        </ASpace>
 
  
-        <Divider />
-        
-        <ArcoCrudTable 
-            :key="editable + '_' + searchable"
-            @showItem="showItem"
-            class="mt-2" 
-            :data="data" 
-            :pagination="pagination"
-            :options="options" 
-            :schema="schema" 
-        />
+        <ADivider />
+     
+        <ARow :gutter="20">
+            <ACol :span="20">
+                <ArcoCrudTable 
+                    :key="editable + '_' + searchable"
+                    @showItem="showItem"
+                    class="mt-2"
+                    :data="data" 
+                    :pagination="pagination"
+                    :options="options" 
+                    :schema="schema" 
+                /> 
+            </ACol>
 
-        <!-- <ArcoCrudForm 
-            class="mt-2" 
-            :data="data[0]" 
-            :options="options" 
-            :schema="schema" 
-        /> -->
+            <ACol :span="4">
+                <ArcoCrudForm 
+                    class="mt-2" 
+                    :data="data[0]" 
+                    :options="options" 
+                    :schema="schema" 
+                />
+            </ACol>
+        </ARow>
+
+
+
 
 
     </div>
 </template>
 
+
 <script setup lang="ts">
+
 
 import { CrudOptions } from '@/parser/CrudOptions';
 import { Ref } from 'vue';
@@ -53,6 +64,8 @@ import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
 import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
+
+
 const editable = ref(false)
 const searchable = ref(false)
 
@@ -60,14 +73,15 @@ let options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
     // .header().visible(false) // 不显示表头
     // .row().hover().border().stripe()
-    // .row().selection().radioType()
     // .size().large()
-    .layout().inline().cols(24)
+    .layout().inline(false).cols(12)
     .search(searchable.value)
-    .row().selection().checkboxType().checkAll().currentOnly(false)
+    // .row().selection().radioType()
+    .row().selection().checkboxType().checkAll() // .currentOnly(false)
     // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
+    // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(300)
-    // .body().scroll().x(1500)
+    .body().scroll().x(1500)
     .column().resizable()
     .viewOperation().clickEmit("showItem")
     .deleteOperation()
