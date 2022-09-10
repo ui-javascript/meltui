@@ -10,6 +10,30 @@
 
 ---
 
+# 安装
+
+- https://github.com/ui-javascript/demo-meltui-test-20220910/blob/master/src/main.js
+- https://github.com/ui-javascript/demo-meltui-test-20220910/blob/master/src/views/01-melt-arco/page.vue
+
+```bash
+npm install meltui@latest lodash @arco-design/web-vue/dist/arco.css
+```
+
+```js
+import ArcoVue from '@arco-design/web-vue'
+import '@arco-design/web-vue/dist/arco.css'
+
+// 全局样式
+import '@/assets/styles/globals.scss'
+app.use(ArcoVue, {
+    size: 'small'
+})
+```
+
+```
+
+```
+
 # 示例 @demo
 
 - 基础示例(带联动)
