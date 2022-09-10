@@ -63,9 +63,9 @@ const editable = ref(false)
 
 let options = ref(new CrudOptions()
     .edit(editable.value) // 编辑模式
-    // .header().visible(false) // 不显示表头
-    // .row().hover().border().stripe()
-    .size().medium()
+    // .header(false).visible(false) // 不显示表头
+    .row().hover().border().stripe()
+    .size().small()
     .layout()
     .search(searchable.value).inline().cols().sm(1).md(2).xl(3)
     // .row().selection().radioType()
@@ -75,7 +75,7 @@ let options = ref(new CrudOptions()
     // .body().virtualList().height(300)
     // .body().scroll().x(1000) 
     // .column().resizable()
-    .viewOperation() // .clickEmit("showItem")
+    .viewOperation() .clickEmit("showItem")
     .editOperation()
     .removeOperation()
     .parse())

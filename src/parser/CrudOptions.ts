@@ -329,7 +329,7 @@ export class CrudOptions {
     clickEmit(eventName: string) {
         if (this.context === "operation.view") {
             const op = get(this.json, "operation.operationList") || {}
-            op.view = Object.assign({}, op, {
+            op.view = Object.assign({}, op.view, {
                 clickEmit: eventName
             })
             set(this.json, "operation.operationList", op)
@@ -337,12 +337,20 @@ export class CrudOptions {
 
         if (this.context === "operation.edit") {
             const op = get(this.json, "operation.operationList") || {}
-            op.edit = Object.assign({}, op, {
+            op.edit = Object.assign({}, op.edit, {
                 clickEmit: eventName
             })
             set(this.json, "operation.operationList", op)
         }
         
+        if (this.context === "operation.remove") {
+            const op = get(this.json, "operation.operationList") || {}
+            op.remove = Object.assign({}, op.remove, {
+                clickEmit: eventName
+            })
+            set(this.json, "operation.operationList", op)
+        }
+
         return this
     }
 

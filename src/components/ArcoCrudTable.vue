@@ -191,7 +191,10 @@
             </template>
 
             <template #operationList="{ record, column, rowIndex }">
-                    <Component :is="props.options.operation.operationList[key].type || 'AButton'" v-for="key of Object.keys(props.options.operation.operationList)" v-bind="{
+                    <Component 
+                        :is="props.options.operation.operationList[key].type || 'AButton'" 
+                        v-for="key of Object.keys(props.options.operation.operationList)" 
+                        v-bind="{
                         'allow-clear': get(column.formSchema, 'widget.clearable'),
                         type: 'text',
                         status: props.options.operation.operationList[key].status,
