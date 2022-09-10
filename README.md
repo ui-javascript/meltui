@@ -144,8 +144,10 @@ const options = new CrudOptions()
 
 ```js
 const options = new CrudOptions()
-    .viewOperation().clickEmit("showItem")
-    // .removeOperation()
+    .editOperation()
+    .viewOperation() 
+    .removeOperation().confirmText("确定删除吗?")
+    .customOperation("自定义").clickEmit("showItem")
     .parse()
 
 ===

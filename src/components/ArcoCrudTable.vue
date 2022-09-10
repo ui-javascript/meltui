@@ -17,11 +17,10 @@
 
                         <AFormItem
                             label-col-flex="60px"
-                            
                             :field="column.dataIndex" 
                             :label="column.title">
 
-                            <Component
+                                <Component
                                 :is="column.widget?.type || 'AInput'" 
                                 v-model="keyword[column.dataIndex]"
                                 @change="handleKeepWatchDeps(column, props.data)" 
@@ -31,6 +30,8 @@
                                      'allow-clear': get(column.formSchema, 'widget.clearable'),
                                      placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
                                }" />
+
+                            
                         </AFormItem>
                     </AGridItem>
 
@@ -193,21 +194,46 @@
             <template #operationList="{ record, column, rowIndex }">
 
                 <!-- {{JSON.stringify(props.options.operation.operationList)}} -->
-                    <Component 
-                        :is="item.type || 'AButton'" 
-                        v-for="item of props.options.operation.operationList" 
-                        v-bind="{
-                        'allow-clear': get(column.formSchema, 'widget.clearable'),
-                        type: 'text',
-                        size: 'small',
-                        status: item.status,
-                        // long: true,
-                        style: {paddingLeft: '4px', paddingRight: '4px'},
-                        placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                        ...get(column.formSchema, 'widget.props'),
-                    }" 
-                    
-                    @click="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">{{item.title}}</Component>
+                       
+                    <template  v-for="item of props.options.operation.operationList">
+                        <APopconfirm v-if="item.needConfirm" 
+                        :content="item.confirmText || '确认执行操作吗?'"
+                        @ok="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">
+                            <Component 
+                                :is="item.type || 'AButton'" 
+                                v-bind="{
+                                'allow-clear': get(column.formSchema, 'widget.clearable'),
+                                type: 'text',
+                                size: 'small',
+                                status: item.status,
+                                // long: true,
+                                style: {paddingLeft: '4px', paddingRight: '4px'},
+                                placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                                ...get(column.formSchema, 'widget.props'),
+                            }" 
+
+                            >{{item.title}}</Component>
+
+                        </APopconfirm>
+
+                        
+                        <Component 
+                            v-else
+                                :is="item.type || 'AButton'" 
+                                v-bind="{
+                                'allow-clear': get(column.formSchema, 'widget.clearable'),
+                                type: 'text',
+                                size: 'small',
+                                status: item.status,
+                                // long: true,
+                                style: {paddingLeft: '4px', paddingRight: '4px'},
+                                placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                                ...get(column.formSchema, 'widget.props'),
+                            }" 
+
+                            @click="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">{{item.title}}</Component>
+                    </template>
+                  
             </template>
 
         </ATable>
@@ -344,13 +370,14 @@ const defaultTrigger = (item, record) => {
         visible.value = true
     }
 
-    if (item.name === "remove") {
-        Modal.confirm({
-            title: "删除确认",
-            content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
-            status: 'danger'
-        })
-    }
+    // if (item.name === "remove") {
+    //     Modal.confirm({
+    //         title: "删除确认",
+    //         content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
+    //         status: 'danger'
+    //     })
+    // }
+
 }
 
 onMounted(() => {
@@ -449,7 +476,7 @@ onMounted(() => {
             title: '操作栏',
             fixed: 'right',
             align: 'center',
-            // width: operationList.length * 70 + 40,
+            width: operationList.length * 50 + 40,
             slotName: 'operationList'
         })
     }

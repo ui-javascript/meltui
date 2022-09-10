@@ -325,7 +325,8 @@ export class CrudOptions {
             title: "删除",
             idx: 9999,
             name: "remove",
-            status: "danger"
+            status: "danger",
+            needConfirm: true,
         })
         set(this.json, "operation.operationList", op)
 
@@ -386,6 +387,96 @@ export class CrudOptions {
                 let item = op.find((item: any) => item.title === opName)
                 if (item) {
                     item.clickEmit = eventName
+                }
+            }
+        }
+
+
+        return this
+    }
+
+
+    needConfirm(enabled = true) {
+   
+        const op = get(this.json, "operation.operationList") || {}
+
+        if (this.context === "operation.view") {
+            let item = op.find((item: any) => item.name === "view")
+            if (item) {
+                item.needConfirm = enabled
+            }
+            return this
+        }
+
+        if (this.context === "operation.edit") {
+            let item = op.find((item: any) => item.name === "edit")
+            if (item) {
+                item.needConfirm = enabled
+            }
+            return this
+        }
+        
+        if (this.context === "operation.remove") {
+            let item = op.find((item: any) => item.name === "remove")
+            if (item) {
+                item.needConfirm = enabled
+            }
+            return this
+        }
+
+        
+        if (this.context.startsWith("operation.")) {
+            let idx = this.context.indexOf(".")
+            if (idx > -1 && idx < this.context.length-1) {
+                let opName = this.context.substring(idx+1)
+                let item = op.find((item: any) => item.title === opName)
+                if (item) {
+                    item.needConfirm = enabled
+                }
+            }
+        }
+
+
+        return this
+    }
+
+    confirmText(text: string) {
+   
+
+        const op = get(this.json, "operation.operationList") || {}
+
+        if (this.context === "operation.view") {
+            let item = op.find((item: any) => item.name === "view")
+            if (item) {
+                item.confirmText = text
+            }
+            return this
+        }
+
+        if (this.context === "operation.edit") {
+            let item = op.find((item: any) => item.name === "edit")
+            if (item) {
+                item.confirmText = text
+            }
+            return this
+        }
+        
+        if (this.context === "operation.remove") {
+            let item = op.find((item: any) => item.name === "remove")
+            if (item) {
+                item.confirmText = text
+            }
+            return this
+        }
+
+        
+        if (this.context.startsWith("operation.")) {
+            let idx = this.context.indexOf(".")
+            if (idx > -1 && idx < this.context.length-1) {
+                let opName = this.context.substring(idx+1)
+                let item = op.find((item: any) => item.title === opName)
+                if (item) {
+                    item.confirmText = text
                 }
             }
         }
