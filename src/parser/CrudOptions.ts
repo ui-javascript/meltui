@@ -285,11 +285,13 @@ export class CrudOptions {
             return this
         }
         this.context = "operation.view"
-        const op = get(this.json, "operation.operationList") || {}
-        op.view = {
+        const op = get(this.json, "operation.operationList") || []
+        op.push({
             type: 'AButton',
-            title: "查看"
-        }
+            title: "查看",
+            name: 'view',
+            idx: 0
+        })
         set(this.json, "operation.operationList", op)
 
         return this
@@ -300,11 +302,13 @@ export class CrudOptions {
             return this
         }
         this.context = "operation.edit"
-        const op = get(this.json, "operation.operationList") || {}
-        op.edit = {
+        const op = get(this.json, "operation.operationList") || []
+        op.push({
             type: 'AButton',
+            name: 'edit',
+            idx: 1,
             title: "编辑"
-        }
+        })
         set(this.json, "operation.operationList", op)
 
         return this
@@ -315,41 +319,77 @@ export class CrudOptions {
             return this
         }
         this.context = "operation.remove"
-        const op = get(this.json, "operation.operationList") || {}
-        op.remove = {
+        const op = get(this.json, "operation.operationList") || []
+        op.push({
             type: 'AButton',
             title: "删除",
+            idx: 9999,
+            name: "remove",
             status: "danger"
-        }
+        })
         set(this.json, "operation.operationList", op)
 
         return this
     }
 
+    customOperation(opName : string, enabled = true) {
+        if (!enabled) {
+            return this
+        }
+
+        this.context = "operation." + opName 
+        const op = get(this.json, "operation.operationList") || []
+        op.push({
+            type: 'AButton',
+            title: opName,
+            name: 'custom',
+            idx: 100,
+            // size: 'mini',
+        })
+        set(this.json, "operation.customOperationList", op)
+
+        return this
+    }
+
     clickEmit(eventName: string) {
+        const op = get(this.json, "operation.operationList") || {}
+
         if (this.context === "operation.view") {
-            const op = get(this.json, "operation.operationList") || {}
-            op.view = Object.assign({}, op.view, {
-                clickEmit: eventName
-            })
-            set(this.json, "operation.operationList", op)
+            let item = op.find((item: any) => item.name === "view")
+            if (item) {
+                item.clickEmit = eventName
+            }
+            return this
         }
 
         if (this.context === "operation.edit") {
-            const op = get(this.json, "operation.operationList") || {}
-            op.edit = Object.assign({}, op.edit, {
-                clickEmit: eventName
-            })
-            set(this.json, "operation.operationList", op)
+            let item = op.find((item: any) => item.name === "edit")
+            if (item) {
+                item.clickEmit = eventName
+            }
+            return this
         }
         
         if (this.context === "operation.remove") {
-            const op = get(this.json, "operation.operationList") || {}
-            op.remove = Object.assign({}, op.remove, {
-                clickEmit: eventName
-            })
-            set(this.json, "operation.operationList", op)
+            let item = op.find((item: any) => item.name === "remove")
+            if (item) {
+                item.clickEmit = eventName
+            }
+            return this
         }
+
+        
+        if (this.context.startsWith("operation.")) {
+            let idx = this.context.indexOf(".")
+            if (idx > -1 && idx < this.context.length-1) {
+                let opName = this.context.substring(idx+1)
+                let item = op.find((item: any) => item.title === opName)
+                if (item) {
+                    item.clickEmit = eventName
+                }
+            }
+        }
+
 
         return this
     }

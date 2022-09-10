@@ -191,19 +191,23 @@
             </template>
 
             <template #operationList="{ record, column, rowIndex }">
+
+                <!-- {{JSON.stringify(props.options.operation.operationList)}} -->
                     <Component 
-                        :is="props.options.operation.operationList[key].type || 'AButton'" 
-                        v-for="key of Object.keys(props.options.operation.operationList)" 
+                        :is="item.type || 'AButton'" 
+                        v-for="item of props.options.operation.operationList" 
                         v-bind="{
                         'allow-clear': get(column.formSchema, 'widget.clearable'),
                         type: 'text',
-                        status: props.options.operation.operationList[key].status,
+                        size: 'small',
+                        status: item.status,
+                        // long: true,
+                        style: {paddingLeft: '4px', paddingRight: '4px'},
                         placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
                         ...get(column.formSchema, 'widget.props'),
                     }" 
                     
-                    @click="props.options.operation.operationList[key].clickEmit ? $emit(props.options.operation.operationList[key].clickEmit, {record}) : defaultTrigger(key, props.options.operation.operationList[key], record)">{{props.options.operation.operationList[key].title}}</Component>
-                
+                    @click="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">{{item.title}}</Component>
             </template>
 
         </ATable>
@@ -321,26 +325,26 @@ const getWidgetType = (formSchema) => {
     return 'AInput'
 }
 
-const defaultTrigger = (key, item, record) => {  
-    console.log("key: ")
-    console.log(key)
-    console.log("item: ")
-    console.log(JSON.stringify(item, null, 2))
+const defaultTrigger = (item, record) => {  
+    // console.log("key: ")
+    // console.log(key)
+    // console.log("item: ")
+    // console.log(JSON.stringify(item, null, 2))
 
     currentRecord.value = record
     // currentRecord.value = Object.assign({}, record) // 副本模式
 
-    if (key === 'view') {
+    if (item.name === 'view') {
         formEditMode.value = false
         visible.value = true
     }
 
-    if (key === 'edit') {
+    if (item.name === 'edit') {
         formEditMode.value = true
         visible.value = true
     }
 
-    if (key === "remove") {
+    if (item.name === "remove") {
         Modal.confirm({
             title: "删除确认",
             content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
@@ -426,13 +430,26 @@ onMounted(() => {
     })
 
     let operationList = get(props.options, "operation.operationList")
+    
 
-    if (operationList && Object.keys(operationList).length > 0) {
+    if (operationList && operationList.length > 0) {
+        // 操作列排序
+        operationList.sort((a, b) => {
+            if (!a.idx) {
+                return -1
+            }
+            if (!b.idx) {
+                return 1
+            }
+            return a.idx - b.idx
+        })
+        set(props.options, "operation.operationList", operationList)
+
         columns.value.push({
             title: '操作栏',
             fixed: 'right',
             align: 'center',
-            width: Object.keys(operationList).length * 60 + 40,
+            // width: operationList.length * 70 + 40,
             slotName: 'operationList'
         })
     }

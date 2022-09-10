@@ -44,7 +44,7 @@ app.use(ArcoVue, {
 
 - 基础示例(带联动)
 
-```vue
+```js
 const options = new CrudOptions()
     .edit() // 编辑模式
     .search() // 搜索模式
