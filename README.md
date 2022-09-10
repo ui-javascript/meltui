@@ -30,14 +30,6 @@ app.use(ArcoVue, {
 })
 ```
 
-```
-
-```
-
-# 示例 @demo
-
-- 基础示例(带联动)
-
 ```vue
 <template>
     <ArcoCrudTable 
@@ -46,8 +38,13 @@ app.use(ArcoVue, {
         :schema="schema" 
     />
 </template>
+```
 
-<script setup lang="ts">
+# 示例 @demo
+
+- 基础示例(带联动)
+
+```vue
 const options = new CrudOptions()
     .edit() // 编辑模式
     .search() // 搜索模式
@@ -80,7 +77,6 @@ const schema = {
         .select().keepWatch("province") // 联动
         .parse(),
 }
-</script>
 ```
 
 - 行选择器
