@@ -46,13 +46,16 @@
 <script setup lang="ts">
 
 
-import { CrudOptions } from '@/parser/CrudOptions';
+
 import { Ref } from 'vue';
 import { get } from 'lodash';
-import { FormSchema } from './parser';
 import { Modal } from '@arco-design/web-vue';
-import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
+// import { FormSchema, CrudOptions } from '../dist/melt-crud';
+// import { ArcoCrudTable, ArcoCrudForm } from '../dist/melt-crud';
+
+import { FormSchema, CrudOptions } from './parser';
+import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
 
 const searchable = ref(true)

@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <ARow class="mb-1" v-if="get(props.options, 'search.enabled')" :gutter="20">
+        <ARow style="margin-bottom: 10px" v-if="get(props.options, 'search.enabled')" :gutter="20">
             
             <ACol flex="auto">
 
@@ -83,25 +83,25 @@
 
         <ADivider v-if="get(props.options, 'search.enabled')" />
 
-        <ARow :gutter="12" class="mb-2">
+        <ARow :gutter="12" style="margin-bottom: 20px;">
             <ACol :span="12" align="left">
             <ASpace>
                 <AButton type="primary">
                     <template #icon>
-                        <IconPlus class="cursor-pointer" />
+                        <IconPlus style="cursor: pointer;" />
                         </template>
                     新增
                 </AButton>
                 <AButton v-if="selectedKeys.length > 0">
                     <template #icon>
-                        <IconEdit class="cursor-pointer" />
+                        <IconEdit style="cursor: pointer;" />
                         </template>
                   
                     批量更新
                 </AButton>
                 <AButton status="danger" v-if="selectedKeys.length > 0">
                     <template #icon>
-                        <IconDelete class="cursor-pointer" />
+                        <IconDelete style="cursor: pointer;" />
                         </template>
                   
                     批量删除
@@ -112,7 +112,7 @@
             <ACol :span="12" align="right">
                 <AButton>
                     <template #icon>
-                        <IconDownload class="cursor-pointer" />
+                        <IconDownload style="cursor: pointer;" />
                         </template>
                  
                     下载
@@ -208,7 +208,6 @@
 
         <AModal v-model:visible="visible" :title="formEditMode ? '编辑' : '查看'">
             <ArcoCrudForm 
-                class="mt-2" 
                 :data="currentRecord" 
                 :options="formOptions" 
                 :schema="props.schema" 
@@ -220,6 +219,8 @@
 </template>
 
 <script setup name="ArcoCrudTable">
+
+import { ref, computed, onMounted } from 'vue';
 
 import { getEval, getEval2 } from "@/utils";
 import { get, merge, set, upperFirst } from "lodash"

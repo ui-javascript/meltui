@@ -34,6 +34,8 @@
 
 <script setup name="ArcoCrudForm">
 
+import { ref, onMounted } from 'vue';
+
 import { getEval, getEval2 } from "@/utils";
 import {get, set, upperFirst, merge } from "lodash"
 
