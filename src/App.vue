@@ -32,7 +32,7 @@
                 @showItem="showItem"
                 class="mt-2"
                 :data="data" 
-                :pagination="pagination"
+        
                 :options="options" 
                 :schema="schema" 
             /> 
@@ -71,10 +71,10 @@ let options = ref(new CrudOptions()
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(300)
     // .body().scroll().x(1000) 
-    .column().resizable()
+    // .column().resizable()
     .viewOperation() // .clickEmit("showItem")
     .editOperation()
-    .deleteOperation()
+    .removeOperation()
     .parse())
 
 watch(() => editable.value, (current, prev) => {    
@@ -101,7 +101,9 @@ watch(() => searchable.value, (current, prev) => {
 
 const schema: Ref = ref({
     name: new FormSchema()
-        .title().upperFirst().width(200).left().format("{{ '[No.' + rowIndex  + ']' + record.name }}")
+        .title().upperFirst()
+            // .width(200)
+            .left().format("{{ '[No.' + rowIndex  + ']' + record.name }}")
         .readonly()
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
@@ -110,19 +112,26 @@ const schema: Ref = ref({
         .parse(),
 
     salary: new FormSchema()
-        .title("工资").width(150) // .left() 
+        .title("工资") // .width(150).center() 
         .inputNumber().placeholder("输入工资").clearable(false)
             // .props({
             //     allowClear: true
             // })
         .sortable().asc().desc()
-        .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}")
+        .filterable()
+            .gt(20000)
+            .gt([25000, 100000])
+            // .filter("{{ record.salary > value[0] }}")
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
    
     address: new FormSchema()
-        .title("地址").width(250).center()
-        .filterable().eq("北京海淀知春路").eq("35 Park Road, London").filter(`{{ record.address === value[0] }}`) // @tofix
+        .title("地址") // .width(250).center()
+        .filterable()
+            // .startsWith("北京海淀").startsWith("35 Park Road")
+            // .startsWith(["北京海淀", "35 Park Road"])
+            .includes(["北京", "绵阳", "Park Road"])
+            // .filter(`{{ record.address.startsWith(value[0]) }}`) // 也可以不用写
         .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
                 .props({
                     autoSize: true
@@ -131,7 +140,9 @@ const schema: Ref = ref({
         .parse(),
 
     province: new FormSchema()
-        .title("省份").width(150).center()
+        .title("省份")
+            // .width(150)
+            .center()
         // .column().fixed().right()
         .select({ 
             province: ['北京', '四川', '广东'],
@@ -146,7 +157,9 @@ const schema: Ref = ref({
         .parse(),
 
     city: new FormSchema()
-        .title("城市").width(150).center()
+        .title("城市")
+            // .width(150)
+            .center()
         // .column().fixed().right()
         .select().keepWatch("province") // 联动
         .parse(),
@@ -176,7 +189,7 @@ const data = reactive([
         key: '3',
         name: 'Kevin Sandra',
         salary: 22000,
-        address: '31 Park Road, London',
+        address: '四川绵阳咩咩',
         province: '四川',
         city: '绵阳',
         email: 'kevin.sandra@example.com'
@@ -207,12 +220,6 @@ for (let i = 10; i < 1000; i++) {
     })
 }
 
-const pagination = ref({
-    pageSize: 5,
-    showTotal: true, 
-    // showJumper: true, 
-    showPageSize: true
-})
 
 const showItem = (argv: any) => {
     const { record } = argv

@@ -5,9 +5,9 @@
             
             <ACol flex="auto">
 
-                <AForm :layout="get(props.options, 'search.layout')">
+                <AForm :layout="get(props.options, 'search.layout')" label-align="left">
 
-                <!-- @fix 需要指定宽度为100%  -->
+                <!-- @fix 需要指定宽度为 100%  -->
                 <AGrid :cols="get(props.options, 'search.cols')" :colGap="12" style="width: 100%;">
                         
                     <AGridItem 
@@ -16,8 +16,8 @@
                     >
 
                         <AFormItem
-                            label-col-flex="80px"
-
+                            label-col-flex="60px"
+                            
                             :field="column.dataIndex" 
                             :label="column.title">
 
@@ -130,13 +130,15 @@
             :bordered="get(props.options, 'row.border')" 
             :column-resizable="get(props.options, 'column.resizable')"
             :expandable="expandable" 
-            :pagination="get(props.options, 'pagination')"
+            :pagination="pagination"
             :show-header="get(props.options, 'header.visible')" 
             :scroll="get(props.options, 'body.scroll')"
             :row-selection="get(props.options, 'row.selection')" 
             :virtual-list-props="get(props.options, 'body.virtualList')" 
             v-model:selectedKeys="selectedKeys"
             :columns="columns"
+            @page-change="handlePageChange"
+            @page-size-change="handlePageSizeChange"
             :data="props.data">
 
             <template #AInput="{ rowIndex, column, record }">
@@ -245,11 +247,16 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    pagination: {
-        type: Object,
-        default: {}
-    },
 })
+
+const pagination = ref({
+    pageSize: 10,
+    showTotal: true, 
+    // showJumper: true, 
+    showPageSize: true,
+
+})
+
 
 const visible = ref(false)
 const currentRecord = ref({})
@@ -268,7 +275,7 @@ const formEditMode = ref(false)
 const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value).parse())
 
 const init = () => {
-    debugger
+    // debugger
 
     isVirtualList.value = !!get(props.options, "body.virtualList")
 
@@ -329,7 +336,7 @@ const defaultTrigger = (key, item, record) => {
         visible.value = true
     }
 
-    if (key === "delete") {
+    if (key === "remove") {
         Modal.confirm({
             title: "删除确认",
             content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
@@ -360,18 +367,38 @@ onMounted(() => {
 
         let format = get(formSchema, "widget.format")
 
-        let filterRender = get(formSchema, "filterable.render")
-        if (filterRender) {
+        
+        let filterable = get(formSchema, "filterable")
+
+        if (filterable) {
+            let filterRender = get(formSchema, "filterable.render")
+
+            let filterableType = get(formSchema, "filterable.type") || 'eq'
+            if (filterableType == 'eq') {
+                filterRender = `{{ record.${key} === value[0] }}`
+            } 
+            if (filterableType == 'lt') {
+                filterRender = `{{ record.${key} < value[0] }}`
+            }
+            if (filterableType == 'gt') {
+                filterRender = `{{ record.${key} > value[0] }}`
+            }
+            if (filterableType == 'startsWith') {
+                filterRender = `{{ record.${key}.startsWith(value[0]) }}`
+            }
+            if (filterableType == 'includes') {
+                filterRender = `{{ record.${key}.includes(value[0]) }}`
+            }
+
             set(formSchema, "filterable.filter", (value, record) => {
+                console.log("value")
+                console.log(value)
+
                 return getEval2(filterRender, value, record)
             })
         }
 
-        const filter = get(formSchema, "filterable")
-        // console.log("filter")
-        // console.log(filter)
 
-        debugger
 
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
@@ -417,6 +444,18 @@ onMounted(() => {
 
 const handleTableChange = (data) => {
     // console.log(data)
+}
+
+const handlePageSizeChange = (pageSize) => {
+    pagination.value = Object.assign({}, pagination.value, {
+        pageSize,
+    })
+}
+
+const handlePageChange = (current) => {
+    pagination.value = Object.assign({}, pagination.value, {
+        current,
+    })
 }
 
 const handleKeepWatchDeps = (column, record) => {

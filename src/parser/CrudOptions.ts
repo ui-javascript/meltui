@@ -310,13 +310,13 @@ export class CrudOptions {
         return this
     }
 
-    deleteOperation(enable = true) {
+    removeOperation(enable = true) {
         if (!enable) {
             return this
         }
-        this.context = "operation.delete"
+        this.context = "operation.remove"
         const op = get(this.json, "operation.operationList") || {}
-        op.delete = {
+        op.remove = {
             type: 'AButton',
             title: "删除",
             status: "danger"

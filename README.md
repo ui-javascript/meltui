@@ -101,7 +101,9 @@ const options = new CrudOptions()
 const schema = {
     salary: new FormSchema()
         .sortable().asc().desc() // 排序
-        .filterable().gt(20000).gt(100000).filter("{{ record.salary > value }}") // 筛选
+        .filterable() // 筛选
+            .gt(20000).gt([25000, 100000]) // gt | lt | eq | startsWith | includes
+            // .filter("{{ record.salary > value }}") // filter可以不用写
         .parse(),
 }
 ```
@@ -123,7 +125,7 @@ const options = new CrudOptions()
 ```js
 const options = new CrudOptions()
     .viewOperation().clickEmit("showItem")
-    // .deleteOperation()
+    // .removeOperation()
     .parse()
 
 ===

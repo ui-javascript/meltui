@@ -1,5 +1,6 @@
-import { merge, set, upperFirst, get } from "lodash"
+import { merge, set, upperFirst, get, isArray } from "lodash"
 import { toHandlers } from "vue"
+import { isTypeError } from "xe-utils"
 
 export class FormSchema {
 
@@ -188,48 +189,139 @@ export class FormSchema {
     filter(render: string) {
         if (this.context === "filterable") {
             set(this.json, "filterable.render", render)
+            set(this.json, 'title.align', 'center')
         }
         return this
     }
 
-    gt(num: number) {
+    eq(num: number|string|[]) {
         if (this.context === "filterable") {
             let filters = get(this.json, "filterable.filters") || []
-            filters.push({
-                text: '> ' + num,
-                value: num + "",
-            })
+
+            if (isArray(num)) {
+                num.forEach(item => {
+                    filters.push({
+                        text: '= ' + item,
+                        value: item,
+                    })
+                })
+            } else {
+                filters.push({
+                    text: '= ' + num,
+                    value: num,
+                })
+            }
 
             set(this.json, "filterable.filters", filters)
+            set(this.json, "filterable.type", 'eq')
+            set(this.json, 'title.align', 'center')
         }
         return this
     }
 
-    eq(num: any) {
+    gt(num: number|number[]) {
         if (this.context === "filterable") {
             let filters = get(this.json, "filterable.filters") || []
-            filters.push({
-                text: '= ' + num,
-                value: num,
-            })
+    
+
+            if (isArray(num)) {
+                num.forEach(item => {
+                    filters.push({
+                        text: '> ' + item,
+                        value: item + "",
+                    })
+                })
+            } else {
+                filters.push({
+                    text: '> ' + num,
+                    value: num + "",
+                })
+            }
 
             set(this.json, "filterable.filters", filters)
+            set(this.json, "filterable.type", 'gt')
+            set(this.json, 'title.align', 'center')
         }
         return this
     }
 
-    lt(num: number) {
+
+    lt(num: number|number[]) {
         if (this.context === "filterable") {
             let filters = get(this.json, "filterable.filters") || []
-            filters.push({
-                text: '< ' + num,
-                value: num + "",
-            })
+ 
+
+            if (isArray(num)) {
+                num.forEach(item => {
+                    filters.push({
+                        text: '< ' + item,
+                        value: item + "",
+                    })
+                })
+            } else {
+                filters.push({
+                    text: '< ' + num,
+                    value: num + "",
+                })
+            }
 
             set(this.json, "filterable.filters", filters)
+            set(this.json, "filterable.type", 'lt')
+            set(this.json, 'title.align', 'center')
         }
         return this
     }
+
+    startsWith(num: string | string[]) {
+        if (this.context === "filterable") {
+            let filters = get(this.json, "filterable.filters") || []
+
+            if (isArray(num)) {
+                num.forEach(item => {
+                    filters.push({
+                        text: '' + item,
+                        value: item,
+                    })
+                })
+            } else {
+                filters.push({
+                    text: '' + num,
+                    value: num,
+                })
+            }
+
+            set(this.json, "filterable.filters", filters)
+            set(this.json, "filterable.type", 'startsWith')
+            set(this.json, 'title.align', 'center')
+        }
+        return this
+    }
+
+    includes(num: string | string[]) {
+        if (this.context === "filterable") {
+            let filters = get(this.json, "filterable.filters") || []
+
+            if (isArray(num)) {
+                num.forEach(item => {
+                    filters.push({
+                        text: '' + item,
+                        value: item,
+                    })
+                })
+            } else {
+                filters.push({
+                    text: '' + num,
+                    value: num,
+                })
+            }
+
+            set(this.json, "filterable.filters", filters)
+            set(this.json, "filterable.type", 'includes')
+            set(this.json, 'title.align', 'center')
+        }
+        return this
+    }
+
 
     
     searchable(enabled = true) {

@@ -1,6 +1,6 @@
 {
   "name": "meltui",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "type": "module",
   "main": "dist/melt-crud.cjs",
   "module": "dist/melt-crud.js",
@@ -13,7 +13,8 @@
     "build": "vue-tsc --noEmit && vite build --outDir docs",
     "build:lib": "vue-tsc --noEmit && vite build --config vite.lib.config.ts",
     "preview": "vite preview",
-    "rm:nm": "rimraf node_modules"
+    "rm:nm": "rimraf node_modules",
+    "publish:lib": "npm run build:lib && npm publish"
   },
   "dependencies": {
     "5a.css": "^0.1.20",

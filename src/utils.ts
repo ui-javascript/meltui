@@ -35,7 +35,6 @@ export const getEval2 = (string: string, value: string, record: {}) => {
       }
   }
 
-  debugger
   return safeEval(`
     const value = ${JSON.stringify(value)};
     const record = ${JSON.stringify(record)};
