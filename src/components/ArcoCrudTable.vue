@@ -1,20 +1,20 @@
 <template>
     <div>
 
+                
         <ARow style="margin-bottom: 10px" v-if="get(props.options, 'search.enabled')" :gutter="20">
-            
+    
             <ACol flex="auto">
-
                 <AForm :layout="get(props.options, 'search.layout')" label-align="left">
 
                 <!-- @fix 需要指定宽度为 100%  -->
                 <AGrid :cols="get(props.options, 'search.cols')" :colGap="12" style="width: 100%;">
-                        
+                     
                     <AGridItem 
                         :key="advancedSearch + '_'"
-                        v-for="column in columns.filter(column => get(column.formSchema, 'searchable.enabled') && ( advancedSearch || (!advancedSearch && !get(column.formSchema, 'searchable.advancedOnly'))) )"
+                        v-for="column in columns.filter(column => get(props.schema[column.dataIndex], 'searchable.enabled') && (advancedSearch || (!advancedSearch && !get(props.schema[column.dataIndex], 'searchable.advancedOnly'))) )"
                     >
-
+                    
                         <AFormItem
                             label-col-flex="60px"
                             :field="column.dataIndex" 
@@ -25,19 +25,15 @@
                                 v-model="keyword[column.dataIndex]"
                                 @change="handleKeepWatchDeps(column, list)" 
                                 v-bind="{
-                                     ...get(column.formSchema, 'widget.props'),
+                                     ...get(props.schema[column.dataIndex], 'widget.props'),
                                      options: column.keepWatch ? selectOptions[list[column.keepWatch]] : selectOptions[column.dataIndex],
-                                     'allow-clear': get(column.formSchema, 'widget.clearable'),
-                                     placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
+                                     'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                                     placeholder: getEval(get(props.schema[column.dataIndex], 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
                                }" />
 
                             
                         </AFormItem>
                     </AGridItem>
-
-
-
-                        <!-- {{ JSON.stringify(props.data, null, 2) }} -->
                    
 
                 </AGrid>
@@ -53,8 +49,6 @@
             <ACol :flex="advancedSearch ? '50px' : '290px' ">
                 <ASpace :direction="advancedSearch ? 'vertical' : 'horizontal'">
     
-               
-             
                     <AButton type="primary" @click="fetchList">
                         <template #icon>
                             <IconSearch />
@@ -147,26 +141,26 @@
 
             <template #AInput="{ rowIndex, column, record }">
                 <AInput v-model="record[column.dataIndex]" v-bind="{
-                     'allow-clear': get(column.formSchema, 'widget.clearable'),
-                     placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                     ...get(column.formSchema, 'widget.props'),
+                     'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                     placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                     ...get(props.schema[column.dataIndex], 'widget.props'),
                 }" />
             </template>
 
             <template #AInputNumber="{ rowIndex, column, record }">
                 <AInputNumber v-model="record[column.dataIndex]" v-bind="{
-                     'allow-clear': get(column.formSchema, 'widget.clearable'),
-                     placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                     ...get(column.formSchema, 'widget.props'),
+                     'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                     placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                     ...get(props.schema[column.dataIndex], 'widget.props'),
                 }" />
             </template>
 
             <template #ATextarea="{ rowIndex, column, record }">
                 <!-- {{ column }} -->
                 <ATextarea v-model="record[column.dataIndex]" v-bind="{
-                     'allow-clear': get(column.formSchema, 'widget.clearable'),
-                     placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                     ...get(column.formSchema, 'widget.props'),
+                     'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                     placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                     ...get(props.schema[column.dataIndex], 'widget.props'),
                 }" />
             </template>
 
@@ -175,18 +169,18 @@
              <p>{{record}}</p>  -->
                 <ASelect :options="selectOptions[column.dataIndex] || []" @change="handleKeepWatchDeps(column, record)"
                     v-model="record[column.dataIndex]" v-bind="{
-                         'allow-clear': get(column.formSchema, 'widget.clearable'),
-                         placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                         ...get(column.formSchema, 'widget.props'),
+                         'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                         placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                         ...get(props.schema[column.dataIndex], 'widget.props'),
                     }" />
             </template>
 
             <template #ASelectCascader="{ rowIndex, column, record }">
                 <ASelect :options="selectOptions[record[column.keepWatch]] || []" v-model="record[column.dataIndex]"
                     v-bind="{
-                         'allow-clear': get(column.formSchema, 'widget.clearable'),
-                         placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                         ...get(column.formSchema, 'widget.props'),
+                         'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                         placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                         ...get(props.schema[column.dataIndex], 'widget.props'),
                     }" />
             </template>
 
@@ -211,14 +205,14 @@
                             <Component 
                                 :is="item.type || 'AButton'" 
                                 v-bind="{
-                                'allow-clear': get(column.formSchema, 'widget.clearable'),
+                                'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                                 type: 'text',
                                 size: 'small',
                                 status: item.status,
                                 // long: true,
                                 style: {paddingLeft: '4px', paddingRight: '4px'},
-                                placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                                ...get(column.formSchema, 'widget.props'),
+                                placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                                ...get(props.schema[column.dataIndex], 'widget.props'),
                             }" 
 
                             >{{item.title}}</Component>
@@ -228,18 +222,17 @@
                         
                         <Component 
                             v-else
-                                :is="item.type || 'AButton'" 
-                                v-bind="{
-                                'allow-clear': get(column.formSchema, 'widget.clearable'),
+                            :is="item.type || 'AButton'" 
+                            v-bind="{
+                                'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                                 type: 'text',
                                 size: 'small',
                                 status: item.status,
                                 // long: true,
                                 style: {paddingLeft: '4px', paddingRight: '4px'},
-                                placeholder: getEval(get(column.formSchema, 'widget.placeholder'), record, column, rowIndex) || '请输入',
-                                ...get(column.formSchema, 'widget.props'),
+                                placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
+                                ...get(props.schema[column.dataIndex], 'widget.props'),
                             }" 
-
                             @click="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">{{item.title}}</Component>
                     </template>
                   
@@ -461,11 +454,12 @@ onMounted(async () => {
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
             dataIndex: key,
+            key: key,
             width: get(formSchema, "title.width"),
             align: get(formSchema, "title.align") || 'left',
             keepWatch,
             format,
-            formSchema,
+            // formSchema,
             sortable: get(formSchema, "sortable"),
             filterable: get(formSchema, "filterable"),
             fixed: get(formSchema, "column.fixed"),
@@ -500,7 +494,7 @@ onMounted(async () => {
 
         columns.value.push({
             title: '操作栏',
-            fixed: resizable ? 'right' : false,
+            fixed: resizable ? false : 'right',
             align: 'center',
             width: operationList.length * 50 + 40,
             slotName: 'operationList'
@@ -510,7 +504,7 @@ onMounted(async () => {
         if (resizable) {
             columns.value.push({
                 title: '',
-                fixed: resizable ? 'right' : false,
+                fixed: resizable ? false : 'right',
                 align: 'center',
                 // wdith: "20px",
                 slotName: 'empty'
@@ -520,11 +514,14 @@ onMounted(async () => {
    
     }
 
-    console.log("columns: ")
-    console.log(JSON.stringify(columns.value))
+    // console.log("columns: ")
+    // console.log(JSON.stringify(columns.value))
 
-    console.log("options: ")
-    console.log(JSON.stringify(props.options))
+    // console.log("options: ")
+    // console.log(JSON.stringify(props.options))
+
+    // console.log("schema: ")
+    // console.log(JSON.stringify(props.schema))
 
 })
 
