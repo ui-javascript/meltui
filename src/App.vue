@@ -25,17 +25,14 @@
 
         <AConfigProvider size="small">
             
-        
-
             <ArcoCrudTable 
                 :key="editable + '_' + searchable"
                 @showItem="showItem"
-                class="mt-2"
-                :data="data" 
-        
+                class="mt-2"        
                 :options="options" 
                 :schema="schema" 
-            /> 
+            />
+
         </AConfigProvider>
        
 
@@ -75,11 +72,16 @@ let options = ref(new CrudOptions()
     // .body().virtualList().height(300)
     .body().scroll().y(400)
     // .body().scroll().x(1000) 
-    .column().resizable()
+    // .column().resizable()
     .editOperation()
     .viewOperation() 
-    .removeOperation().confirmText("确定删除吗?") // .needConfirm(true)
+    .removeOperation().needConfirm().confirmText("确定删除吗?") 
     .customOperation("自定义").clickEmit("showItem")
+
+    .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
+    .fetchList().get("/v1/fetchList")
+
+
     // .customOperation("自定义2").clickEmit("showItem")
     .parse())
 

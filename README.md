@@ -33,7 +33,6 @@ app.use(ArcoVue, {
 ```vue
 <template>
     <ArcoCrudTable 
-        :data="data" 
         :options="options" 
         :schema="schema" 
     />
@@ -49,6 +48,8 @@ const options = new CrudOptions()
     .edit() // 编辑模式
     .search() // 搜索模式
     .hover().border().stripe()
+    .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
+    .fetchList().get("/v1/fetchList") // 初始化接口
     .parse()
 
 const schema = {
@@ -146,7 +147,7 @@ const options = new CrudOptions()
 const options = new CrudOptions()
     .editOperation()
     .viewOperation() 
-    .removeOperation().confirmText("确定删除吗?")
+    .removeOperation().needConfirm(true).confirmText("确定删除吗?")
     .customOperation("自定义").clickEmit("showItem")
     .parse()
 

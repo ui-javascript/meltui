@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const http = axios.create({
     // 配置
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    // baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 http.interceptors.response.use(function (response) {

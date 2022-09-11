@@ -23,10 +23,10 @@
                                 <Component
                                 :is="column.widget?.type || 'AInput'" 
                                 v-model="keyword[column.dataIndex]"
-                                @change="handleKeepWatchDeps(column, props.data)" 
+                                @change="handleKeepWatchDeps(column, list)" 
                                 v-bind="{
                                      ...get(column.formSchema, 'widget.props'),
-                                     options: column.keepWatch ? selectOptions[props.data[column.keepWatch]] : selectOptions[column.dataIndex],
+                                     options: column.keepWatch ? selectOptions[list[column.keepWatch]] : selectOptions[column.dataIndex],
                                      'allow-clear': get(column.formSchema, 'widget.clearable'),
                                      placeholder: getEval(get(column.formSchema, 'searchable.placeholder'), {}, column, null) || ('请输入' + column.title),                                
                                }" />
@@ -53,29 +53,30 @@
             <ACol :flex="advancedSearch ? '50px' : '290px' ">
                 <ASpace :direction="advancedSearch ? 'vertical' : 'horizontal'">
     
-                    <AButton status="success" type="primary" @click="advancedSearch = !advancedSearch">
-                        <template  #icon>
-                            <IconDoubleLeft v-if="advancedSearch" />
-                            <IconDoubleRight v-else /> 
-                        </template>
-                        {{ advancedSearch ? '收起' : '展开' }}
-                    </AButton>
+               
              
-              
-                    <AButton type="primary" status="warning" @click="keyword = {}">
+                    <AButton type="primary" @click="fetchList">
+                        <template #icon>
+                            <IconSearch />
+                        </template>
+                        查询
+                    </AButton>
+
+                    <AButton  status="warning" @click="handleReset">
                         <template #icon>
                             <IconCloseCircle />
                         </template>
                         重置
                     </AButton>
        
-                    <AButton type="primary">
-                        <template #icon>
-                            <IconSearch />
+                    <AButton status="success" @click="advancedSearch = !advancedSearch">
+                        <template  #icon>
+                            <IconArrowLeft v-if="advancedSearch" />
+                            <IconArrowDown v-else /> 
                         </template>
-                        查询
+                        {{ advancedSearch ? '收起' : '展开' }}
                     </AButton>
-             
+
                 </ASpace>
 
             </ACol>
@@ -138,9 +139,10 @@
             :virtual-list-props="get(props.options, 'body.virtualList')" 
             v-model:selectedKeys="selectedKeys"
             :columns="columns"
+            :loading="tableLoading"
             @page-change="handlePageChange"
             @page-size-change="handlePageSizeChange"
-            :data="props.data">
+            :data="list">
 
             <template #AInput="{ rowIndex, column, record }">
                 <AInput v-model="record[column.dataIndex]" v-bind="{
@@ -197,6 +199,7 @@
                        
                     <template  v-for="item of props.options.operation.operationList">
                         <APopconfirm v-if="item.needConfirm" 
+                        status="warning"
                         :content="item.confirmText || '确认执行操作吗?'"
                         @ok="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">
                             <Component 
@@ -253,7 +256,7 @@
 
 <script setup name="ArcoCrudTable">
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 
 import { getEval, getEval2 } from "@/utils";
 import { get, merge, set, upperFirst } from "lodash"
@@ -261,14 +264,15 @@ import { get, merge, set, upperFirst } from "lodash"
 import {CrudOptions} from "@/parser"
 
 import { ArcoCrudForm } from "@/components"
-import { IconSearch, IconEdit, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDoubleRight, IconDoubleLeft } from "@arco-design/web-vue/es/icon"
+import { IconSearch, IconEdit, IconArrowDown, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDown, IconArrowLeft } from "@arco-design/web-vue/es/icon"
 import { Modal } from '@arco-design/web-vue';
+import http from '@/http';
 
 const props = defineProps({
-    data: {
-        type: Array,
-        default: []
-    },
+    // data: {
+    //     type: Array,
+    //     default: []
+    // },
     schema: {
         type: Object,
         default: {}
@@ -277,18 +281,22 @@ const props = defineProps({
         type: Object,
         default: {}
     },
-    loading: {
-        type: Boolean,
-        default: false
-    },
+    // loading: {
+    //     type: Boolean,
+    //     default: false
+    // },
 })
 
+const list = ref([])
+
+const tableLoading = ref(false)
+
 const pagination = ref({
+    current: 1,
     pageSize: 10,
     showTotal: true, 
     // showJumper: true, 
     showPageSize: true,
-
 })
 
 
@@ -380,7 +388,10 @@ const defaultTrigger = (item, record) => {
 
 }
 
-onMounted(() => {
+onMounted(async () => {
+
+
+
 
     init()
 
@@ -489,6 +500,34 @@ onMounted(() => {
 
 })
 
+const fetchList = async () => {
+    let baseUrl = get(props.options, "baseUrl")
+    let fetchList = get(props.options, "fetchList")
+    let fetchUrl = get(props.options, "fetchList.url")
+
+    if (!baseUrl || !fetchList) {
+        return
+    }
+
+    tableLoading.value = true
+    let method = get(props.options, "fetchList.method")
+
+    const { data } = await http(fetchUrl, {
+        method,
+        baseURL: baseUrl,
+        [method === "GET" ? 'params' : 'data']: {
+            page: pagination.value.current,
+            pageSize: pagination.value.pageSize,
+            ...keyword.value,
+        }
+    })
+
+    list.value = data.list
+    pagination.value.total = data.total
+
+    tableLoading.value = false
+}
+
 
 const handleTableChange = (data) => {
     // console.log(data)
@@ -512,4 +551,16 @@ const handleKeepWatchDeps = (column, record) => {
         record[deps] = ""
     }
 }
+
+watch([pagination], async () => {
+    fetchList()
+}, {
+    immediate: true
+})
+
+const handleReset = () => {
+    keyword.value = {}
+    fetchList()
+}
+
 </script>

@@ -442,13 +442,13 @@ export class CrudOptions {
 
     confirmText(text: string) {
    
-
         const op = get(this.json, "operation.operationList") || {}
 
         if (this.context === "operation.view") {
             let item = op.find((item: any) => item.name === "view")
             if (item) {
                 item.confirmText = text
+                item.needConfirm = true
             }
             return this
         }
@@ -457,6 +457,7 @@ export class CrudOptions {
             let item = op.find((item: any) => item.name === "edit")
             if (item) {
                 item.confirmText = text
+                item.needConfirm = true
             }
             return this
         }
@@ -465,6 +466,7 @@ export class CrudOptions {
             let item = op.find((item: any) => item.name === "remove")
             if (item) {
                 item.confirmText = text
+                item.needConfirm = true
             }
             return this
         }
@@ -477,6 +479,7 @@ export class CrudOptions {
                 let item = op.find((item: any) => item.title === opName)
                 if (item) {
                     item.confirmText = text
+                    item.needConfirm = true
                 }
             }
         }
@@ -543,6 +546,31 @@ export class CrudOptions {
     }
 
 
+    baseUrl(url: string) {
+        set(this.json, "baseUrl", url)
+        return this
+    }
+
+    fetchList() {
+        this.context = "fetchList"
+        return this
+    }
+
+    get(url: string) {
+        if (this.context == "fetchList") {
+            set(this.json, "fetchList.url", url)
+            set(this.json, "fetchList.method", "GET")
+        }
+        return this
+    }
+
+    post(url: string) {
+        if (this.context == "fetchList") {
+            set(this.json, "fetchList.url", url)
+            set(this.json, "fetchList.method", "POST")
+        }
+        return this
+    }
 
     parse(json?: {}) {
         if (json) {
