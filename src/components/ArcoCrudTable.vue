@@ -194,6 +194,11 @@
                 {{ getEval(column.format, record, column, rowIndex) }}
             </template>
 
+            <template #empty>
+
+            </template>
+
+
             <template #operationList="{ record, column, rowIndex }">
 
                 <!-- {{JSON.stringify(props.options.operation.operationList)}} -->
@@ -316,15 +321,15 @@ let expandRender = ref()
 const isVirtualList = ref(false)
 
 const formEditMode = ref("") 
-const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value).parse())
+const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value === "edit").parse())
 
 const init = () => {
     // debugger
 
     isVirtualList.value = !!get(props.options, "body.virtualList")
 
-    console.log("isVirtualList: ")
-    console.log(isVirtualList.value)
+    // console.log("isVirtualList: ")
+    // console.log(isVirtualList.value)
 
     columns.value = []
     selectOptions.value = {}
@@ -380,13 +385,10 @@ const defaultTrigger = (item, record) => {
         visible.value = true
     }
 
-    // if (item.name === "remove") {
-    //     Modal.confirm({
-    //         title: "删除确认",
-    //         content: `确认删除吗 ${record.name || record.title || record.id || record.key} ?`,
-    //         status: 'danger'
-    //     })
-    // }
+    console.log("item.name: " + item.name)
+    if (item.name === "remove") {
+        handleDelete(record)
+    }
 
 }
 
@@ -424,8 +426,6 @@ onMounted(async () => {
         }
 
         let format = get(formSchema, "widget.format")
-
-        
         let filterable = get(formSchema, "filterable")
 
         if (filterable) {
@@ -495,27 +495,33 @@ onMounted(async () => {
         })
         set(props.options, "operation.operationList", operationList)
 
+
+        let resizable = get(props.options, 'column.resizable')
+
         columns.value.push({
             title: '操作栏',
-            fixed: 'right',
+            fixed: resizable ? 'right' : false,
             align: 'center',
             width: operationList.length * 50 + 40,
             slotName: 'operationList'
         })
 
-        if (get(props.options, 'column.resizable')) {
+        
+        if (resizable) {
             columns.value.push({
-            title: '',
-            fixed: 'right',
-            align: 'center',
-            // wdith: "20px"
-        })
+                title: '',
+                fixed: resizable ? 'right' : false,
+                align: 'center',
+                // wdith: "20px",
+                slotName: 'empty'
+            })
         }
+
    
     }
 
-    // console.log("columns: ")
-    // console.log(JSON.stringify(columns.value))
+    console.log("columns: ")
+    console.log(JSON.stringify(columns.value))
 
     console.log("options: ")
     console.log(JSON.stringify(props.options))
@@ -548,6 +554,33 @@ const fetchList = async () => {
     pagination.value.total = data.total
 
     tableLoading.value = false
+}
+
+
+const handleDelete = async (record) => {
+    let baseUrl = get(props.options, "baseUrl")
+    let deleteOne = get(props.options, "delete")
+    let deleteUrl = get(props.options, "delete.url")
+
+    if (!baseUrl || !deleteOne || !deleteUrl) {
+        return
+    }
+
+    let method = get(props.options, "delete.method")
+
+    // tableLoading.value = true
+    await http( deleteUrl, {
+        method,
+        baseURL: baseUrl,
+        [method === "GET" ? 'params' : 'data']: {
+            id: record.id,
+        }
+    })
+    // tableLoading.value = false
+
+    fetchList()
+
+
 }
 
 

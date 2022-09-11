@@ -93,6 +93,14 @@ const options = new CrudOptions()
     .parse()
 ```
 
+- 表格固定高度
+
+```js 
+const options = new CrudOptions()
+    .body().scroll().y(400) 
+    .parse()
+```
+
 - 展开行
 
 ```js
@@ -115,7 +123,8 @@ const schema = {
 
 ```js 
 const options = new CrudOptions()
-    .column().resizable()
+    .column().resizable().column().resizable() // 右侧的fixed会失效
+    // .body().scroll().x(1000) 
     .parse()
 ```
 

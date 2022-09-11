@@ -347,7 +347,7 @@ export class CrudOptions {
             idx: 100,
             // size: 'mini',
         })
-        set(this.json, "operation.customOperationList", op)
+        set(this.json, "operation.operationList", op)
 
         return this
     }
@@ -606,6 +606,11 @@ export class CrudOptions {
         if (this.context == "save") {
             set(this.json, "save.url", url)
             set(this.json, "save.method", "GET")
+        }
+
+        if (this.context == "delete") {
+            set(this.json, "delete.url", url)
+            set(this.json, "delete.method", "GET")
         }
 
         return this

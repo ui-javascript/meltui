@@ -73,13 +73,16 @@ let options = ref(new CrudOptions()
     // .body().scroll().y(400)
     // .body().scroll().x(1000) 
     .column().resizable()
-    .editOperation()
-    .viewOperation() 
-    .removeOperation().needConfirm().confirmText("确定删除吗?") 
-    .customOperation("自定义").clickEmit("showItem")
 
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
     .fetchList().get("/v1/fetchList")
+    .editOperation()
+    .viewOperation() 
+    .removeOperation().needConfirm().confirmText("确定删除吗?") 
+    .delete().get("/v1/fetchList")
+    .customOperation("自定义").clickEmit("showItem")
+
+
     .save().get("/v1/fetchList")
 
 
