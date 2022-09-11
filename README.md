@@ -62,7 +62,11 @@ const schema = {
         .inputNumber().placeholder("输入工资").clearable()
         .parse(),
     address: new FormSchema().title("地址").width(200).center()
-        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址' }}")
+        .textArea().clearable()
+            .placeholder("{{ '请输入' + (record.name ? record.name + '的' : '') + '地址'}}")
+            .props({
+                autoSize: true
+            })
         .parse(),
     province: new FormSchema().width(100).title("省份")
         // 下拉框

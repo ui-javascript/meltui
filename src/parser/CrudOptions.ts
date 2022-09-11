@@ -551,8 +551,44 @@ export class CrudOptions {
         return this
     }
 
+
+    fetch() {
+        this.context = "fetch"
+        return this
+    }
+
     fetchList() {
         this.context = "fetchList"
+        return this
+    }
+
+    delete() {
+        this.context = "delete"
+        return this
+    }
+
+    deleteBatch() {
+        this.context = "deleteBatch"
+        return this
+    }
+
+    save() {
+        this.context = "save"
+        return this
+    }
+
+    saveBatch() {
+        this.context = "saveBatch"
+        return this
+    }
+
+    update() {
+        this.context = "update"
+        return this
+    }
+
+    updateBatch() {
+        this.context = "updateBatch"
         return this
     }
 
@@ -561,6 +597,17 @@ export class CrudOptions {
             set(this.json, "fetchList.url", url)
             set(this.json, "fetchList.method", "GET")
         }
+
+        if (this.context == "fetch") {
+            set(this.json, "fetch.url", url)
+            set(this.json, "fetch.method", "GET")
+        }
+
+        if (this.context == "save") {
+            set(this.json, "save.url", url)
+            set(this.json, "save.method", "GET")
+        }
+
         return this
     }
 
@@ -568,6 +615,10 @@ export class CrudOptions {
         if (this.context == "fetchList") {
             set(this.json, "fetchList.url", url)
             set(this.json, "fetchList.method", "POST")
+        }
+        if (this.context == "fetch") {
+            set(this.json, "fetch.url", url)
+            set(this.json, "fetch.method", "POST")
         }
         return this
     }

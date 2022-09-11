@@ -70,9 +70,9 @@ let options = ref(new CrudOptions()
     // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(300)
-    .body().scroll().y(400)
+    // .body().scroll().y(400)
     // .body().scroll().x(1000) 
-    // .column().resizable()
+    .column().resizable()
     .editOperation()
     .viewOperation() 
     .removeOperation().needConfirm().confirmText("确定删除吗?") 
@@ -80,6 +80,7 @@ let options = ref(new CrudOptions()
 
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
     .fetchList().get("/v1/fetchList")
+    .save().get("/v1/fetchList")
 
 
     // .customOperation("自定义2").clickEmit("showItem")
@@ -110,17 +111,16 @@ watch(() => searchable.value, (current, prev) => {
 const schema: Ref = ref({
     name: new FormSchema()
         .title().upperFirst()
-            // .width(200)
-            .left().format("{{ '[No.' + rowIndex  + ']' + record.name }}")
+            .width(200)
+            .left().format("{{ '[No.' + (rowIndex+1)  + ']' + record.name }}")
         .readonly()
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
-        .cell().ellipsis().tooltip().width(150) // width会覆盖前面的
         .searchable() // .placeholder("{{ '请输入' + column.title }}")
         .parse(),
 
     salary: new FormSchema()
-        .title("工资") // .width(150).center() 
+        .title("工资").width(150).center() 
         .inputNumber().placeholder("输入工资").clearable(false)
             // .props({
             //     allowClear: true
@@ -134,22 +134,25 @@ const schema: Ref = ref({
         .parse(),
    
     address: new FormSchema()
-        .title("地址") // .width(250).center()
+        .title("地址").width(250).center()
         .filterable()
             // .startsWith("北京海淀").startsWith("35 Park Road")
             // .startsWith(["北京海淀", "35 Park Road"])
             .includes(["北京", "绵阳", "Park Road"])
             // .filter(`{{ record.address.startsWith(value[0]) }}`) // 也可以不用写
-        .textArea().clearable().placeholder("{{ '请输入' + record.name + '的地址'}}")
+        .textArea().clearable()
+                .placeholder("{{ '请输入' + (record.name ? record.name + '的' : '') + '地址'}}")
                 .props({
                     autoSize: true
                 })
+        .cell().ellipsis().tooltip().width(150) // width会覆盖
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
+        .readonly()
         .parse(),
 
     province: new FormSchema()
         .title("省份")
-            // .width(150)
+            .width(150)
             .center()
         // .column().fixed().right()
         .select({ 
@@ -166,7 +169,7 @@ const schema: Ref = ref({
 
     city: new FormSchema()
         .title("城市")
-            // .width(150)
+            .width(150)
             .center()
         // .column().fixed().right()
         .select().keepWatch("province") // 联动

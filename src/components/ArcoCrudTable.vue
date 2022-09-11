@@ -88,7 +88,8 @@
         <ARow :gutter="12" style="margin-bottom: 20px;">
             <ACol :span="12" align="left">
             <ASpace>
-                <AButton type="primary">
+                <AButton v-if="get(props.options, 'save.url')" 
+                    type="primary" @click="handleSave">
                     <template #icon>
                         <IconPlus style="cursor: pointer;" />
                         </template>
@@ -199,7 +200,7 @@
                        
                     <template  v-for="item of props.options.operation.operationList">
                         <APopconfirm v-if="item.needConfirm" 
-                        status="warning"
+                        type="warning"
                         :content="item.confirmText || '确认执行操作吗?'"
                         @ok="item.clickEmit ? $emit(item.clickEmit, {record}) : defaultTrigger(item, record)">
                             <Component 
@@ -242,7 +243,7 @@
         </ATable>
      
 
-        <AModal v-model:visible="visible" :title="formEditMode ? '编辑' : '查看'">
+        <AModal v-model:visible="visible" :title="modalTitleMapping[formEditMode]">
             <ArcoCrudForm 
                 :data="currentRecord" 
                 :options="formOptions" 
@@ -294,7 +295,8 @@ const tableLoading = ref(false)
 const pagination = ref({
     current: 1,
     pageSize: 10,
-    showTotal: true, 
+    showTotal: true,
+    defaultPageSize: 10, 
     // showJumper: true, 
     showPageSize: true,
 })
@@ -313,7 +315,7 @@ let expandable = ref(void 0)
 let expandRender = ref()
 const isVirtualList = ref(false)
 
-const formEditMode = ref(false) 
+const formEditMode = ref("") 
 const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value).parse())
 
 const init = () => {
@@ -369,12 +371,12 @@ const defaultTrigger = (item, record) => {
     // currentRecord.value = Object.assign({}, record) // 副本模式
 
     if (item.name === 'view') {
-        formEditMode.value = false
+        formEditMode.value = "view"
         visible.value = true
     }
 
     if (item.name === 'edit') {
-        formEditMode.value = true
+        formEditMode.value = "edit"
         visible.value = true
     }
 
@@ -388,10 +390,20 @@ const defaultTrigger = (item, record) => {
 
 }
 
+const handleSave = () => {
+    currentRecord.value = {}
+    visible.value = true
+    formEditMode.value = "save"
+}
+
+
+const modalTitleMapping = {
+    'edit': "编辑",
+    'save': "新增",
+    'view': "查看"
+}
+
 onMounted(async () => {
-
-
-
 
     init()
 
@@ -490,6 +502,16 @@ onMounted(async () => {
             width: operationList.length * 50 + 40,
             slotName: 'operationList'
         })
+
+        if (get(props.options, 'column.resizable')) {
+            columns.value.push({
+            title: '',
+            fixed: 'right',
+            align: 'center',
+            // wdith: "20px"
+        })
+        }
+   
     }
 
     // console.log("columns: ")
