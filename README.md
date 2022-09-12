@@ -12,8 +12,8 @@
 
 # 原则
 
-- 链式语法是最适合复制粘贴(Ctrl+CV)的
-- 远程数据配置会覆盖本地数据
+- 众所周知, 链式的语法是最适合复制粘贴(Ctrl+CV)的
+- 远程数据的配置优先级更高, 会覆盖对本地数据的配置
 
 # 测试
 
@@ -142,7 +142,7 @@ const schema = {
 }
 ```
 
-- 调整列宽
+- 调整列宽(需指定各列的width)
 
 ```js 
 const options = new CrudOptions()
@@ -150,7 +150,6 @@ const options = new CrudOptions()
     // .body().scroll().x(1000) 
     .parse()
 ```
-
 
 - 排序筛选
 

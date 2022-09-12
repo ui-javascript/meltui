@@ -2,13 +2,13 @@
     <div>
 
                 
-        <ARow style="margin-bottom: 10px" v-if="get(props.options, 'search.enabled')" :gutter="20">
+        <ARow style="margin-bottom: 10px" v-if="get(formOptions, 'search.enabled')" :gutter="20">
     
             <ACol flex="auto">
-                <AForm :layout="get(props.options, 'search.layout')" label-align="left">
+                <AForm :layout="get(formOptions, 'search.layout')" label-align="left">
 
                 <!-- @fix 需要指定宽度为 100%  -->
-                <AGrid :cols="get(props.options, 'search.cols')" :colGap="12" style="width: 100%;">
+                <AGrid :cols="get(formOptions, 'search.cols')" :colGap="12" style="width: 100%;">
                      
                     <AGridItem 
                         :key="advancedSearch + '_'"
@@ -49,7 +49,7 @@
             <ACol :flex="advancedSearch ? '50px' : '290px' ">
                 <ASpace :direction="advancedSearch ? 'vertical' : 'horizontal'">
     
-                    <AButton type="primary" @click="fetchList">
+                    <AButton type="primary" @click="handleSearch">
                         <template #icon>
                             <IconSearch />
                         </template>
@@ -77,26 +77,38 @@
 
         </ARow>
 
-        <ADivider v-if="get(props.options, 'search.enabled')" />
+        <ADivider v-if="get(formOptions, 'search.enabled')" />
 
         <ARow :gutter="12" style="margin-bottom: 20px;">
             <ACol :span="12" align="left">
             <ASpace>
-                <AButton v-if="get(props.options, 'save.url')" 
+                <AButton v-if="get(formOptions, 'save.url')" 
                     type="primary" @click="handleAdd">
                     <template #icon>
                         <IconPlus style="cursor: pointer;" />
                         </template>
                     新增
                 </AButton>
-                <AButton v-if="props.options?.edit?.enabled && selectedKeys.length > 0 && get(props.options, 'updateBatch.url')">
+
+                <AButton 
+                    @click="beginEditBatch"
+                    v-if="!formOptions?.edit?.enabled && !editing && get(formOptions, 'updateBatch.url')">
                     <template #icon>
                         <IconEdit style="cursor: pointer;" />
                         </template>
-                  
-                    批量更新
+                    批量编辑
                 </AButton>
-                <AButton status="danger" v-if="selectedKeys.length > 0 && get(props.options, 'deleteBatch.url')" @click="handleRemoveBatch">
+
+                <AButton 
+                    @click="handleUpdateBatch"
+                    v-if="formOptions?.edit?.enabled && editing && get(formOptions, 'updateBatch.url')">
+                    <template #icon>
+                        <IconSync style="cursor: pointer;" />
+                        </template>
+                    保存编辑
+                </AButton>
+
+                <AButton status="danger" v-if="selectedKeys.length > 0 && get(formOptions, 'deleteBatch.url')" @click="handleRemoveBatch">
                     <template #icon>
                         <IconDelete style="cursor: pointer;" />
                         </template>
@@ -121,17 +133,17 @@
         <!-- <Divider /> -->
 
         <ATable 
-            :size="get(props.options, 'size')"
-            :hoverable="props.options?.row?.hover"
-            :stripe="props.options?.row?.stripe" 
-            :bordered="get(props.options, 'row.border')" 
-            :column-resizable="get(props.options, 'column.resizable')"
+            :size="get(formOptions, 'size')"
+            :hoverable="formOptions?.row?.hover"
+            :stripe="formOptions?.row?.stripe" 
+            :bordered="get(formOptions, 'row.border')" 
+            :column-resizable="get(formOptions, 'column.resizable')"
             :expandable="expandable" 
             :pagination="pagination"
-            :show-header="get(props.options, 'header.visible')" 
-            :scroll="get(props.options, 'body.scroll')"
-            :row-selection="get(props.options, 'row.selection')" 
-            :virtual-list-props="get(props.options, 'body.virtualList')" 
+            :show-header="get(formOptions, 'header.visible')" 
+            :scroll="get(formOptions, 'body.scroll')"
+            :row-selection="get(formOptions, 'row.selection')" 
+            :virtual-list-props="get(formOptions, 'body.virtualList')" 
             v-model:selectedKeys="selectedKeys"
             :columns="columns"
             :loading="tableLoading"
@@ -140,11 +152,14 @@
             :data="list">
 
             <template #AInput="{ rowIndex, column, record }">
-                <AInput v-model="record[column.dataIndex]" v-bind="{
+                <AInput v-model="record[column.dataIndex]" 
+                    v-bind="{
                      'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                      placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(props.schema[column.dataIndex], 'widget.props'),
-                }" />
+                }" 
+                    @blur="flagEdited(record)"
+                />
             </template>
 
             <template #AInputNumber="{ rowIndex, column, record }">
@@ -152,7 +167,9 @@
                      'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                      placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(props.schema[column.dataIndex], 'widget.props'),
-                }" />
+                }" 
+                @blur="flagEdited(record)"
+                />
             </template>
 
             <template #ATextarea="{ rowIndex, column, record }">
@@ -161,7 +178,9 @@
                      'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                      placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                      ...get(props.schema[column.dataIndex], 'widget.props'),
-                }" />
+                }" 
+                @blur="flagEdited(record)"
+                />
             </template>
 
             <template #ASelect="{ rowIndex, column, record }">
@@ -172,7 +191,9 @@
                          'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                          placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                          ...get(props.schema[column.dataIndex], 'widget.props'),
-                    }" />
+                    }" 
+                    @blur="flagEdited(record)"
+                    />
             </template>
 
             <template #ASelectCascader="{ rowIndex, column, record }">
@@ -181,7 +202,9 @@
                          'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
                          placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                          ...get(props.schema[column.dataIndex], 'widget.props'),
-                    }" />
+                    }" 
+                    @blur="flagEdited(record)"
+                    />
             </template>
 
             <template #format="{ rowIndex, column, record }">
@@ -195,9 +218,9 @@
 
             <template #operationList="{ record, column, rowIndex }">
 
-                <!-- {{JSON.stringify(props.options.operation.operationList)}} -->
+                <!-- {{JSON.stringify(formOptions.operation.operationList)}} -->
                        
-                    <template  v-for="item of props.options.operation.operationList.filter(item => (props.options?.edit?.enabled && item.name === 'edit') ? false : true)">
+                    <template  v-for="item of formOptions.operation.operationList.filter(item => (formOptions?.edit?.enabled && item.name === 'edit') ? false : true)">
                         <APopconfirm v-if="item.needConfirm" 
                         type="warning"
                         :content="item.confirmText || '确认执行操作吗?'"
@@ -247,7 +270,7 @@
             :title="modalTitleMapping[formEditMode]">
             <ArcoCrudForm 
                 :data="currentRecord" 
-                :options="formOptions" 
+                :options="modalOptions" 
                 :schema="props.schema" 
             />
         </AModal>
@@ -266,7 +289,7 @@ import { get, merge, set, upperFirst } from "lodash"
 import {CrudOptions} from "@/parser"
 
 import { ArcoCrudForm } from "@/components"
-import { IconSearch, IconEdit, IconArrowDown, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDown, IconArrowLeft } from "@arco-design/web-vue/es/icon"
+import { IconSearch, IconEdit, IconSync, IconArrowDown, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDown, IconArrowLeft } from "@arco-design/web-vue/es/icon"
 import { Modal } from '@arco-design/web-vue';
 import http from '@/http';
 
@@ -293,6 +316,7 @@ const list = ref([])
 
 const tableLoading = ref(false)
 const okLoading = ref(false)
+const editing = ref(false)
 
 const pagination = ref({
     current: 1,
@@ -307,6 +331,7 @@ const pagination = ref({
 const visible = ref(false)
 const currentRecord = ref({})
 const selectedKeys = ref([]);
+const editedKeys = ref([]);
 const keyword = ref({})
 const advancedSearch = ref(false)
 const columns = ref([]);
@@ -318,35 +343,14 @@ let expandRender = ref()
 const isVirtualList = ref(false)
 
 const formEditMode = ref("") 
-const formOptions = computed(() => new CrudOptions(props.options).edit(formEditMode.value != "view").parse())
 
-const init = () => {
-    // debugger
+const formOptions = computed(() => new CrudOptions(props.options)
+    .edit(editing.value)
+    .parse())
 
-    isVirtualList.value = !!get(props.options, "body.virtualList")
-
-    // console.log("isVirtualList: ")
-    // console.log(isVirtualList.value)
-
-    columns.value = []
-    selectOptions.value = {}
-    keepWatchDeps.value = {}
-
-    expandable.value = void 0
-    expandRender.value = get(props.options, "row.expand")
-
-    if (expandRender.value && expandRender.value.render) {
-        expandable.value = merge(expandRender.value, {
-            expandedRowRender:
-                (record) => {
-                    return getEval(expandRender.value.render, record, {}, null)
-                }
-        })
-
-        // console.log("展开")
-        // console.log(expandable.value)
-    }
-}
+const modalOptions = computed(() => new CrudOptions(formOptions.value)
+    .edit(formEditMode.value === "edit")
+    .parse())
 
 const getWidgetType = (formSchema) => {
     const widget = get(formSchema, "widget.type")
@@ -369,7 +373,7 @@ const operationClickTrigger = (item, record) => {
     // console.log("item: ")
     // console.log(JSON.stringify(item, null, 2))
 
-    if (props.options?.edit?.enabled) {
+    if (formOptions.value.edit?.enabled) {
         currentRecord.value = record
     } else {
         currentRecord.value = Object.assign({}, record) // 副本模式
@@ -393,14 +397,14 @@ const operationClickTrigger = (item, record) => {
 }
 
 const modalOkTrigger = async () => {
-    let baseUrl = get(props.options, "baseUrl")
+    let baseUrl = get(formOptions.value, "baseUrl")
 
     if (formEditMode.value === "edit") {      
         // 自定义事件 
         // if () {} 
 
-        let updateUrl = get(props.options, "update.url")
-        let method = get(props.options, "update.method")
+        let updateUrl = get(formOptions.value, "update.url")
+        let method = get(formOptions.value, "update.method")
 
         console.log(method)
 
@@ -424,8 +428,8 @@ const modalOkTrigger = async () => {
         // 自定义事件 
         // if () {} 
 
-        let saveUrl = get(props.options, "save.url")
-        let method = get(props.options, "save.method")
+        let saveUrl = get(formOptions.value, "save.url")
+        let method = get(formOptions.value, "save.method")
 
         console.log(method)
 
@@ -462,16 +466,16 @@ const modalTitleMapping = {
 
 
 const fetchList = async () => {
-    let baseUrl = get(props.options, "baseUrl")
-    let fetchList = get(props.options, "fetchList")
-    let fetchUrl = get(props.options, "fetchList.url")
+    let baseUrl = get(formOptions.value, "baseUrl")
+    let fetchList = get(formOptions.value, "fetchList")
+    let fetchUrl = get(formOptions.value, "fetchList.url")
 
     if (!baseUrl || !fetchList) {
         return
     }
 
     tableLoading.value = true
-    let method = get(props.options, "fetchList.method")
+    let method = get(formOptions.value, "fetchList.method")
 
     const { data } = await http(fetchUrl, {
         method,
@@ -490,16 +494,55 @@ const fetchList = async () => {
 }
 
 
+const beginEditBatch = () => {
+    formEditMode.value = "editBatch"
+    editing.value = true
+    initColumns()
+    // console.log(formOptions.value)
+}
+
+const handleUpdateBatch = async () => {
+    editing.value = false
+
+    console.log(editedKeys.value)
+
+    // Modal.info({
+    //     content: JSON.stringify(editedKeys.value, null, 2)
+    // })
+
+    // Modal.info({
+    //     content: JSON.stringify(list.value.filter(item => editedKeys.value.includes(item.key)), null, 2)
+    // })
+
+    let baseUrl = get(formOptions.value, "baseUrl")
+    let method = get(formOptions.value, "updateBatch.method")
+    let updateBatchUrl = get(formOptions.value, "updateBatch.url")
+
+    await http(updateBatchUrl, {
+        method,
+        baseURL: baseUrl,
+        [method === "GET" ? 'params' : 'data']: {
+            list: list.value.filter(item => editedKeys.value.includes(item.key)),
+        }
+    })
+
+    editedKeys.value = []
+    formEditMode.value = ""
+    initColumns()
+
+    fetchList()
+}
+
 const handleRemove = async (record) => {
-    let baseUrl = get(props.options, "baseUrl")
-    let deleteOne = get(props.options, "delete")
-    let deleteUrl = get(props.options, "delete.url")
+    let baseUrl = get(formOptions.value, "baseUrl")
+    let deleteOne = get(formOptions.value, "delete")
+    let deleteUrl = get(formOptions.value, "delete.url")
 
     if (!baseUrl || !deleteOne || !deleteUrl) {
         return
     }
 
-    let method = get(props.options, "delete.method")
+    let method = get(formOptions.value, "delete.method")
 
     // tableLoading.value = true
     await http( deleteUrl, {
@@ -540,22 +583,29 @@ const handleKeepWatchDeps = (column, record) => {
     }
 }
 
+const handleSearch = () => {
+    pagination.value.current = 1
+    fetchList()
+}
+
+
 
 const handleReset = () => {
+    pagination.value.current = 1
     keyword.value = {}
     fetchList()
 }
 
 const handleRemoveBatch = async () => {
-    let baseUrl = get(props.options, "baseUrl")
-    let deleteBatch = get(props.options, "deleteBatch")
-    let deleteBatchUrl = get(props.options, "deleteBatch.url")
+    let baseUrl = get(formOptions.value, "baseUrl")
+    let deleteBatch = get(formOptions.value, "deleteBatch")
+    let deleteBatchUrl = get(formOptions.value, "deleteBatch.url")
 
     if (!baseUrl || !deleteBatch || !deleteBatchUrl) {
         return
     }
 
-    let method = get(props.options, "deleteBatchUrl.method") || post
+    let method = get(formOptions.value, "deleteBatchUrl.method") || post
 
     // tableLoading.value = true
     await http( deleteUrl, {
@@ -571,122 +621,154 @@ const handleRemoveBatch = async () => {
 
 }
 
+const flagEdited = (record) => {
+    // console.log("record",  record)
 
-onMounted(async () => {
+    editedKeys.value.push(record.key)
 
-init()
-
-Object.keys(props.schema).forEach(key => {
-    let formSchema = props.schema[key]
-
-    let title = get(formSchema, "title.name") || key
-    let titleUpperFirst = get(formSchema, "title.upperFirst")
-
-    let selectOpList = get(formSchema, "widget.options")
-    if (selectOpList) {
-        selectOptions.value = Object.assign({}, selectOpList.value, selectOpList)
-    }
-
-    let keepWatch = get(formSchema, "widget.keepWatch")
-    if (keepWatch) {
-        keepWatchDeps.value[keepWatch] = key
-    }
-
-    let format = get(formSchema, "widget.format")
-    let filterable = get(formSchema, "filterable")
-
-    if (filterable) {
-        let filterRender = get(formSchema, "filterable.render")
-
-        let filterableType = get(formSchema, "filterable.type") || 'eq'
-        if (filterableType == 'eq') {
-            filterRender = `{{ record.${key} === value[0] }}`
-        } 
-        if (filterableType == 'lt') {
-            filterRender = `{{ record.${key} < value[0] }}`
-        }
-        if (filterableType == 'gt') {
-            filterRender = `{{ record.${key} > value[0] }}`
-        }
-        if (filterableType == 'startsWith') {
-            filterRender = `{{ record.${key}.startsWith(value[0]) }}`
-        }
-        if (filterableType == 'includes') {
-            filterRender = `{{ record.${key}.includes(value[0]) }}`
-        }
-
-        set(formSchema, "filterable.filter", (value, record) => {
-            console.log("value")
-            console.log(value)
-
-            return getEval2(filterRender, value, record)
-        })
-    }
-
-
-
-    columns.value.push({
-        title: titleUpperFirst ? upperFirst(title) : title,
-        dataIndex: key,
-        key: key,
-        width: get(formSchema, "title.width"),
-        align: get(formSchema, "title.align") || 'left',
-        keepWatch,
-        format,
-        // formSchema,
-        sortable: get(formSchema, "sortable"),
-        filterable: get(formSchema, "filterable"),
-        fixed: get(formSchema, "column.fixed"),
-        ellipsis: get(formSchema, "cell.ellipsis"),
-        tooltip: get(formSchema, "cell.tooltip"),
-        widget: get(formSchema, "widget") || {},
-        slotName: (!get(props.options, "body.virtualList") && props.options?.edit?.enabled && get(formSchema, "editable") != false)
-            ? getWidgetType(formSchema)
-            : (format ? 'format' : null),
-    })
-
-})
-
-let operationList = get(props.options, "operation.operationList")
-
-
-if (operationList && operationList.length > 0) {
-    // 操作列排序
-    operationList.sort((a, b) => {
-        if (!a.idx) {
-            return -1
-        }
-        if (!b.idx) {
-            return 1
-        }
-        return a.idx - b.idx
-    })
-    set(props.options, "operation.operationList", operationList)
-
-
-    let resizable = get(props.options, 'column.resizable')
-
-    columns.value.push({
-        title: '操作栏',
-        fixed: resizable ? false : 'right',
-        align: 'center',
-        width: operationList.length * 50 + 40,
-        slotName: 'operationList'
-    })
-
-    
-    if (resizable) {
-        columns.value.push({
-            title: '',
-            fixed: resizable ? false : 'right',
-            align: 'center',
-            // wdith: "20px",
-            slotName: 'empty'
-        })
-    }
-
-
+    console.log(editedKeys.value)
 }
+
+
+const initColumns = () => {
+    columns.value = []
+
+    isVirtualList.value = !!get(formOptions.value, "body.virtualList")
+
+    // console.log("isVirtualList: ")
+    // console.log(isVirtualList.value)
+
+
+    selectOptions.value = {}
+    keepWatchDeps.value = {}
+
+    expandable.value = void 0
+    expandRender.value = get(formOptions.value, "row.expand")
+
+    if (expandRender.value && expandRender.value.render) {
+        expandable.value = merge(expandRender.value, {
+            expandedRowRender:
+                (record) => {
+                    return getEval(expandRender.value.render, record, {}, null)
+                }
+        })
+
+        // console.log("展开")
+        // console.log(expandable.value)
+    }
+
+    Object.keys(props.schema).forEach(key => {
+        let formSchema = props.schema[key]
+
+        let title = get(formSchema, "title.name") || key
+        let titleUpperFirst = get(formSchema, "title.upperFirst")
+
+        let selectOpList = get(formSchema, "widget.options")
+        if (selectOpList) {
+            selectOptions.value = Object.assign({}, selectOpList.value, selectOpList)
+        }
+
+        let keepWatch = get(formSchema, "widget.keepWatch")
+        if (keepWatch) {
+            keepWatchDeps.value[keepWatch] = key
+        }
+
+        let format = get(formSchema, "widget.format")
+        let filterable = get(formSchema, "filterable")
+
+        if (filterable) {
+            let filterRender = get(formSchema, "filterable.render")
+
+            let filterableType = get(formSchema, "filterable.type") || 'eq'
+            if (filterableType == 'eq') {
+                filterRender = `{{ record.${key} === value[0] }}`
+            } 
+            if (filterableType == 'lt') {
+                filterRender = `{{ record.${key} < value[0] }}`
+            }
+            if (filterableType == 'gt') {
+                filterRender = `{{ record.${key} > value[0] }}`
+            }
+            if (filterableType == 'startsWith') {
+                filterRender = `{{ record.${key}.startsWith(value[0]) }}`
+            }
+            if (filterableType == 'includes') {
+                filterRender = `{{ record.${key}.includes(value[0]) }}`
+            }
+
+            set(formSchema, "filterable.filter", (value, record) => {
+                console.log("value")
+                console.log(value)
+
+                return getEval2(filterRender, value, record)
+            })
+        }
+
+        
+
+        columns.value.push({
+            title: titleUpperFirst ? upperFirst(title) : title,
+            dataIndex: key,
+            key: key,
+            width: get(formSchema, "title.width"),
+            align: get(formSchema, "title.align") || 'left',
+            keepWatch,
+            format,
+            // formSchema,
+            sortable: get(formSchema, "sortable"),
+            filterable: get(formSchema, "filterable"),
+            fixed: get(formSchema, "column.fixed"),
+            ellipsis: get(formSchema, "cell.ellipsis"),
+            tooltip: get(formSchema, "cell.tooltip"),
+            widget: get(formSchema, "widget") || {},
+            slotName: (!get(formOptions.value, "body.virtualList") && formOptions?.value.edit?.enabled && get(formSchema, "editable") != false)
+                ? getWidgetType(formSchema)
+                : (format ? 'format' : null),
+        })
+
+    })
+
+    let operationList = get(formOptions.value, "operation.operationList")
+
+
+    if (operationList && operationList.length > 0) {
+        // 操作列排序
+        operationList.sort((a, b) => {
+            if (!a.idx) {
+                return -1
+            }
+            if (!b.idx) {
+                return 1
+            }
+            return a.idx - b.idx
+        })
+
+        // @tofix
+        set(formOptions.value, "operation.operationList", operationList)
+
+        let resizable = get(formOptions.value, 'column.resizable')
+
+        columns.value.push({
+            title: '操作栏',
+            fixed: 'right',
+            align: 'center',
+            width: operationList.length * 50 + 40,
+            slotName: 'operationList'
+        })
+
+        
+        if (resizable) {
+            columns.value.push({
+                title: '',
+                fixed: resizable ? false : 'right',
+                align: 'center',
+                // wdith: "20px",
+                slotName: 'empty'
+            })
+        }
+
+
+    }
 
 // console.log("columns: ")
 // console.log(JSON.stringify(columns.value))
@@ -697,6 +779,17 @@ if (operationList && operationList.length > 0) {
 // console.log("schema: ")
 // console.log(JSON.stringify(props.schema))
 
+}
+
+onMounted(async () => {
+    initColumns()
+})
+
+watch(() => formEditMode.value, (current) => {
+    if (current === "editBatch") {
+        console.log("编辑模式")
+        formOptions.value.edit.enabled = true 
+    }
 })
 
 watch([pagination], async () => {

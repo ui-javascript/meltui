@@ -6,18 +6,11 @@
                     搜索模式
                 </template>
                 <template #unchecked>
-                    简约模式
+                    不用搜索
                 </template>
             </ASwitch>
 
-            <ASwitch type="round" v-model="editable">
-                <template #checked>
-                    编辑模式
-                </template>
-                <template #unchecked>
-                    阅读模式
-                </template>
-            </ASwitch>
+  
         </ASpace>
 
 
@@ -26,7 +19,6 @@
         <AConfigProvider size="small">
             
             <ArcoCrudTable 
-                :key="editable + '_' + searchable"
                 @showItem="showItem"
                 class="mt-2"        
                 :options="options" 
@@ -56,10 +48,9 @@ import { ArcoCrudTable, ArcoCrudForm } from '@/components';
 
 
 const searchable = ref(true)
-const editable = ref(false)
 
 let options = ref(new CrudOptions()
-    .edit(editable.value) // 编辑模式
+    .edit() // 编辑模式
     // .header(false).visible(false) // 不显示表头
     .row().hover().border().stripe()
     .size().small()
@@ -71,7 +62,8 @@ let options = ref(new CrudOptions()
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(400)
     .body().scroll().y(400)
-    .column().resizable()   // .body().scroll().x(1000) 
+    .column().resizable()  // 调整列宽 
+    // .body().scroll().x(1000)  
 
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
     .fetchList().get("/v1/fetchList")
@@ -81,7 +73,8 @@ let options = ref(new CrudOptions()
     .addOperation().save().post("/v1/save")
     .removeOperation().needConfirm().confirmText("确定删除吗?").delete().post("/v1/delete")
     .removeBatchOperation().deleteBatch().post("/v1/deleteBatch")
-    .customOperation("自定义").clickEmit("showItem")
+    .customOperation("自定义").clickEmit("showItem") // .needConfirm()
+    // .customOperation("自定义2") 
 
     .save().get("/v1/fetchList")
 
@@ -89,32 +82,12 @@ let options = ref(new CrudOptions()
     // .customOperation("自定义2").clickEmit("showItem")
     .parse())
 
-watch(() => editable.value, (current, prev) => {    
-    // console.log(current, prev)
-    // console.log(new CrudOptions(options.value).edit(current).parse())
-    options.value = new CrudOptions(options.value).edit(current).parse()
 
-    // console.log("更新")
-    // console.log(JSON.stringify(options.value))
-}, {
-    deep: true
-})    
-
-watch(() => searchable.value, (current, prev) => {    
-    // console.log(current, prev)
-    // console.log(new CrudOptions(options.value).edit(current).parse())
-    options.value = new CrudOptions(options.value).search(current).parse()
-
-    // console.log("更新")
-    // console.log(JSON.stringify(options.value))
-}, {
-    deep: true
-})    
 
 const schema: Ref = ref({
     name: new FormSchema()
         .title().upperFirst()
-            // .width(200)
+            .width(200)
             .left().format("{{ '[No.' + (rowIndex+1)  + ']' + record.name }}")
         .readonly()
         .column().fixed().left()
@@ -124,7 +97,7 @@ const schema: Ref = ref({
 
     salary: new FormSchema()
         .title("工资")
-            // .width(150).center() 
+            .width(150).center() 
         .inputNumber().placeholder("输入工资").clearable(false)
             // .props({
             //     allowClear: true
@@ -139,7 +112,7 @@ const schema: Ref = ref({
    
     address: new FormSchema()
         .title("地址")
-        // .width(250).center()
+        .width(250).center()
         .filterable()
             // .startsWith("北京海淀").startsWith("35 Park Road")
             // .startsWith(["北京海淀", "35 Park Road"])
@@ -150,7 +123,7 @@ const schema: Ref = ref({
                 .props({
                     autoSize: true
                 })
-        // .cell().ellipsis().tooltip().width(150) // width会覆盖
+        .cell().ellipsis().tooltip().width(150) // width会覆盖
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .readonly()
         .parse(),
@@ -226,13 +199,15 @@ const data = reactive([
 
 for (let i = 10; i < 1000; i++) {
     data.push({
-        key: i + "xx",
+        key: i + "_",
         name: 'William Smith',
         salary: 27000,
         address: '62 Park Road, London',
         email: 'william.smith@example.com'
     })
 }
+
+
 
 
 const showItem = (argv: any) => {
@@ -244,6 +219,18 @@ const showItem = (argv: any) => {
         content: JSON.stringify(record, null, 2)
     });
 }
+
+
+watch(() => searchable.value, (current, prev) => {    
+    // console.log(current, prev)
+    // console.log(new CrudOptions(options.value).edit(current).parse())
+    options.value = new CrudOptions(options.value).search(current).parse()
+
+    // console.log("更新")
+    // console.log(JSON.stringify(options.value))
+}, {
+    deep: true
+})    
 
 </script>
     
