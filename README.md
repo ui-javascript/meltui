@@ -2,11 +2,22 @@
 
 > 基于Arco和VXE的简单增删改查封装, 采用链式语法, 将JSONSchema改成ChainSchema
 
-# API草稿 @todo
+![image](https://user-images.githubusercontent.com/16240829/189589335-b5100772-86e2-41cd-9db5-f2106fc594ef.png)
+
+---
+
+# API @building
 
 - https://static-59728804-d890-4267-8e45-393e10b3c780.bspapp.com/#/pages/test/noteDetail?id=63093bda553eac0001a5472e
 
-![image](https://user-images.githubusercontent.com/16240829/189215628-c5fe9741-6e3c-47b5-8253-def7163b1593.png)
+# 原则
+
+- 链式语法是最适合复制粘贴(Ctrl+CV)的
+- 远程数据配置会覆盖本地数据
+
+# 测试
+
+- https://github.com/ui-javascript/demo-meltui-test-20220910
 
 ---
 
@@ -48,8 +59,18 @@ const options = new CrudOptions()
     .edit() // 编辑模式
     .search() // 搜索模式
     .hover().border().stripe()
+    
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
-    .fetchList().get("/v1/fetchList") // 初始化接口
+    .fetchList().get("/v1/fetchList") // 初始化列表
+    .viewOperation().fetch().get("/v1/fetch") // 查看1条数据
+    .editOperation().update().post("/v1/update") // 更新1条数据
+    .editBatchOperation().updateBatch().post("/v1/updateBatch") // 批量更新
+    .addOperation().save().post("/v1/save") // 新增1条数据
+    .removeOperation().delete().post("/v1/delete") // 删除1条数据
+        .needConfirm().confirmText("确定删除吗?") // 删除前需要确认
+    .removeBatchOperation().deleteBatch().post("/v1/deleteBatch") // 批量删除
+    .customOperation("自定义").clickEmit("showItem") // 自定义按钮
+
     .parse()
 
 const schema = {
@@ -83,6 +104,8 @@ const schema = {
         .parse(),
 }
 ```
+
+- 校验数据
 
 - 行选择器
 
