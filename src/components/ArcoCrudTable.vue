@@ -292,7 +292,7 @@ import {CrudOptions} from "@/parser"
 
 import { ArcoCrudForm } from "@/components"
 import { IconSearch, IconEdit, IconSync, IconArrowDown, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDown, IconArrowLeft } from "@arco-design/web-vue/es/icon"
-import { Modal } from '@arco-design/web-vue';
+// import { Modal } from '@arco-design/web-vue';
 import http from '@/http';
 
 const props = defineProps({
