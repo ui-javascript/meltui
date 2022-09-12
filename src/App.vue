@@ -93,6 +93,7 @@ const schema: Ref = ref({
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
         .searchable() // .placeholder("{{ '请输入' + column.title }}")
+        .validate().blur().required()
         .parse(),
 
     salary: new FormSchema()
@@ -108,6 +109,7 @@ const schema: Ref = ref({
             .gt([25000, 100_0000])
             // .filter("{{ record.salary > value[0] }}")
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
+        .validate().blur().max(20000000)
         .parse(),
    
     address: new FormSchema()
@@ -116,7 +118,7 @@ const schema: Ref = ref({
         .filterable()
             // .startsWith("北京海淀").startsWith("35 Park Road")
             // .startsWith(["北京海淀", "35 Park Road"])
-            .includes(["北京", "绵阳", "Park Road"])
+            .contains(["北京", "绵阳", "Park Road"])
             // .filter(`{{ record.address.startsWith(value[0]) }}`) // 也可以不用写
         .textArea().clearable()
                 .placeholder("{{ '请输入' + (record.name ? record.name + '的' : '') + '地址'}}")

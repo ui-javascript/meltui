@@ -491,7 +491,7 @@ export class CrudOptions {
             let item = op.find((item: any) => item.name === "view")
             if (item) {
                 item.confirmText = text
-                item.needConfirm = true
+                // item.needConfirm = true
             }
             return this
         }
@@ -681,6 +681,7 @@ export class CrudOptions {
         return this
     }
 
+    
     parse(json?: {}) {
         if (json) {
             this.json = merge(this.json, json)

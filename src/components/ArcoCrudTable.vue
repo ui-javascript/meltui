@@ -1,7 +1,6 @@
 <template>
     <div>
 
-                
         <ARow style="margin-bottom: 10px" v-if="get(formOptions, 'search.enabled')" :gutter="20">
     
             <ACol flex="auto">
@@ -266,9 +265,12 @@
 
         <AModal v-model:visible="visible" 
             :ok-loading="okLoading"
+            unmountOnClose
             @ok="modalOkTrigger"
+            :on-before-ok="handleBeforeOk"
             :title="modalTitleMapping[formEditMode]">
             <ArcoCrudForm 
+                ref="modalForm"
                 :data="currentRecord" 
                 :options="modalOptions" 
                 :schema="props.schema" 
@@ -327,7 +329,7 @@ const pagination = ref({
     showPageSize: true,
 })
 
-
+const modalForm = ref()
 const visible = ref(false)
 const currentRecord = ref({})
 const selectedKeys = ref([]);
@@ -349,7 +351,7 @@ const formOptions = computed(() => new CrudOptions(props.options)
     .parse())
 
 const modalOptions = computed(() => new CrudOptions(formOptions.value)
-    .edit(formEditMode.value === "edit")
+    .edit(formEditMode.value === "edit" || formEditMode.value === "add")
     .parse())
 
 const getWidgetType = (formSchema) => {
@@ -399,6 +401,7 @@ const operationClickTrigger = (item, record) => {
 const modalOkTrigger = async () => {
     let baseUrl = get(formOptions.value, "baseUrl")
 
+    debugger
     if (formEditMode.value === "edit") {      
         // 自定义事件 
         // if () {} 
@@ -424,7 +427,9 @@ const modalOkTrigger = async () => {
         fetchList()
     }
 
-    if (formEditMode.value === "add") {      
+    if (formEditMode.value === "add") {  
+  
+
         // 自定义事件 
         // if () {} 
 
@@ -448,6 +453,18 @@ const modalOkTrigger = async () => {
         fetchList()
     }
 
+}
+
+
+const handleBeforeOk = async () => {
+    // console.log(modalForm.value.formRef)
+    const res = await modalForm.value.formRef.validate()
+    console.log(res)
+    if (res) {
+        return false
+    }
+
+    return true
 }
 
 const handleAdd = () => {
@@ -692,7 +709,7 @@ const initColumns = () => {
             if (filterableType == 'startsWith') {
                 filterRender = `{{ record.${key}.startsWith(value[0]) }}`
             }
-            if (filterableType == 'includes') {
+            if (filterableType == 'contains') {
                 filterRender = `{{ record.${key}.includes(value[0]) }}`
             }
 
@@ -776,8 +793,8 @@ const initColumns = () => {
 // console.log("options: ")
 // console.log(JSON.stringify(props.options))
 
-// console.log("schema: ")
-// console.log(JSON.stringify(props.schema))
+console.log("schema: ")
+console.log(JSON.stringify(props.schema))
 
 }
 

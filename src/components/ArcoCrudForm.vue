@@ -1,20 +1,25 @@
 <template>
-    <AForm auto-label-width v-model="props.data" :layout="get(props.options, 'layout.type')">
-        <AFormItem :field="column.dataIndex" :label="column.title" v-for="column in columns" >
+    <AForm ref="formRef" auto-label-width :model="formData" :layout="get(props.options, 'layout.type')">
+        <AFormItem 
+        :field="column.dataIndex" 
+        :label="column.title" 
+        :rules="get(props.schema[column.dataIndex], 'validate.rules')"
+        :validate-trigger="get(props.schema[column.dataIndex], 'validate.trigger')" 
+        v-for="column in columns" >
             <Component 
                 v-if="props.options.edit?.enabled"
                 :is="column.widget.type" 
-                v-model="props.data[column.dataIndex]" 
-                @change="handleKeepWatchDeps(column, props.data)" 
+                v-model="formData[column.dataIndex]" 
+                @change="handleKeepWatchDeps(column, formData)" 
                 v-bind="{
-                    'allow-clear': get(column.formSchema, 'widget.clearable'),
-                    placeholder: getEval(get(column.formSchema, 'widget.placeholder'), props.data) || '请输入', 
-                    ...get(column.formSchema, 'widget.props'),
-                    options: column.keepWatch ? selectOptions[props.data[column.keepWatch]] : selectOptions[column.dataIndex],
+                    'allow-clear': get(props.schema[column.dataIndex], 'widget.clearable'),
+                    placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), formData) || '请输入', 
+                    ...get(props.schema[column.dataIndex], 'widget.props'),
+                    options: column.keepWatch ? selectOptions[formData[column.keepWatch]] : selectOptions[column.dataIndex],
                }"
             />
             <span v-else>
-                {{ props.data[column.dataIndex] }}
+                {{ formData[column.dataIndex] }}
             </span>
         </AFormItem>
         
@@ -26,7 +31,7 @@
             </ASpace>
             </AFormItem> -->
 
-        <!-- {{ JSON.stringify(props.data, null, 2) }} -->
+        <!-- {{ JSON.stringify(formData, null, 2) }} -->
     </AForm>
 
 
@@ -34,7 +39,8 @@
 
 <script setup name="ArcoCrudForm">
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineExpose } from 'vue';
+
 
 import { getEval, getEval2 } from "@/utils";
 import {get, set, upperFirst, merge } from "lodash"
@@ -51,28 +57,22 @@ const props = defineProps({
     options: {
         type: Object,
         default: {}
-    },
-    loading: {
-        type: Boolean,
-        default: false
     }
 })
 
+const formData = ref(props.data)
+const formRef = ref()
 const columns = ref([]);
 const selectOptions = ref({})
 const keepWatchDeps = ref({})
 
-const handleKeepWatchDeps = (column, record) => {
+console.log(props.options)
 
-    // console.log("column")
-    // console.log(JSON.stringify(column))
-    // console.log(JSON.stringify(record))
-    // console.log(JSON.stringify(keepWatchDeps.value))
+const handleKeepWatchDeps = (column, record) => {
 
     if (column.widget.type === "ASelect" && Object.keys(keepWatchDeps.value).includes(column.dataIndex)) {
         let deps = keepWatchDeps.value[column.dataIndex]
-        // console.log("deps:")
-        // console.log(JSON.stringify(deps))
+
         if (deps) {
             record[deps] = ""
         }
@@ -108,42 +108,26 @@ onMounted(() => {
 
         let format = get(formSchema, "widget.format")
 
-        // let filterRender = get(formSchema, "filterable.render")
-        // if (filterRender) {
-        //     set(formSchema, "filterable.filter", (value, record) => {
-        //         return getEval2(filterRender, value, record)
-        //     })
-        // }
-
-        // const filter = get(formSchema, "filterable")
-        // console.log("filter")
-        // console.log(filter)
-
         columns.value.push({
             title: titleUpperFirst ? upperFirst(title) : title,
             dataIndex: key,
             width: get(formSchema, "title.width"),
-            // slotName: 'name',
             align: get(formSchema, "title.align") || 'left',
             keepWatch,
             format,
-            formSchema,
-            // sortable: get(formSchema, "sortable"),
-            // filterable: get(formSchema, "filterable"),
-            // fixed: get(formSchema, "column.fixed"),
-            // ellipsis: get(formSchema, "cell.ellipsis"),
-            // tooltip: get(formSchema, "cell.tooltip"),
             widget: get(formSchema, "widget") || {},
-            // slotName: (props.options.edit && get(formSchema, "editable") != false)
-            //     ? getWidgetType(formSchema)
-            //     : (format ? 'format' : null),
         })
 
     })
 
-    // console.log("columns: ")
-    // console.log(columns.value)
+    console.log("columns: ")
+    console.log(columns.value)
 
+})
+
+
+defineExpose({
+    formRef
 })
 
 </script>

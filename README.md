@@ -151,6 +151,8 @@ const options = new CrudOptions()
     .parse()
 ```
 
+- 定制列 @todo
+
 - 排序筛选
 
 ```js
@@ -158,7 +160,7 @@ const schema = {
     salary: new FormSchema()
         .sortable().asc().desc() // 排序
         .filterable() // 筛选
-            .gt(20000).gt([25000, 100000]) // gt | lt | eq | startsWith | includes
+            .gt(20000).gt([25000, 100000]) // gt | lt | eq | startsWith | contains
             // .filter("{{ record.salary > value }}") // filter可以不用写
         .parse(),
 }
