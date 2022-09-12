@@ -333,6 +333,45 @@ export class CrudOptions {
         return this
     }
 
+    removeBatchOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "removeBatch"
+        set(this.json, "removeBatch", {})
+
+        return this
+    }
+
+    updateBatchOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "updateBatch"
+        set(this.json, "updateBatch", {})
+
+        return this
+    }
+
+    editBatchOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "editBatch"
+        set(this.json, "editBatch", {})
+
+        return this
+    }
+
+    addOperation(enable = true) {
+        if (!enable) {
+            return this
+        }
+        this.context = "add"
+        set(this.json, "add", true)
+        return this
+    }
+
     customOperation(opName : string, enabled = true) {
         if (!enabled) {
             return this
@@ -378,7 +417,6 @@ export class CrudOptions {
             }
             return this
         }
-
         
         if (this.context.startsWith("operation.")) {
             let idx = this.context.indexOf(".")
@@ -389,6 +427,11 @@ export class CrudOptions {
                     item.clickEmit = eventName
                 }
             }
+        }
+
+        if (this.context === "removeBatch" || this.context === "editBatch" || this.context === "saveBatch") {
+            set(this.json, this.context + ".clickEmit", eventName)
+            return this
         }
 
 
@@ -603,28 +646,38 @@ export class CrudOptions {
             set(this.json, "fetch.method", "GET")
         }
 
-        if (this.context == "save") {
-            set(this.json, "save.url", url)
-            set(this.json, "save.method", "GET")
-        }
-
-        if (this.context == "delete") {
-            set(this.json, "delete.url", url)
-            set(this.json, "delete.method", "GET")
-        }
-
         return this
     }
 
     post(url: string) {
-        if (this.context == "fetchList") {
-            set(this.json, "fetchList.url", url)
-            set(this.json, "fetchList.method", "POST")
+        if (this.context == "save") {
+            set(this.json, "save.url", url)
+            set(this.json, "save.method", "POST")
         }
-        if (this.context == "fetch") {
-            set(this.json, "fetch.url", url)
-            set(this.json, "fetch.method", "POST")
+        if (this.context == "saveBatch") {
+            set(this.json, "saveBatch.url", url)
+            set(this.json, "saveBatch.method", "POST")
         }
+
+        if (this.context == "update") {
+            set(this.json, "update.url", url)
+            set(this.json, "update.method", "POST")
+        }
+        if (this.context == "updateBatch") {
+            set(this.json, "updateBatch.url", url)
+            set(this.json, "updateBatch.method", "POST")
+        }
+
+        if (this.context == "delete") {
+            set(this.json, "delete.url", url)
+            set(this.json, "delete.method", "POST")
+        }
+
+        if (this.context == "deleteBatch") {
+            set(this.json, "deleteBatch.url", url)
+            set(this.json, "deleteBatch.method", "POST")
+        }
+
         return this
     }
 

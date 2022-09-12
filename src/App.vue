@@ -69,18 +69,19 @@ let options = ref(new CrudOptions()
     .row().selection().checkboxType().checkAll() // .currentOnly(false)
     // .row().expand().width(50).title('展开行').render("{{ record.key % 2 === 1 ? '我的名字是 is' + record.name + ', 我的地址是 ' + record.address : JSON.stringify(record, null, 2)  }}")    
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
-    // .body().virtualList().height(300)
+    // .body().virtualList().height(400)
     .body().scroll().y(400)
-    // .column().resizable()   // .body().scroll().x(1000) 
+    .column().resizable()   // .body().scroll().x(1000) 
 
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
     .fetchList().get("/v1/fetchList")
-    .editOperation()
-    .viewOperation() 
-    .removeOperation().needConfirm().confirmText("确定删除吗?") 
-    .delete().get("/v1/fetchList")
+    .viewOperation().fetch().get("/v1/fetch")
+    .editOperation().update().post("/v1/update")
+    .editBatchOperation().updateBatch().post("/v1/updateBatch")
+    .addOperation().save().post("/v1/save")
+    .removeOperation().needConfirm().confirmText("确定删除吗?").delete().post("/v1/delete")
+    .removeBatchOperation().deleteBatch().post("/v1/deleteBatch")
     .customOperation("自定义").clickEmit("showItem")
-
 
     .save().get("/v1/fetchList")
 
@@ -113,7 +114,7 @@ watch(() => searchable.value, (current, prev) => {
 const schema: Ref = ref({
     name: new FormSchema()
         .title().upperFirst()
-            .width(200)
+            // .width(200)
             .left().format("{{ '[No.' + (rowIndex+1)  + ']' + record.name }}")
         .readonly()
         .column().fixed().left()
@@ -122,7 +123,8 @@ const schema: Ref = ref({
         .parse(),
 
     salary: new FormSchema()
-        .title("工资").width(150).center() 
+        .title("工资")
+            // .width(150).center() 
         .inputNumber().placeholder("输入工资").clearable(false)
             // .props({
             //     allowClear: true
@@ -136,7 +138,8 @@ const schema: Ref = ref({
         .parse(),
    
     address: new FormSchema()
-        .title("地址").width(250).center()
+        .title("地址")
+        // .width(250).center()
         .filterable()
             // .startsWith("北京海淀").startsWith("35 Park Road")
             // .startsWith(["北京海淀", "35 Park Road"])
@@ -147,15 +150,14 @@ const schema: Ref = ref({
                 .props({
                     autoSize: true
                 })
-        .cell().ellipsis().tooltip().width(150) // width会覆盖
+        // .cell().ellipsis().tooltip().width(150) // width会覆盖
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .readonly()
         .parse(),
 
     province: new FormSchema()
         .title("省份")
-            .width(150)
-            .center()
+            .width(150).center()
         // .column().fixed().right()
         .select({ 
             province: ['北京', '四川', '广东'],
@@ -171,8 +173,7 @@ const schema: Ref = ref({
 
     city: new FormSchema()
         .title("城市")
-            .width(150)
-            .center()
+            .width(150).center()
         // .column().fixed().right()
         .select().keepWatch("province") // 联动
         .parse(),
