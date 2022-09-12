@@ -75,10 +75,8 @@ let options = ref(new CrudOptions()
     .removeBatchOperation().deleteBatch().post("/v1/deleteBatch")
     .customOperation("自定义").clickEmit("showItem") // .needConfirm()
     // .customOperation("自定义2") 
-
     .save().get("/v1/fetchList")
-
-
+    // .validate() // 默认开启校验
     // .customOperation("自定义2").clickEmit("showItem")
     .parse())
 
@@ -93,7 +91,7 @@ const schema: Ref = ref({
         .column().fixed().left()
         .input().placeholder("输入姓名").clearable()
         .searchable() // .placeholder("{{ '请输入' + column.title }}")
-        .validate().blur().required()
+        .validatable().blur().required()
         .parse(),
 
     salary: new FormSchema()
@@ -109,7 +107,7 @@ const schema: Ref = ref({
             .gt([25000, 100_0000])
             // .filter("{{ record.salary > value[0] }}")
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
-        .validate().blur().max(20000000)
+        .validatable().blur().min(1200).required()
         .parse(),
    
     address: new FormSchema()
@@ -128,6 +126,7 @@ const schema: Ref = ref({
         .cell().ellipsis().tooltip().width(150) // width会覆盖
         .searchable().advancedOnly() // .placeholder("{{ '请输入' + column.title }}")
         .readonly()
+        .validatable(false).required()
         .parse(),
 
     province: new FormSchema()

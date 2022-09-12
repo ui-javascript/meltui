@@ -12,7 +12,7 @@
 
 # 原则
 
-- 众所周知, 链式的语法是最适合复制粘贴(Ctrl+CV)的
+- 众所周知(其实就我), 链式的语法是最适合复制粘贴(Ctrl+CV)的
 - 远程数据的配置优先级更高, 会覆盖对本地数据的配置
 
 # 测试
@@ -106,6 +106,14 @@ const schema = {
 ```
 
 - 校验数据
+
+```js
+const schema = {
+    salary: new FormSchema()
+        .validatable().blur().max(200_0000).required()
+        .parse(),
+}        
+```
 
 - 行选择器
 

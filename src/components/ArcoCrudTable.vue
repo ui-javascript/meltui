@@ -264,10 +264,10 @@
      
 
         <AModal v-model:visible="visible" 
-            :ok-loading="okLoading"
             unmountOnClose
-            @ok="modalOkTrigger"
+            :ok-loading="okLoading"
             :on-before-ok="handleBeforeOk"
+            @ok="modalOkTrigger"
             :title="modalTitleMapping[formEditMode]">
             <ArcoCrudForm 
                 ref="modalForm"
@@ -414,7 +414,7 @@ const modalOkTrigger = async () => {
         console.log("currentRecord")
         console.log(currentRecord.value)
 
-        okLoading.value = true
+        // okLoading.value = true
         await http(updateUrl, {
             method,
             baseURL: baseUrl,
@@ -422,7 +422,7 @@ const modalOkTrigger = async () => {
                 ...currentRecord.value
             }
         })
-        okLoading.value = false
+        // okLoading.value = false
 
         fetchList()
     }
@@ -430,8 +430,6 @@ const modalOkTrigger = async () => {
     if (formEditMode.value === "add") {  
   
 
-        // 自定义事件 
-        // if () {} 
 
         let saveUrl = get(formOptions.value, "save.url")
         let method = get(formOptions.value, "save.method")
@@ -440,7 +438,7 @@ const modalOkTrigger = async () => {
 
         // console.log("currentRecord")
         // console.log(currentRecord.value)
-        okLoading.value = true
+        // okLoading.value = true
         await http(saveUrl, {
             method,
             baseURL: baseUrl,
@@ -448,7 +446,7 @@ const modalOkTrigger = async () => {
                 ...currentRecord.value
             }
         })
-        okLoading.value = false
+        // okLoading.value = false
 
         fetchList()
     }
@@ -456,14 +454,22 @@ const modalOkTrigger = async () => {
 }
 
 
-const handleBeforeOk = async () => {
+// @tofix https://github.com/arco-design/arco-design-vue/pull/1623
+const handleBeforeOk = async (done) => {
+
+    // let enabled = get(props.options, "validate.enabled") 
+    // if (enabled != false) {
+    //     return true
+    // }
+
     // console.log(modalForm.value.formRef)
     const res = await modalForm.value.formRef.validate()
     console.log(res)
+
     if (res) {
         return false
-    }
-
+    } 
+    
     return true
 }
 

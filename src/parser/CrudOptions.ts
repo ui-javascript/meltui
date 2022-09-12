@@ -682,6 +682,12 @@ export class CrudOptions {
     }
 
     
+    validate(enabled = true) {
+        this.context = "validate"
+        set(this.json, "validate.enabled", enabled)
+        return this
+    }
+
     parse(json?: {}) {
         if (json) {
             this.json = merge(this.json, json)

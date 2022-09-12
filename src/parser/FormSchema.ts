@@ -353,112 +353,114 @@ export class FormSchema {
         return this
     }
 
-    validate(enabled = true) {
-        this.context = "validate"
-        set(this.json, "validate.enabled", enabled)
+    validatable(enabled = true) {
+        this.context = "validatable"
+        set(this.json, "validatable.enabled", enabled)
         return this
     }
 
     blur() {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.trigger") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.trigger") || []
             trigger.push('blur')
-            set(this.json, "validate.trigger", trigger)
+            set(this.json, "validatable.trigger", trigger)
         }
         return this
     }
 
     change() {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.trigger") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.trigger") || []
             trigger.push('change')
-            set(this.json, "validate.trigger", trigger)
+            set(this.json, "validatable.trigger", trigger)
         }
         return this
     }
 
     required(message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
                 required: true,
                 message: message || "必填"
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
 
     maxLength(num: number, message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
                 maxLength: num,
                 message: message || "最大长度" + num
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
 
     minLength(num: number, message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
                 maxLength: num,
                 message: message || "最小长度" + num
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
 
     
     max(val: number, message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
+                type:'number', 
                 max: val,
                 message: message || "最大值" + val
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
 
     min(val: number, message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
+                type:'number', 
                 min: val,
                 message: message || "最小值" + val
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
 
 
     equal(val: number | string, message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
                 equal: val,
                 message: message || "应等于" + val
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }
    
     includes(val: [], message?: string) {
-        if (this.context === "validate") {
-            let trigger = get(this.json, "validate.rules") || []
+        if (this.context === "validatable") {
+            let trigger = get(this.json, "validatable.rules") || []
             trigger.push({
                 includes: [],
                 message: message || "最小值" + val
             })
-            set(this.json, "validate.rules", trigger)
+            set(this.json, "validatable.rules", trigger)
         }
         return this
     }

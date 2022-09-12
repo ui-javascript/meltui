@@ -3,8 +3,8 @@
         <AFormItem 
         :field="column.dataIndex" 
         :label="column.title" 
-        :rules="get(props.schema[column.dataIndex], 'validate.rules')"
-        :validate-trigger="get(props.schema[column.dataIndex], 'validate.trigger')" 
+        :rules="get(props.schema[column.dataIndex], 'validatable.enabled') ? get(props.schema[column.dataIndex], 'validatable.rules') : []"
+        :validate-trigger="get(props.schema[column.dataIndex], 'validatable.enabled') ? get(props.schema[column.dataIndex], 'validatable.trigger') : []" 
         v-for="column in columns" >
             <Component 
                 v-if="props.options.edit?.enabled"
