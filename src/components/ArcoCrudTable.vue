@@ -223,7 +223,7 @@
                         <APopconfirm v-if="item.needConfirm" 
                         type="warning"
                         :content="item.confirmText || '确认执行操作吗?'"
-                        @ok="item.clickEmit ? $emit(item.clickEmit, {record}) : operationClickTrigger(item, record)">
+                        @ok="(item.clickEmit && editing != true) ? $emit(item.clickEmit, {record}) : operationClickTrigger(item, record)">
                             <Component 
                                 :is="item.type || 'AButton'" 
                                 v-bind="{
@@ -255,7 +255,7 @@
                                 placeholder: getEval(get(props.schema[column.dataIndex], 'widget.placeholder'), record, column, rowIndex) || '请输入',
                                 ...get(props.schema[column.dataIndex], 'widget.props'),
                             }" 
-                            @click="item.clickEmit ? $emit(item.clickEmit, {record}) : operationClickTrigger(item, record)">{{item.title}}</Component>
+                            @click="(item.clickEmit && !editing) ? $emit(item.clickEmit, {record}) : operationClickTrigger(item, record)">{{item.title}}</Component>
                     </template>
                   
             </template>
@@ -294,6 +294,7 @@ import { ArcoCrudForm } from "@/components"
 import { IconSearch, IconEdit, IconSync, IconArrowDown, IconDownload, IconPlus, IconCloseCircle, IconDelete, IconDown, IconArrowLeft } from "@arco-design/web-vue/es/icon"
 // import { Modal } from '@arco-design/web-vue';
 import http from '@/http';
+import { Message } from '@arco-design/web-vue';
 
 const props = defineProps({
     // data: {
@@ -370,6 +371,11 @@ const getWidgetType = (formSchema) => {
 }
 
 const operationClickTrigger = (item, record) => {  
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     // console.log("key: ")
     // console.log(key)
     // console.log("item: ")
@@ -399,6 +405,11 @@ const operationClickTrigger = (item, record) => {
 }
 
 const modalOkTrigger = async () => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     let baseUrl = get(formOptions.value, "baseUrl")
 
     debugger
@@ -474,6 +485,11 @@ const handleBeforeOk = async (done) => {
 }
 
 const handleAdd = () => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     currentRecord.value = {}
     visible.value = true
     formEditMode.value = "add"
@@ -489,6 +505,8 @@ const modalTitleMapping = {
 
 
 const fetchList = async () => {
+
+
     let baseUrl = get(formOptions.value, "baseUrl")
     let fetchList = get(formOptions.value, "fetchList")
     let fetchUrl = get(formOptions.value, "fetchList.url")
@@ -557,6 +575,11 @@ const handleUpdateBatch = async () => {
 }
 
 const handleRemove = async (record) => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     let baseUrl = get(formOptions.value, "baseUrl")
     let deleteOne = get(formOptions.value, "delete")
     let deleteUrl = get(formOptions.value, "delete.url")
@@ -588,12 +611,23 @@ const handleTableChange = (data) => {
 }
 
 const handlePageSizeChange = (pageSize) => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     pagination.value = Object.assign({}, pagination.value, {
+        current: 1,
         pageSize,
     })
 }
 
 const handlePageChange = (current) => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     pagination.value = Object.assign({}, pagination.value, {
         current,
     })
@@ -607,6 +641,11 @@ const handleKeepWatchDeps = (column, record) => {
 }
 
 const handleSearch = () => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     pagination.value.current = 1
     fetchList()
 }
@@ -614,12 +653,22 @@ const handleSearch = () => {
 
 
 const handleReset = () => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     pagination.value.current = 1
     keyword.value = {}
     fetchList()
 }
 
 const handleRemoveBatch = async () => {
+    if (editing.value) {
+        Message.warning("当前处于批量编辑状态, 请先保存！")
+        return
+    }
+
     let baseUrl = get(formOptions.value, "baseUrl")
     let deleteBatch = get(formOptions.value, "deleteBatch")
     let deleteBatchUrl = get(formOptions.value, "deleteBatch.url")

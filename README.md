@@ -66,8 +66,9 @@ const options = new CrudOptions()
     .editOperation().update().post("/v1/update") // 更新1条数据
     .editBatchOperation().updateBatch().post("/v1/updateBatch") // 批量更新
     .addOperation().save().post("/v1/save") // 新增1条数据
-    .removeOperation().delete().post("/v1/delete") // 删除1条数据
+    .removeOperation()
         .needConfirm().confirmText("确定删除吗?") // 删除前需要确认
+        .delete().post("/v1/delete") // 删除1条数据
     .removeBatchOperation().deleteBatch().post("/v1/deleteBatch") // 批量删除
     .customOperation("自定义").clickEmit("showItem") // 自定义按钮
 
