@@ -4,7 +4,7 @@
         <ARow style="margin-bottom: 10px" v-if="get(formOptions, 'search.enabled')" :gutter="20">
     
             <ACol flex="auto">
-                <AForm :layout="get(formOptions, 'search.layout')" label-align="left">
+                <AForm :model="keyword" :layout="get(formOptions, 'search.layout')" label-align="left">
 
                 <!-- @fix 需要指定宽度为 100%  -->
                 <AGrid :cols="get(formOptions, 'search.cols')" :colGap="12" style="width: 100%;">
@@ -217,9 +217,7 @@
 
             <template #operationList="{ record, column, rowIndex }">
 
-                <!-- {{JSON.stringify(formOptions.operation.operationList)}} -->
-                       
-                    <template  v-for="item of formOptions.operation.operationList.filter(item => (formOptions?.edit?.enabled && item.name === 'edit') ? false : true)">
+                    <template  v-for="item of formOptions.operation.operationList">
                         <APopconfirm v-if="item.needConfirm" 
                         type="warning"
                         :content="item.confirmText || '确认执行操作吗?'"
@@ -803,7 +801,7 @@ const initColumns = () => {
     let operationList = get(formOptions.value, "operation.operationList")
 
 
-    if (operationList && operationList.length > 0) {
+    if (!editing.value && operationList && operationList.length > 0) {
         // 操作列排序
         operationList.sort((a, b) => {
             if (!a.idx) {
@@ -818,7 +816,6 @@ const initColumns = () => {
         // @tofix
         set(formOptions.value, "operation.operationList", operationList)
 
-        let resizable = get(formOptions.value, 'column.resizable')
 
         columns.value.push({
             title: '操作栏',
@@ -829,27 +826,27 @@ const initColumns = () => {
         })
 
         
-        if (resizable) {
-            columns.value.push({
-                title: '',
-                fixed: resizable ? false : 'right',
-                align: 'center',
-                // wdith: "20px",
-                slotName: 'empty'
-            })
-        }
-
-
     }
 
-// console.log("columns: ")
-// console.log(JSON.stringify(columns.value))
+    let resizable = get(formOptions.value, 'column.resizable')
+    if (resizable) {
+        columns.value.push({
+            title: '',
+            fixed: resizable ? false : 'right',
+            align: 'center',
+            // wdith: "20px",
+            slotName: 'empty'
+        })
+    }
 
-// console.log("options: ")
-// console.log(JSON.stringify(props.options))
+    // console.log("columns: ")
+    // console.log(JSON.stringify(columns.value))
 
-console.log("schema: ")
-console.log(JSON.stringify(props.schema))
+    // console.log("options: ")
+    // console.log(JSON.stringify(props.options))
+
+    console.log("schema: ")
+    console.log(JSON.stringify(props.schema))
 
 }
 
