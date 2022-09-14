@@ -132,6 +132,21 @@ defineExpose({
 
 </script>
 
-<style>
 
-</style>
+<style lang="less">
+    // @import "../assets/styles/color.less";
+    body {
+        --arcoblue-6: 64,158,255!important;
+        --arcoblue-7: 64,158,255!important;
+        // --primary-6: 64,158,255;
+    
+        --orange-6: 230,162,60!important;
+        --orange-7: 230,162,60!important;
+    
+        --green-6: 103,194,58!important;
+        --green-7: 103,194,58!important;
+    
+        --red-6: 245,108,108!important;
+        --red-7: 245,108,108!important;
+    }
+    </style>

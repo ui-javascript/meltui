@@ -55,6 +55,7 @@ app.use(ArcoVue, {
 - 仿element主题
     - https://arco.design/themes/preview/2279
     - https://element-plus.gitee.io/zh-CN/component/color.html
+    - https://github.com/arco-design/arco-design-vue/issues/420
 
 # 示例 @demo
 

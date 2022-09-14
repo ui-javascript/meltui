@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="arco-crud-table">
 
         <ARow style="margin-bottom: 10px" v-if="get(formOptions, 'search.enabled')" :gutter="20">
     
@@ -871,3 +871,22 @@ watch([pagination], async () => {
 
 
 </script>
+
+
+<style lang="less">
+// @import "../assets/styles/color.less";
+body {
+    --arcoblue-6: 64,158,255!important;
+    --arcoblue-7: 64,158,255!important;
+    // --primary-6: 64,158,255;
+
+    --orange-6: 230,162,60!important;
+    --orange-7: 230,162,60!important;
+
+    --green-6: 103,194,58!important;
+    --green-7: 103,194,58!important;
+
+    --red-6: 245,108,108!important;
+    --red-7: 245,108,108!important;
+}
+</style>

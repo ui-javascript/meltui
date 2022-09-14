@@ -15,7 +15,7 @@ import { App as VueApp, createApp } from 'vue'
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 
-import '@/assets/styles/color.less';
+// import '@/assets/styles/color.less';
 
 // function useTable (app: VueApp) {
 //     app.use(VXETable)

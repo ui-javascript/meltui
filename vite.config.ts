@@ -37,11 +37,13 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        modifyVars: {   
+        modifyVars: {  
+          // 'primary-6': `rgb(var(~'@{arco-cssvars-prefix}-green-6'))`,
+          // 'dark-primary-6': `rgb(var(~'@{arco-cssvars-prefix}-orange-6'))`, 
           // 'primary-6': `rgb(var(~'@{arco-cssvars-prefix}-green-6'))`,
           // 'dark-primary-6': `rgb(var(~'@{arco-cssvars-prefix}-orange-6'))`,
-          'arcoblue-6': '#f85959',
-          // hack: `true; @import  (reference) "${path.resolve('src/assets/styles/color.less')}";`,
+          // 'arcoblue-6': '#f85959',
+          hack: `true; @import  (reference) "${path.resolve('src/assets/styles/color.less')}";`,
         },
         javascriptEnabled: true,
       },
