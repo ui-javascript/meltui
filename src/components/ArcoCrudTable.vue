@@ -90,6 +90,8 @@
                 </AButton>
 
                 <AButton 
+                    :loading="tableLoading"
+                    :disabled="tableLoading"
                     @click="beginEditBatch"
                     v-if="!formOptions?.edit?.enabled && !editing && get(formOptions, 'updateBatch.url')">
                     <template #icon>
@@ -99,6 +101,8 @@
                 </AButton>
 
                 <AButton 
+                    :loading="tableLoading"
+                    :disabled="tableLoading"
                     @click="handleUpdateBatch"
                     status="success"
                     v-if="formOptions?.edit?.enabled && editing && get(formOptions, 'updateBatch.url')">
@@ -558,6 +562,7 @@ const handleUpdateBatch = async () => {
     let method = get(formOptions.value, "updateBatch.method")
     let updateBatchUrl = get(formOptions.value, "updateBatch.url")
 
+    tableLoading.value = true
     await http(updateBatchUrl, {
         method,
         baseURL: baseUrl,
@@ -565,6 +570,7 @@ const handleUpdateBatch = async () => {
             list: list.value.filter(item => editedKeys.value.includes(item.key)),
         }
     })
+    // tableLoading.value = false // 后续会发起请求
 
     editedKeys.value = []
     formEditMode.value = ""
