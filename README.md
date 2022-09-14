@@ -27,7 +27,7 @@
 - https://github.com/ui-javascript/demo-meltui-test-20220910/blob/master/src/views/01-melt-arco/page.vue
 
 ```bash
-npm install meltui@latest lodash @arco-design/web-vue/dist/arco.css
+npm install meltui@latest lodash @arco-design/web-vue
 ```
 
 ```js
@@ -49,6 +49,12 @@ app.use(ArcoVue, {
     />
 </template>
 ```
+
+# 主题
+
+- 仿element主题
+    - https://arco.design/themes/preview/2279
+    - https://element-plus.gitee.io/zh-CN/component/color.html
 
 # 示例 @demo
 
@@ -155,7 +161,7 @@ const schema = {
 
 ```js 
 const options = new CrudOptions()
-    .column().resizable().column().resizable() // 右侧的fixed会失效
+    .column().resizable() 
     // .body().scroll().x(1000) 
     .parse()
 ```
@@ -169,7 +175,9 @@ const schema = {
     salary: new FormSchema()
         .sortable().asc().desc() // 排序
         .filterable() // 筛选
-            .gt(20000).gt([25000, 100000]) // gt | lt | eq | startsWith | contains
+            // @todo 暂时只支持单选, 待加强
+            // gt | lt | eq | startsWith | contains
+            .gt(20000).gt([25000, 100000]) 
             // .filter("{{ record.salary > value }}") // filter可以不用写
         .parse(),
 }

@@ -100,6 +100,7 @@
 
                 <AButton 
                     @click="handleUpdateBatch"
+                    status="success"
                     v-if="formOptions?.edit?.enabled && editing && get(formOptions, 'updateBatch.url')">
                     <template #icon>
                         <IconSync style="cursor: pointer;" />
@@ -675,20 +676,21 @@ const handleRemoveBatch = async () => {
         return
     }
 
-    let method = get(formOptions.value, "deleteBatchUrl.method") || post
+    let method = get(formOptions.value, "deleteBatch.method") 
 
     // tableLoading.value = true
-    await http( deleteUrl, {
+    await http( deleteBatchUrl, {
         method,
         baseURL: baseUrl,
         [method === "GET" ? 'params' : 'data']: {
-            id: record.id,
+            ids: selectedKeys.value,
         }
     })
     // tableLoading.value = false
 
+    pagination.value.current = 1
     fetchList()
-
+    selectedKeys.value = []
 }
 
 const flagEdited = (record) => {

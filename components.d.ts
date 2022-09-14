@@ -7,7 +7,25 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AButton: typeof import('@arco-design/web-vue')['Button']
+    ACol: typeof import('@arco-design/web-vue')['Col']
+    AConfigProvider: typeof import('@arco-design/web-vue')['ConfigProvider']
+    ADivider: typeof import('@arco-design/web-vue')['Divider']
+    AForm: typeof import('@arco-design/web-vue')['Form']
+    AFormItem: typeof import('@arco-design/web-vue')['FormItem']
+    AGrid: typeof import('@arco-design/web-vue')['Grid']
+    AGridItem: typeof import('@arco-design/web-vue')['GridItem']
+    AInput: typeof import('@arco-design/web-vue')['Input']
+    AInputNumber: typeof import('@arco-design/web-vue')['InputNumber']
+    AModal: typeof import('@arco-design/web-vue')['Modal']
+    APopconfirm: typeof import('@arco-design/web-vue')['Popconfirm']
     ArcoCrudForm: typeof import('./src/components/ArcoCrudForm.vue')['default']
     ArcoCrudTable: typeof import('./src/components/ArcoCrudTable.vue')['default']
+    ARow: typeof import('@arco-design/web-vue')['Row']
+    ASelect: typeof import('@arco-design/web-vue')['Select']
+    ASpace: typeof import('@arco-design/web-vue')['Space']
+    ASwitch: typeof import('@arco-design/web-vue')['Switch']
+    ATable: typeof import('@arco-design/web-vue')['Table']
+    ATextarea: typeof import('@arco-design/web-vue')['Textarea']
   }
 }

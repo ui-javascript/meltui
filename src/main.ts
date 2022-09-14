@@ -2,8 +2,8 @@ import App from '@/App.vue'
 import { App as VueApp, createApp } from 'vue'
 // 加载UI库, 引入后组件会被全局注册, 我们在任意组件内都可以直接使用
 
-import '@5a.css/reset';
-import '@5a.css/helpers';
+// import '@5a.css/reset';
+// import '@5a.css/helpers';
 
 // import 'xe-utils'
 // import VXETable from 'vxe-table'
@@ -15,6 +15,7 @@ import '@5a.css/helpers';
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 
+import '@/assets/styles/color.less';
 
 // function useTable (app: VueApp) {
 //     app.use(VXETable)

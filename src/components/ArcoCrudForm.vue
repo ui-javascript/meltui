@@ -39,7 +39,7 @@
 
 <script setup name="ArcoCrudForm">
 
-import { ref, onMounted, defineExpose } from 'vue';
+import { ref, onMounted } from 'vue';
 
 
 import { getEval, getEval2 } from "@/utils";

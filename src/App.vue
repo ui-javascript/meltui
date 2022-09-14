@@ -62,7 +62,7 @@ let options = ref(new CrudOptions()
     // @fix 开启虚拟列表后 复选款无法勾选 --> v-model:selected-keys
     // .body().virtualList().height(400)
     .body().scroll().y(400)
-    .column().resizable()  // 调整列宽 
+    // .column().resizable()  // 调整列宽 
     // .body().scroll().x(1000)  
 
     .baseUrl("https://mock.apifox.cn/m1/1087009-0-default/api")
